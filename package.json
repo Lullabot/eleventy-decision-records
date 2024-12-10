@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run develop",
-		"develop": "eleventy --serve",
+    "develop": "eleventy --serve",
     "build": "eleventy",
     "develop:debug": "DEBUG=Eleventy* eleventy --serve",
     "build:debug": "DEBUG=Eleventy* eleventy"
-	},
+  },
   "keywords": [],
   "author": "Lullabot, Inc.",
   "repository": {

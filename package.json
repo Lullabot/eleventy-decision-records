@@ -17,8 +17,7 @@
     "url": "https://github.com/Lullabot/eleventy-decision-records"
   },
   "bugs": {
-    "url": "https://github.com/Lullabot/eleventy-decision-records/issues",
-    "email": "carbon@us.ibm.com"
+    "url": "https://github.com/Lullabot/eleventy-decision-records/issues"
   },
   "license": "MIT",
   "type": "module",

@@ -1,0 +1,25 @@
+{
+  "name": "eleventy-decision-records",
+  "version": "1.0.0",
+  "description": "An eleventy starter project for documenting decision records",
+  "scripts": {
+    "start": "npm run develop",
+    "develop": "eleventy --serve",
+    "build": "eleventy",
+    "develop:debug": "DEBUG=Eleventy* eleventy --serve",
+    "build:debug": "DEBUG=Eleventy* eleventy"
+  },
+  "author": "Lullabot, Inc.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lullabot/eleventy-decision-records"
+  },
+  "bugs": {
+    "url": "https://github.com/Lullabot/eleventy-decision-records/issues"
+  },
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

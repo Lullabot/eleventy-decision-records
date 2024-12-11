@@ -2,7 +2,6 @@
   "name": "eleventy-decision-records",
   "version": "1.0.0",
   "description": "An eleventy starter project for documenting decision records",
-  "main": "index.js",
   "scripts": {
     "start": "npm run develop",
     "develop": "eleventy --serve",
@@ -10,7 +9,6 @@
     "develop:debug": "DEBUG=Eleventy* eleventy --serve",
     "build:debug": "DEBUG=Eleventy* eleventy"
   },
-  "keywords": [],
   "author": "Lullabot, Inc.",
   "repository": {
     "type": "git",

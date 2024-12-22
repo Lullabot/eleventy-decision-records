@@ -1,0 +1,29 @@
+name: Run eslint
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  run-eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # Remember to update .tugboat/config.yml when changing this.
+          node-version: 22
+      - run: npm ci
+      - run: npm run-script lint:ci
+      - run: jq -s '[.[][]]' reports/eslint/*.json > reports/eslint/eslint-combined.json
+        if: ${{ failure() }}
+      - name: Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@3.0.0
+        if: ${{ failure() }}
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          report-json: reports/eslint/eslint-combined.json
+      - name: Upload test artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: eslint_test_results
+          path: reports/eslint

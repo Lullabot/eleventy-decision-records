@@ -19,7 +19,7 @@ services:
         - ln -snf "${TUGBOAT_ROOT}/dist" "${DOCROOT}"
         - apt-get install -y nodejs
       build:
-        - npm ci
+        - npm install
         - npm run build
 
     urls:

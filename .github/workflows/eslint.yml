@@ -12,8 +12,7 @@ jobs:
           # Remember to update .tugboat/config.yml when changing this.
           node-version: 22
       - run: npm install
-      - run: npm run-script lint:ci
-      - run: jq -s '[.[][]]' reports/eslint/*.json > reports/eslint/eslint-combined.json
+      - run: npm run-script lint
         if: ${{ failure() }}
       - name: Annotate Code Linting Results
         uses: ataylorme/eslint-annotate-action@3.0.0

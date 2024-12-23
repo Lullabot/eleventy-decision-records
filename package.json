@@ -9,7 +9,7 @@
     "develop:debug": "DEBUG=Eleventy* eleventy --serve",
     "build:debug": "DEBUG=Eleventy* eleventy",
     "lint": "eslint && prettier -c .",
-    "lint:ci": "eslint -o reports/eslint/issues.json -f json",
+    "lint:fix": "eslint --fix && prettier -w",
     "lint-staged": "lint-staged"
   },
   "author": "Lullabot, Inc.",

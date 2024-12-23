@@ -13,16 +13,3 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm run-script lint
-        if: ${{ failure() }}
-      - name: Annotate Code Linting Results
-        uses: ataylorme/eslint-annotate-action@3.0.0
-        if: ${{ failure() }}
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          report-json: reports/eslint/eslint-combined.json
-      - name: Upload test artifacts
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: eslint_test_results
-          path: reports/eslint

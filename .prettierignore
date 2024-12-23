@@ -1,0 +1,6 @@
+# Skip auto-generated files.
+/dist
+/node_modules
+
+# Skip the ADRs, format them manually.
+/adrs

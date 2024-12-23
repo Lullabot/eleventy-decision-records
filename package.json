@@ -10,7 +10,8 @@
     "build:debug": "DEBUG=Eleventy* eleventy",
     "lint": "eslint && prettier -c .",
     "lint:fix": "eslint --fix && prettier -w",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "prepare": "husky"
   },
   "author": "Lullabot, Inc.",
   "repository": {
@@ -29,6 +30,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.14.0",
+    "husky": "^9.1.7",
     "prettier": "^3.4.2"
   }
 }

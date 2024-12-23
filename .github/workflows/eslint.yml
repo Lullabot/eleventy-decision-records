@@ -11,7 +11,7 @@ jobs:
         with:
           # Remember to update .tugboat/config.yml when changing this.
           node-version: 22
-      - run: npm ci
+      - run: npm install
       - run: npm run-script lint:ci
       - run: jq -s '[.[][]]' reports/eslint/*.json > reports/eslint/eslint-combined.json
         if: ${{ failure() }}

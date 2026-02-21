@@ -8,7 +8,8 @@
       "matchStrings": ["setup_(?<currentValue>\\d+)\\.x"],
       "depNameTemplate": "node",
       "datasourceTemplate": "node-version",
-      "extractVersionTemplate": "^(?<version>\\d+)"
+      "extractVersionTemplate": "^(?<version>\\d+)",
+      "versioningTemplate": "regex:^(?<major>\\d+)$"
     }
   ]
 }

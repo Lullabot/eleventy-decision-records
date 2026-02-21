@@ -4,7 +4,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^\\.tugboat/config\\.yml$"],
+      "managerFilePatterns": ["/^\\.tugboat/config\\.yml$/"],
       "matchStrings": ["setup_(?<currentValue>\\d+)\\.x"],
       "depNameTemplate": "node",
       "datasourceTemplate": "node-version",

@@ -1,4 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"]
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^\\.tugboat/config\\.yml$"],
+      "matchStrings": ["setup_(?<currentValue>\\d+)\\.x"],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "node-version",
+      "extractVersionTemplate": "^(?<version>\\d+)"
+    }
+  ]
 }

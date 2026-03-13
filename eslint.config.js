@@ -6,7 +6,7 @@ export default [
   pluginJs.configs.recommended,
   {
     languageOptions: {
-      ecmaVersion: 2023,
+      ecmaVersion: 'latest',
       globals: {
         ...globals.browser,
         ...globals.node,

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or site.title }} — {{ site.organization }}</title>
+  <meta name="description" content="{{ description or site.description }}">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/gabarito-v9-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/gabarito-v9-latin-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/gabarito-v9-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+  {% css %}{% include "../assets/styles/reset.css" %}{% endcss %}
+  {% css %}{% include "../assets/styles/fonts.css" %}{% endcss %}
+  {% css %}{% include "../assets/styles/tokens.css" %}{% endcss %}
+  {% css %}{% include "../assets/styles/typography.css" %}{% endcss %}
+  {% css %}{% include "../assets/styles/layout.css" %}{% endcss %}
+  {% css %}{% include "../assets/styles/recent-decisions.css" %}{% endcss %}
+  <link rel="stylesheet" href="{% getBundleFileUrl 'css' %}">
+</head>
+<body>
+
+  {% include "site-nav.njk" %}
+
+  <main class="site-main" id="site-main">
+    {{ content | safe }}
+  </main>
+
+  {% include "recent-decisions.njk" %}
+
+  <script>
+    document.querySelector('.site-nav__toggle').addEventListener('click', () => {
+      const nav = document.querySelector('.site-nav');
+      const btn = document.querySelector('.site-nav__toggle');
+      const expanded = nav.classList.toggle('site-nav--expanded');
+      btn.setAttribute('aria-expanded', expanded);
+    });
+  </script>
+</body>
+</html>

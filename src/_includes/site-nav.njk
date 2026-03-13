@@ -1,0 +1,54 @@
+<nav class="site-nav" aria-label="Site navigation">
+  {# Logo #}
+  <a href="/" class="site-nav__logo" aria-label="{{ site.organization }} home">
+    {% icon site.icon %}
+    <span class="site-nav__label">{{ site.organization }}</span>
+  </a>
+
+  {# Navigation menu #}
+  <div class="site-nav__menu">
+    {# Primary nav group #}
+    <div class="site-nav__group">
+      {%- for item in navigation.primary %}
+        <a href="{{ item.url }}" class="site-nav__item" aria-label="{{ item.label }}"{{ ' aria-current="page"' | safe if page.url == item.url }}>
+          {% icon item.icon %}
+          <span class="site-nav__label">{{ item.label }}</span>
+        </a>
+      {%- endfor %}
+      <div class="site-nav__search">
+        <button class="site-nav__item" aria-label="Search">
+          {% icon "search" %}
+          <span class="site-nav__label">Search</span>
+        </button>
+      </div>
+    </div>
+
+    {# Practice area nav group #}
+    <div class="site-nav__group">
+      {%- for area in practiceAreas %}
+        <a href="/#practice-areas" class="site-nav__item" aria-label="{{ area.name }}">
+          {% icon area.icon %}
+          <span class="site-nav__label">{{ area.name }}</span>
+        </a>
+      {%- endfor %}
+    </div>
+
+    {# Utility nav group #}
+    <div class="site-nav__group">
+      {%- for item in navigation.utility %}
+        <a href="{{ item.url }}" class="site-nav__item" aria-label="{{ item.label }}"{{ ' aria-current="page"' | safe if page.url == item.url }}>
+          {% icon item.icon %}
+          <span class="site-nav__label">{{ item.label }}</span>
+        </a>
+      {%- endfor %}
+    </div>
+  </div>
+
+  {# Sidebar footer / toggle #}
+  <div class="site-nav__footer">
+    <button class="site-nav__toggle" aria-label="Toggle sidebar" aria-expanded="false">
+      {% icon "side_navigation" %}
+      <span class="site-nav__label">Menu</span>
+    </button>
+  </div>
+</nav>

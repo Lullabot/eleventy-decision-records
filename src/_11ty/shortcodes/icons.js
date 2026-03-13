@@ -72,7 +72,7 @@ export function icon(name, label) {
 
 const ICON_DIR = join(
   import.meta.dirname,
-  '../..',
+  '../../..',
   'node_modules',
   '@material-symbols',
   'svg-400',

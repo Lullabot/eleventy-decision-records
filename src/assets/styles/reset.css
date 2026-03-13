@@ -4,8 +4,8 @@
     GitHub page: https://github.com/elad2412/the-new-css-reset
 ***/
 *:where(
-    :not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)
-  ) {
+  :not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)
+) {
   all: unset;
   display: revert;
 }

@@ -1,0 +1,347 @@
+/* ==========================================================================
+   Site Layout
+   ========================================================================== */
+
+html,
+body {
+  min-height: 100vh;
+}
+
+body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  text-rendering: optimizeLegibility;
+}
+
+/* ==========================================================================
+   Sidebar Navigation
+   ========================================================================== */
+
+.site-nav {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-dark);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 10;
+}
+
+/* Logo bar */
+.site-nav__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background-color: var(--color-brand-primary);
+  color: var(--gray-0);
+  padding: var(--space-4);
+  text-decoration: none;
+}
+
+.site-nav__logo svg {
+  width: 32px;
+  height: 32px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Labels — hidden by default (icon-only collapsed state) */
+.site-nav__label {
+  display: none;
+  white-space: nowrap;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-sm);
+}
+
+.site-nav__logo .site-nav__label {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Nav menu area */
+.site-nav__menu {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: var(--space-4) var(--space-3);
+  padding-bottom: var(--space-22);
+  overflow-y: auto;
+}
+
+/* Nav groups */
+.site-nav__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-block: var(--space-3);
+}
+
+.site-nav__group:first-child {
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border-dark);
+}
+
+.site-nav__group:last-child {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border-dark);
+}
+
+/* Individual nav items */
+.site-nav__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  color: var(--gray-300);
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.site-nav__item:hover,
+.site-nav__item:focus-visible {
+  background-color: var(--gray-800);
+  color: var(--gray-0);
+}
+
+.site-nav__item--active {
+  border: 1.25px solid var(--gray-500);
+  color: var(--gray-0);
+}
+
+.site-nav__item svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Tooltips (CSS Anchor Positioning — uses implicit anchor from ::after) */
+.site-nav__item::after,
+.site-nav__toggle::after {
+  content: attr(aria-label);
+  position: fixed;
+  left: anchor(right);
+  margin-left: var(--space-12);
+  align-self: anchor-center;
+  white-space: nowrap;
+  background-color: var(--gray-900);
+  color: var(--gray-0);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-sm);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 20;
+}
+
+.site-nav__item:hover::after,
+.site-nav__item:focus-visible::after,
+.site-nav__toggle:hover::after,
+.site-nav__toggle:focus-visible::after {
+  opacity: 1;
+}
+
+/* Search bar in nav */
+.site-nav__search {
+  padding-top: var(--space-2);
+}
+
+.site-nav__search .site-nav__item {
+  background-color: var(--gray-800);
+  width: 100%;
+}
+
+/* Footer toggle */
+.site-nav__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-3);
+  background-color: var(--color-bg-dark);
+  border-top: 1px solid var(--color-border-dark);
+}
+
+.site-nav__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  color: var(--gray-300);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.site-nav__toggle:hover,
+.site-nav__toggle:focus-visible {
+  background-color: var(--gray-800);
+  color: var(--gray-0);
+}
+
+.site-nav__toggle svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Sidebar — Desktop Expanded
+   ========================================================================== */
+
+.site-nav--expanded {
+  width: 260px;
+}
+
+.site-nav--expanded .site-nav__logo {
+  justify-content: flex-start;
+}
+
+.site-nav--expanded .site-nav__label {
+  display: block;
+}
+
+/* Hide tooltips when labels are visible */
+.site-nav--expanded .site-nav__item::after,
+.site-nav--expanded .site-nav__toggle::after {
+  display: none;
+}
+
+/* ==========================================================================
+   Main Content Area
+   ========================================================================== */
+
+.site-main {
+  padding: var(--space-22) var(--space-18);
+  overflow-x: clip;
+  overflow-y: auto;
+  box-shadow: var(--shadow-panel);
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   Recent Decisions Sidebar (right)
+   ========================================================================== */
+
+.recent-decisions {
+  display: none;
+  background-color: var(--color-bg-secondary);
+  padding: var(--space-16) var(--space-12);
+  overflow-x: clip;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+@media screen and (min-width: 75rem) {
+  body {
+    grid-template-columns: auto 1fr 25rem;
+  }
+
+  .recent-decisions {
+    display: block;
+  }
+}
+
+/* ==========================================================================
+   Mobile Layout
+   ========================================================================== */
+
+@media screen and (max-width: 48rem) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .site-nav {
+    position: sticky;
+    top: 0;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    z-index: 20;
+  }
+
+  .site-nav__logo {
+    padding: var(--space-3);
+  }
+
+  .site-nav__logo svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Hide the menu by default on mobile */
+  .site-nav__menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: calc(var(--space-22) + var(--space-4)) var(--space-6)
+      var(--space-6);
+    background-color: var(--color-bg-dark);
+    overflow-y: auto;
+    z-index: 19;
+    flex-direction: column;
+  }
+
+  .site-nav__logo {
+    position: relative;
+    z-index: 21;
+  }
+
+  /* Footer toggle moves inline to the right of the logo */
+  .site-nav__footer {
+    position: static;
+    margin-left: auto;
+    padding: var(--space-3);
+    border-top: none;
+    z-index: 21;
+  }
+
+  .site-nav__toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Mobile expanded: show menu as full-screen overlay */
+  .site-nav--expanded .site-nav__menu {
+    display: flex;
+  }
+
+  .site-nav--expanded .site-nav__label {
+    display: block;
+  }
+
+  /* Hide tooltips on mobile */
+  .site-nav__item::after,
+  .site-nav__toggle::after {
+    display: none;
+  }
+
+  /* Main content adjustments */
+  .site-main {
+    padding: var(--space-8) var(--space-4);
+  }
+}

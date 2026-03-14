@@ -2,87 +2,109 @@
    Recent Decisions Sidebar
    ========================================================================== */
 
-.recent-decisions__heading {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  justify-content: space-between;
-}
+@scope (.recent-decisions) {
+  .heading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-content: space-between;
+  }
 
-.recent-decisions__title {
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-sm);
-  letter-spacing: var(--letter-spacing-wide);
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
+  h2 {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-sm);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
 
-.recent-decisions__icon {
-  width: 24px;
-  height: 24px;
-  color: var(--color-text-muted);
-}
+  .icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-text-muted);
+  }
 
-/* Decision list */
-.recent-decisions__list {
-  display: flex;
-  flex-direction: column;
-}
+  /* Decision list */
+  ol {
+    display: flex;
+    flex-direction: column;
+  }
 
-.recent-decisions__item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  padding-block: var(--space-6);
-}
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-block: var(--space-6);
+  }
 
-.recent-decisions__item + .recent-decisions__item {
-  border-top: 1px solid var(--color-border-default);
-}
+  li + li {
+    border-top: 1px solid var(--color-border-default);
+  }
 
-/* Date */
-.recent-decisions__date {
-  font-weight: var(--font-weight-regular);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-sm);
-  letter-spacing: var(--letter-spacing-sm);
-  color: var(--color-text-tertiary);
-}
+  /* Meta row — date + icon */
+  .meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
 
-/* Decision title link */
-.recent-decisions__link {
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-lg);
-  line-height: var(--line-height-base);
-  color: var(--color-text-primary);
-  text-decoration: none;
-}
+  .practice-area-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--color-brand-primary);
+  }
 
-.recent-decisions__link:hover {
-  color: var(--color-brand-primary);
-}
+  .practice-area-icon svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
 
-/* Tags */
-.recent-decisions__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
+  /* Date */
+  time {
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-sm);
+    letter-spacing: var(--letter-spacing-sm);
+    color: var(--color-text-tertiary);
+  }
 
-.tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-1) var(--space-2);
-  background-color: var(--gray-0);
-  border-left: 1px solid var(--color-border-default);
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  box-shadow: var(--shadow-subtle);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-sm);
-  letter-spacing: var(--letter-spacing-sm);
-  color: var(--color-text-tertiary);
-  white-space: nowrap;
+  /* Decision title link */
+  a {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-base);
+    color: var(--color-text-primary);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-brand-primary);
+  }
+
+  /* Tags */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-1) var(--space-2);
+    background-color: var(--gray-0);
+    border-left: 1px solid var(--color-border-default);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    box-shadow: var(--shadow-subtle);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-sm);
+    letter-spacing: var(--letter-spacing-sm);
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+  }
 }

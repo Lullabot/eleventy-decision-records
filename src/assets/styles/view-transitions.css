@@ -1,0 +1,67 @@
+/* ==========================================================================
+   Cross-Document View Transitions (MPA)
+   ========================================================================== */
+
+/* View transition opt-in is via <meta name="view-transition"> in page.njk
+   because lightningcss strips the @view-transition at-rule. */
+
+/* Persistent elements get named transitions so they morph in place */
+.site-nav {
+  view-transition-name: site-nav;
+}
+
+.site-main {
+  view-transition-name: main-content;
+}
+
+.recent-decisions {
+  view-transition-name: recent-decisions;
+}
+
+/* Main content: true fade-out-then-in (not a crossfade) */
+::view-transition-group(main-content) {
+  animation-duration: 0.3s;
+}
+
+::view-transition-old(main-content) {
+  animation: 0.15s ease-out both vt-fade-out;
+}
+
+::view-transition-new(main-content) {
+  animation: 0.15s ease-in 0.15s both vt-fade-in;
+}
+
+/* Keep nav and sidebar stable (no animation) */
+::view-transition-old(site-nav),
+::view-transition-new(site-nav),
+::view-transition-old(recent-decisions),
+::view-transition-new(recent-decisions) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@keyframes vt-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(main-content),
+  ::view-transition-new(main-content) {
+    animation-duration: 0.01s;
+  }
+}

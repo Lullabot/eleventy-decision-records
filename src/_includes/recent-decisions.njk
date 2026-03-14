@@ -1,23 +1,27 @@
 <aside class="recent-decisions" aria-label="Accepted decisions">
-  <div class="recent-decisions__heading">
-    <h2 class="recent-decisions__title">Accepted Decisions</h2>
-    <span class="recent-decisions__icon">{% icon "verified" %}</span>
+  <div class="heading">
+    <h2>Accepted Decisions</h2>
+    <span class="icon">{% icon "verified" %}</span>
   </div>
 
-  <ol class="recent-decisions__list">
+  <ol>
     {%- for adr in collections.adrs %}
       {%- if adr.data.status == "accepted" %}
-    <li class="recent-decisions__item">
-      <time class="recent-decisions__date" datetime="{{ adr.date | datetimeFormat }}">
-        {{ adr.date | timeSince }}
-      </time>
-      <a href="{{ adr.url }}" class="recent-decisions__link">
+    <li>
+      <div class="meta">
+        <time datetime="{{ adr.date | datetimeFormat }}">
+          {{ adr.date | timeSince }}
+        </time>
+        {%- for area in practiceAreas %}
+          {%- if area.name == adr.data.practiceArea %}
+        <span class="practice-area-icon" aria-label="{{ area.name }}">{% icon area.icon %}</span>
+          {%- endif %}
+        {%- endfor %}
+      </div>
+      <a href="{{ adr.url }}">
         {{ adr.data.title }}
       </a>
-      <div class="recent-decisions__tags">
-        {%- if adr.data.practiceArea %}
-        <span class="tag">{{ adr.data.practiceArea }}</span>
-        {%- endif %}
+      <div class="tags">
         {%- for topic in adr.data.topics %}
         <span class="tag">{{ topic }}</span>
         {%- endfor %}

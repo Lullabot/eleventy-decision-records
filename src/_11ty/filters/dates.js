@@ -46,3 +46,14 @@ export function datetimeFormat(date) {
     day: 'numeric',
   });
 }
+
+/**
+ * Returns the current four-digit year.
+ *
+ * @example
+ * {{ null | year }}
+ * → "2026"
+ */
+export function year() {
+  return new Date().getFullYear().toString();
+}

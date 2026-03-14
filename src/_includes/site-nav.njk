@@ -1,54 +1,60 @@
 <nav class="site-nav" aria-label="Site navigation">
   {# Logo #}
-  <a href="/" class="site-nav__logo" aria-label="{{ site.organization }} home">
+  <a href="/" aria-label="{{ site.organization }} home">
     {% icon site.icon %}
-    <span class="site-nav__label">{{ site.organization }}</span>
+    <span class="label">{{ site.organization }}</span>
   </a>
 
   {# Navigation menu #}
-  <div class="site-nav__menu">
+  <div class="menu">
     {# Primary nav group #}
-    <div class="site-nav__group">
+    <ul>
       {%- for item in navigation.primary %}
-        <a href="{{ item.url }}" class="site-nav__item" aria-label="{{ item.label }}"{{ ' aria-current="page"' | safe if page.url == item.url }}>
-          {% icon item.icon %}
-          <span class="site-nav__label">{{ item.label }}</span>
-        </a>
+        <li>
+          <a href="{{ item.url }}" aria-label="{{ item.label }}"{{ ' aria-current="page"' | safe if page.url == item.url }}>
+            {% icon item.icon %}
+            <span class="label">{{ item.label }}</span>
+          </a>
+        </li>
       {%- endfor %}
-      <div class="site-nav__search">
-        <button class="site-nav__item" aria-label="Search">
+      <li>
+        <button aria-label="Search">
           {% icon "search" %}
-          <span class="site-nav__label">Search</span>
+          <span class="label">Search</span>
         </button>
-      </div>
-    </div>
+      </li>
+    </ul>
 
     {# Practice area nav group #}
-    <div class="site-nav__group">
+    <ul>
       {%- for area in practiceAreas %}
-        <a href="/#practice-areas" class="site-nav__item" aria-label="{{ area.name }}">
-          {% icon area.icon %}
-          <span class="site-nav__label">{{ area.name }}</span>
-        </a>
+        <li>
+          <a href="/practice-areas/{{ area.name | slugify }}/" aria-label="{{ area.name }}">
+            {% icon area.icon %}
+            <span class="label">{{ area.name }}</span>
+          </a>
+        </li>
       {%- endfor %}
-    </div>
+    </ul>
 
     {# Utility nav group #}
-    <div class="site-nav__group">
+    <ul>
       {%- for item in navigation.utility %}
-        <a href="{{ item.url }}" class="site-nav__item" aria-label="{{ item.label }}"{{ ' aria-current="page"' | safe if page.url == item.url }}>
-          {% icon item.icon %}
-          <span class="site-nav__label">{{ item.label }}</span>
-        </a>
+        <li>
+          <a href="{{ item.url }}" aria-label="{{ item.label }}"{{ ' aria-current="page"' | safe if page.url == item.url }}>
+            {% icon item.icon %}
+            <span class="label">{{ item.label }}</span>
+          </a>
+        </li>
       {%- endfor %}
-    </div>
+    </ul>
   </div>
 
   {# Sidebar footer / toggle #}
-  <div class="site-nav__footer">
-    <button class="site-nav__toggle" aria-label="Toggle sidebar" aria-expanded="false">
+  <footer>
+    <button aria-label="Toggle sidebar" aria-expanded="false">
       {% icon "side_navigation" %}
-      <span class="site-nav__label">Menu</span>
+      <span class="label">Menu</span>
     </button>
-  </div>
+  </footer>
 </nav>

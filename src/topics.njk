@@ -1,0 +1,46 @@
+---
+pagination:
+  data: collections.topics
+  size: 1
+  alias: topic
+permalink: "topics/{{ topic.label | slugify }}/"
+eleventyExcludeFromCollections: true
+eleventyComputed:
+  title: "Decisions about {{ topic.label }}"
+  description: "Architectural decision records tagged with {{ topic.label }}"
+---
+
+{%- set topicAdrs = collections.adrs | withTopic(topic.label) %}
+
+<h1>Decisions about {{ topic.label }}</h1>
+<p class="page-description">{{ description }}</p>
+
+<div class="adr-filters">
+  <span class="adr-count">{{ topicAdrs | length }} decision{{ "s" if topicAdrs | length != 1 }}</span>
+</div>
+
+<ol class="adr-list" reversed>
+{%- for adr in topicAdrs %}
+  <li class="adr-item">
+    <div class="adr-header">
+      <span class="adr-status adr-status--{{ adr.data.status }}">
+        {% if adr.data.status == "accepted" %}{% icon "verified" %}{% else %}{% icon "cancel" %}{% endif %}
+        {{ adr.data.status }}
+      </span>
+      <time datetime="{{ adr.date | datetimeFormat }}">{{ adr.date | timeSince }}</time>
+    </div>
+    <a class="adr-title" href="{{ adr.url }}">{{ adr.data.title }}</a>
+    {%- if adr.data.context %}
+    <p class="adr-context">{{ adr.data.context }}</p>
+    {%- endif %}
+    <div class="adr-meta">
+      {%- if adr.data.practiceArea %}
+      <span class="tag">{{ adr.data.practiceArea }}</span>
+      {%- endif %}
+      {%- for t in adr.data.topics %}
+      <span class="tag">{{ t }}</span>
+      {%- endfor %}
+    </div>
+  </li>
+{%- endfor %}
+</ol>

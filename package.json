@@ -9,7 +9,7 @@
     "develop:debug": "DEBUG=Eleventy* eleventy --serve",
     "build:debug": "DEBUG=Eleventy* eleventy",
     "lint": "eslint && prettier -c .",
-    "lint:fix": "eslint --fix && prettier -w",
+    "lint:fix": "eslint --fix && prettier -w .",
     "lint-staged": "lint-staged",
     "prepare": "husky",
     "sample-content": "node ./scripts/generate-adrs.js"
@@ -39,10 +39,13 @@
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
     "@js-temporal/polyfill": "^0.5.1",
     "@material-symbols/svg-400": "^0.40.2",
+    "@orama/orama": "^3.1.18",
     "eleventy-plugin-toc": "^1.1.5",
+    "he": "^1.2.0",
     "lightningcss": "^1.32.0",
     "markdown-it": "^14.1.1",
     "markdown-it-anchor": "^9.2.0",
-    "node-html-parser": "^7.1.0"
+    "node-html-parser": "^7.1.0",
+    "striptags": "^3.2.0"
   }
 }

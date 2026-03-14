@@ -1,0 +1,174 @@
+/* ==========================================================================
+   Search Dialog
+   ========================================================================== */
+
+@scope (#search-dialog) {
+  :scope {
+    width: min(800px, 90vw);
+    margin-top: 10vh;
+    margin-bottom: auto;
+    padding: 0;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-primary);
+    box-shadow: var(--shadow-panel);
+    font-family: var(--font-family-base);
+    color: var(--color-text-primary);
+    interpolate-size: allow-keywords;
+    transition: height 0.3s ease;
+  }
+
+  :scope::backdrop {
+    background-color: rgba(1, 7, 11, 0.6);
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-default);
+  }
+
+  h2 {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-sm);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  form button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  form button:hover,
+  form button:focus-visible {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+  }
+
+  form button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  input[type='search'] {
+    display: block;
+    width: 100%;
+    padding: var(--space-6) var(--space-8);
+    border: none;
+    background: transparent;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-md);
+    color: var(--color-text-primary);
+    outline: none;
+  }
+
+  input[type='search']::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  /* Results list */
+  ol {
+    max-height: 50vh;
+    overflow-y: auto;
+    border-top: 1px solid var(--color-border-default);
+  }
+
+  ol:empty {
+    max-height: 0;
+    border-top: none;
+  }
+
+  li {
+    padding: var(--space-4) var(--space-8);
+    border-bottom: 1px solid var(--color-border-default);
+    animation: fade-in 0.25s ease both;
+    transition: background-color 0.15s ease;
+  }
+
+  li:hover {
+    background-color: var(--color-bg-secondary);
+  }
+
+  li:has(a:focus-visible) {
+    background-color: var(--color-bg-secondary);
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      translate: 0 4px;
+    }
+  }
+
+  li a {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-base);
+    color: var(--color-link);
+    text-decoration: none;
+  }
+
+  li a:hover {
+    text-decoration: underline;
+  }
+
+  li a:focus-visible {
+    text-decoration: underline;
+    outline: none;
+  }
+
+  .snippet {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--color-text-secondary);
+    margin-top: var(--space-1);
+  }
+
+  mark {
+    background-color: var(--gold-200);
+    color: inherit;
+    border-radius: var(--radius-sm);
+    padding-inline: 2px;
+  }
+
+  li > footer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-sm);
+    color: var(--color-text-tertiary);
+  }
+
+  .status {
+    text-transform: capitalize;
+  }
+
+  .tags span {
+    padding: var(--space-1) var(--space-2);
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+  }
+
+  .age::before {
+    content: '\00b7';
+    margin-right: var(--space-3);
+  }
+}

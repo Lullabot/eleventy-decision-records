@@ -1,0 +1,12 @@
+---
+layout: false
+permalink: /searchindex.json
+eleventyExcludeFromCollections: true
+---
+{% filter spaceless %}
+  {% set rendercache %}
+    {% for adr in collections.adrs %}
+      {{ adr.content }}
+    {% endfor %}
+  {% endset %}
+{% endfilter %}{% oramaIndex collections.adrs %}

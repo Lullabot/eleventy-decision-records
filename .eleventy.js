@@ -13,13 +13,6 @@ export default function (eleventyConfig) {
   plugins(eleventyConfig);
   shortcodes(eleventyConfig);
 
-  // Disable morphdom-based DOM diffing so that the dev server performs full
-  // page navigations, which is required for cross-document view transitions
-  // (@view-transition { navigation: auto }) to fire.
-  eleventyConfig.setServerOptions({
-    domDiff: false,
-  });
-
   return {
     markdownTemplateEngine: 'njk',
     htmlTemplateEngine: 'njk',

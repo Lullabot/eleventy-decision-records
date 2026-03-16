@@ -13,6 +13,8 @@ npm run start
 
 This launches a local dev server with hot reload at `http://localhost:8080`.
 
+After cloning the template, remove the `adrs/*.md` line from `.gitignore` so your ADR files can be committed to version control.
+
 ### Available Commands
 
 | Command            | Description                            |

@@ -23,6 +23,32 @@ body {
 }
 
 /* ==========================================================================
+   Skip Navigation
+   ========================================================================== */
+
+.skip-link {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  transform: translateY(-100%);
+  opacity: 0;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ==========================================================================
    Sidebar Navigation
    ========================================================================== */
 
@@ -57,25 +83,6 @@ body {
     flex-shrink: 0;
   }
 
-  /* Labels — hidden by default (icon-only collapsed state) */
-  .label {
-    white-space: nowrap;
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-sm);
-    opacity: 0;
-    width: 0;
-    overflow: hidden;
-    transition:
-      opacity 0.15s ease,
-      width 0.2s ease;
-  }
-
-  & > a .label {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-  }
-
   /* Nav menu area */
   .menu {
     display: flex;
@@ -90,6 +97,7 @@ body {
   ul {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: var(--space-1);
     padding-block: var(--space-3);
   }
@@ -109,6 +117,7 @@ body {
   .menu a,
   .menu button {
     display: flex;
+    width: 100%;
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-3);
@@ -121,11 +130,17 @@ body {
   }
 
   .menu a:hover,
+  .menu button:hover {
+    background-color: var(--gray-800);
+    color: var(--gray-0);
+  }
+
   .menu a:focus-visible,
-  .menu button:hover,
   .menu button:focus-visible {
     background-color: var(--gray-800);
     color: var(--gray-0);
+    outline: 2px solid var(--gray-0);
+    outline-offset: -2px;
   }
 
   .menu a[aria-current='page'] {
@@ -142,7 +157,9 @@ body {
   }
 
   /* Tooltips (CSS Anchor Positioning — uses implicit anchor from ::after) */
+  & > a::after,
   .menu a::after,
+  .menu button::after,
   footer button::after {
     content: attr(aria-label);
     position: fixed;
@@ -163,8 +180,12 @@ body {
     z-index: 20;
   }
 
+  & > a:hover::after,
+  & > a:focus-visible::after,
   .menu a:hover::after,
   .menu a:focus-visible::after,
+  .menu button:hover::after,
+  .menu button:focus-visible::after,
   footer button:hover::after,
   footer button:focus-visible::after {
     opacity: 1;
@@ -193,10 +214,16 @@ body {
       color 0.15s ease;
   }
 
-  footer button:hover,
+  footer button:hover {
+    background-color: var(--gray-800);
+    color: var(--gray-0);
+  }
+
   footer button:focus-visible {
     background-color: var(--gray-800);
     color: var(--gray-0);
+    outline: 2px solid var(--gray-0);
+    outline-offset: -2px;
   }
 
   footer button svg {
@@ -216,15 +243,29 @@ body {
     width: 260px;
   }
 
-  .label {
-    opacity: 1;
-    width: auto;
+  ul {
+    align-items: stretch;
   }
 
-  /* Hide tooltips when labels are visible */
+  /* Show ::after as inline labels instead of tooltips */
+  & > a::after,
   .menu a::after,
+  .menu button::after,
   footer button::after {
-    display: none;
+    position: static;
+    margin-left: 0;
+    align-self: auto;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    opacity: 1;
+    pointer-events: auto;
+    color: inherit;
+  }
+
+  & > a::after {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
   }
 }
 
@@ -291,13 +332,6 @@ body {
       transition: none;
     }
 
-    .label {
-      display: none;
-      opacity: 1;
-      width: auto;
-      transition: none;
-    }
-
     & > a {
       padding: var(--space-3);
     }
@@ -319,7 +353,7 @@ body {
       top: 0;
       left: 0;
       right: 0;
-      bottom: 0;
+      height: 100svh;
       padding: calc(var(--space-22) + var(--space-4)) var(--space-6)
         var(--space-6);
       background-color: var(--color-bg-dark);
@@ -347,8 +381,10 @@ body {
       height: 20px;
     }
 
-    /* Hide tooltips on mobile */
+    /* Hide tooltips and labels on mobile (collapsed) */
+    & > a::after,
     .menu a::after,
+    .menu button::after,
     footer button::after {
       display: none;
     }
@@ -360,19 +396,28 @@ body {
       width: auto;
     }
 
+    ul {
+      align-items: stretch;
+    }
+
     .menu {
       display: flex;
       animation: nav-overlay-in 0.25s ease-out both;
     }
 
-    .menu .label {
-      display: block;
-    }
-
-    /* Keep logo and toggle button compact on mobile */
-    & > a .label,
-    footer .label {
-      display: none;
+    /* Show ::after as inline labels in the mobile menu */
+    .menu a::after,
+    .menu button::after {
+      display: inline;
+      position: static;
+      margin-left: 0;
+      align-self: auto;
+      background-color: transparent;
+      padding: 0;
+      border-radius: 0;
+      opacity: 1;
+      pointer-events: auto;
+      color: inherit;
     }
   }
 
@@ -383,8 +428,9 @@ body {
       animation: nav-overlay-out 0.2s ease-in both;
     }
 
-    .menu .label {
-      display: block;
+    .menu a::after,
+    .menu button::after {
+      display: inline;
     }
   }
 

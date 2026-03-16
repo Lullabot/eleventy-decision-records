@@ -50,7 +50,7 @@ function getSnippet(text, terms, contextChars = 80) {
   const SCHEMA = {
     url: 'string',
     title: 'string',
-    tags: 'string[]',
+    topics: 'string[]',
     context: 'string',
     content: 'string',
     status: 'string',
@@ -84,8 +84,8 @@ function getSnippet(text, terms, contextChars = 80) {
 
     const { hits } = search(db, {
       term: query,
-      properties: ['title', 'tags', 'context', 'content'],
-      boost: { title: 3, tags: 2, context: 1.5 },
+      properties: ['title', 'topics', 'context', 'content'],
+      boost: { title: 3, topics: 2, context: 1.5 },
       tolerance: 1,
       threshold: 0.6,
       limit: 50,
@@ -125,7 +125,7 @@ function getSnippet(text, terms, contextChars = 80) {
       entry.querySelector('.age').textContent = result.timeSince;
 
       const tagsEl = entry.querySelector('.tags');
-      tagsEl.innerHTML = result.tags
+      tagsEl.innerHTML = result.topics
         .map((tag) => `<span>${tag}</span>`)
         .join('');
 

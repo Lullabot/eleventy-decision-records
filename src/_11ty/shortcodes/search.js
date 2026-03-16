@@ -6,7 +6,7 @@ import { timeSince } from '../filters/dates.js';
 const SCHEMA = {
   url: 'string',
   title: 'string',
-  tags: 'string[]',
+  topics: 'string[]',
   context: 'string',
   content: 'string',
   status: 'string',
@@ -20,7 +20,7 @@ export async function oramaIndex(adrs) {
     insert(db, {
       url: adr.page.url,
       title: adr.data.title,
-      tags: adr.data.topics || [],
+      topics: adr.data.topics || [],
       context: adr.data.context || '',
       content: he.decode(striptags(adr.content)),
       status: adr.data.status,

@@ -6,29 +6,39 @@ layout: page.njk
 
 <dl class="adr-detail-meta">
   <dt>Date</dt>
-  <dd><time datetime="{{ date | datetimeFormat }}">{{ date | datetimeFormat }}</time></dd>
+  <dd>
+    <time datetime="{{ date | isoDate }}">{{ date | datetimeFormat }}</time>
+  </dd>
 
   {%- if practiceArea %}
-  <dt>Practice Area</dt>
-  <dd><a href="/practice-areas/{{ practiceArea | slugify }}/">{{ practiceArea }}</a></dd>
+    <dt>Practice Area</dt>
+    <dd>
+      <a href="/practice-areas/{{ practiceArea | slugify }}/"
+        >{{ practiceArea }}</a
+      >
+    </dd>
   {%- endif %}
 
   {%- if contributors | length %}
-  <dt>Contributors</dt>
-  <dd>
-    {%- for contributor in contributors %}
-    <a href="/contributors/{{ contributor | slugify }}/">{{ contributor }}</a>{% if not loop.last %}, {% endif %}
-    {%- endfor %}
-  </dd>
+    <dt>Contributors</dt>
+    <dd>
+      {%- for contributor in contributors %}
+        <a href="/contributors/{{ contributor | slugify }}/"
+          >{{ contributor }}</a
+        >{% if not loop.last %},{% endif %}
+      {%- endfor %}
+    </dd>
   {%- endif %}
 
   {%- if topics | length %}
-  <dt>Topics</dt>
-  <dd class="adr-detail-topics">
-    {%- for topic in topics %}
-    <a class="tag" href="/topics/{{ topic | lower | slugify }}/">{{ topic }}</a>
-    {%- endfor %}
-  </dd>
+    <dt>Topics</dt>
+    <dd class="adr-detail-topics">
+      {%- for topic in topics %}
+        <a class="tag" href="/topics/{{ topic | lower | slugify }}/"
+          >{{ topic }}</a
+        >
+      {%- endfor %}
+    </dd>
   {%- endif %}
 </dl>
 

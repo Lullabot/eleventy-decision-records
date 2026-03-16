@@ -57,3 +57,14 @@ export function datetimeFormat(date) {
 export function year() {
   return new Date().getFullYear().toString();
 }
+
+/**
+ * Returns an ISO date string (YYYY-MM-DD) for use in <time datetime>.
+ *
+ * @example
+ * {{ adr.data.date | isoDate }}
+ * → "2024-01-01"
+ */
+export function isoDate(date) {
+  return new Date(date).toISOString().slice(0, 10);
+}

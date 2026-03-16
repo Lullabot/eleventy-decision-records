@@ -1,4 +1,4 @@
-import { timeSince, datetimeFormat, year } from './dates.js';
+import { timeSince, datetimeFormat, year, isoDate } from './dates.js';
 import {
   byContributor,
   withTopic,
@@ -15,6 +15,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter('timeSince', timeSince);
   eleventyConfig.addFilter('datetimeFormat', datetimeFormat);
   eleventyConfig.addFilter('year', year);
+  eleventyConfig.addFilter('isoDate', isoDate);
   eleventyConfig.addFilter('byContributor', byContributor);
   eleventyConfig.addFilter('withTopic', withTopic);
   eleventyConfig.addFilter('withPracticeArea', withPracticeArea);

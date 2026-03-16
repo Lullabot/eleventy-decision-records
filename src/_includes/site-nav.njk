@@ -1,9 +1,6 @@
 <nav class="site-nav" aria-label="Site navigation">
   {# Logo #}
-  <a href="/" aria-label="{{ site.organization }} home">
-    {% icon site.icon %}
-    <span class="label">{{ site.organization }}</span>
-  </a>
+  <a href="/" aria-label="{{ site.organization }}"> {% icon site.icon %} </a>
 
   {# Navigation menu #}
   <div class="menu">
@@ -11,17 +8,17 @@
     <ul>
       {%- for item in navigation.primary %}
         <li>
-          <a href="{{ item.url }}" aria-label="{{ item.label }}"{{ ' aria-current="page"' | safe if page.url == item.url }}>
+          <a
+            href="{{ item.url }}"
+            aria-label="{{ item.label }}"
+            {{ ' aria-current="page"' | safe if page.url == item.url }}
+          >
             {% icon item.icon %}
-            <span class="label">{{ item.label }}</span>
           </a>
         </li>
       {%- endfor %}
       <li>
-        <button aria-label="Search">
-          {% icon "search" %}
-          <span class="label">Search</span>
-        </button>
+        <button aria-label="Search">{% icon "search" %}</button>
       </li>
     </ul>
 
@@ -29,9 +26,11 @@
     <ul>
       {%- for area in practiceAreas %}
         <li>
-          <a href="/practice-areas/{{ area.name | slugify }}/" aria-label="{{ area.name }}">
+          <a
+            href="/practice-areas/{{ area.name | slugify }}/"
+            aria-label="{{ area.name }}"
+          >
             {% icon area.icon %}
-            <span class="label">{{ area.name }}</span>
           </a>
         </li>
       {%- endfor %}
@@ -41,9 +40,12 @@
     <ul>
       {%- for item in navigation.utility %}
         <li>
-          <a href="{{ item.url }}" aria-label="{{ item.label }}"{{ ' aria-current="page"' | safe if page.url == item.url }}>
+          <a
+            href="{{ item.url }}"
+            aria-label="{{ item.label }}"
+            {{ ' aria-current="page"' | safe if page.url == item.url }}
+          >
             {% icon item.icon %}
-            <span class="label">{{ item.label }}</span>
           </a>
         </li>
       {%- endfor %}
@@ -52,9 +54,8 @@
 
   {# Sidebar footer / toggle #}
   <footer>
-    <button aria-label="Toggle sidebar" aria-expanded="false">
+    <button aria-label="Menu" aria-expanded="false">
       {% icon "side_navigation" %}
-      <span class="label">Menu</span>
     </button>
   </footer>
 </nav>

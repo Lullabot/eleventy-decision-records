@@ -44,6 +44,7 @@ export function datetimeFormat(date) {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    timeZone: 'UTC',
   });
 }
 

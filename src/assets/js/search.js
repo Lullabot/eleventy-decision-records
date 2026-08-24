@@ -44,8 +44,7 @@ function getSnippet(text, terms, contextChars = 80) {
   const resultTemplate = dialog.querySelector('template').content;
 
   let db;
-  const { promise: searchReady, resolve: makeSearchReady } =
-    Promise.withResolvers();
+  let initPromise = null;
 
   const SCHEMA = {
     url: 'string',
@@ -57,14 +56,22 @@ function getSnippet(text, terms, contextChars = 80) {
     timeSince: 'string',
   };
 
-  async function initializeSearch() {
-    const response = await fetch('/searchindex.json');
-    const rawData = await response.json();
+  function initializeSearch() {
+    initPromise ??= (async () => {
+      const response = await fetch('/searchindex.json');
+      if (!response.ok) {
+        throw new Error(`Search index returned ${response.status}`);
+      }
+      const rawData = await response.json();
 
-    db = create({ schema: SCHEMA });
-    load(db, rawData);
-
-    makeSearchReady();
+      db = create({ schema: SCHEMA });
+      load(db, rawData);
+    })().catch((error) => {
+      // Allow the next search to retry the fetch.
+      initPromise = null;
+      throw error;
+    });
+    return initPromise;
   }
 
   async function doSearch() {
@@ -80,7 +87,16 @@ function getSnippet(text, terms, contextChars = 80) {
     loading.setAttribute('aria-live', 'polite');
     resultsList.append(loading);
 
-    await searchReady;
+    try {
+      await initializeSearch();
+    } catch {
+      resultsList.innerHTML = '';
+      const error = document.createElement('li');
+      error.textContent = 'Search is unavailable right now — please try again.';
+      error.setAttribute('aria-live', 'polite');
+      resultsList.append(error);
+      return;
+    }
 
     const { hits } = search(db, {
       term: query,
@@ -144,7 +160,12 @@ function getSnippet(text, terms, contextChars = 80) {
     }
   }
 
-  searchInput.addEventListener('input', initializeSearch, { once: true });
+  // Start fetching the index on the first keystroke, ahead of the debounce.
+  searchInput.addEventListener(
+    'input',
+    () => initializeSearch().catch(() => {}),
+    { once: true },
+  );
 
   let debounceTimer;
   searchInput.addEventListener('input', () => {

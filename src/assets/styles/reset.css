@@ -23,6 +23,12 @@ button {
   cursor: revert;
 }
 
+/* Reapply focus outlines removed by `all: unset` */
+:focus-visible {
+  outline: 2px solid var(--color-link);
+  outline-offset: -2px;
+}
+
 /* Remove list styles (bullets/numbers) */
 ol,
 ul,

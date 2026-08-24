@@ -125,9 +125,11 @@ function getSnippet(text, terms, contextChars = 80) {
       entry.querySelector('.age').textContent = result.timeSince;
 
       const tagsEl = entry.querySelector('.tags');
-      tagsEl.innerHTML = result.topics
-        .map((tag) => `<span>${tag}</span>`)
-        .join('');
+      for (const tag of result.topics) {
+        const span = document.createElement('span');
+        span.textContent = tag;
+        tagsEl.append(span);
+      }
 
       return entry;
     });

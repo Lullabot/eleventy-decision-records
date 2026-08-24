@@ -22,9 +22,6 @@ export function timeSince(date) {
   if (duration.months > 0) {
     return rtf.format(-duration.months, 'month');
   }
-  if (duration.weeks > 0) {
-    return rtf.format(-duration.weeks, 'week');
-  }
   if (duration.days > 0) {
     return rtf.format(-duration.days, 'day');
   }

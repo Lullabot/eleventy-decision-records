@@ -1,5 +1,6 @@
 {
   "organization": "Lullabot",
+  "url": "https://architecture.lullabot.com/",
   "legalName": "Lullabot, Inc.",
   "title": "Decision Records",
   "description": "Documented architectural decisions and best practices for Lullabot's team",

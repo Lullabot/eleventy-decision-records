@@ -33,13 +33,14 @@ Edit `src/_data/site.json` to set your organization name, site title, and descri
 ```json
 {
   "organization": "Your Organization",
+  "url": "https://decisions.example.com/",
   "title": "Decision Records",
   "description": "Documented architectural decisions for your team",
   "icon": "brand_family-fill"
 }
 ```
 
-The `icon` value is a [Material Symbols](https://fonts.google.com/icons) icon identifier used in the site header.
+The `icon` value is a [Material Symbols](https://fonts.google.com/icons) icon identifier used in the site header. The `url` is the production base URL, used to build absolute links in the Atom feed at `/feed.xml`.
 
 ### 2. Practice Areas
 

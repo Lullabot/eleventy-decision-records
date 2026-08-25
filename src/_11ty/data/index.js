@@ -3,7 +3,6 @@
  */
 export default function (eleventyConfig) {
   eleventyConfig.addGlobalData('layout', 'page.njk');
-  eleventyConfig.addGlobalData('compiled', () => new Date());
   eleventyConfig.addGlobalData('eleventyComputed', {
     layout: (data) => {
       if (

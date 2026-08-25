@@ -6,7 +6,7 @@ import {
   setKey,
   topTopics,
 } from './collections.js';
-import { render, cssmin, inspect, spaceless } from './strings.js';
+import { spaceless } from './strings.js';
 
 /**
  * Register all custom filters with Eleventy.
@@ -21,8 +21,5 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter('withPracticeArea', withPracticeArea);
   eleventyConfig.addFilter('setKey', setKey);
   eleventyConfig.addFilter('topTopics', topTopics);
-  eleventyConfig.addFilter('render', render);
-  eleventyConfig.addFilter('cssmin', cssmin);
-  eleventyConfig.addFilter('inspect', inspect);
   eleventyConfig.addFilter('spaceless', spaceless);
 }

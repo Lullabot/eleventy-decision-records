@@ -15,7 +15,7 @@ export default defineConfig({
   },
   webServer: {
     command:
-      'SAMPLE_CONTENT_TODAY=2026-08-01 node scripts/generate-adrs.js && npx eleventy --serve --port=8181',
+      'rm -rf dist && SAMPLE_CONTENT_TODAY=2026-08-01 node scripts/generate-adrs.js && npx eleventy --serve --port=8181',
     url: 'http://localhost:8181',
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,

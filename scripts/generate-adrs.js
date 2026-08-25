@@ -153,9 +153,11 @@ const dates = Array.from({ length: total }, (_, i) => {
 }).sort((a, b) => a - b);
 
 function formatDate(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
+  // UTC getters keep generated filenames and dates identical across
+  // machine timezones.
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
   return `${y}-${m}-${day}`;
 }
 
@@ -211,5 +213,37 @@ ${consequencesText}
   writeFileSync(join(adrsDir, filename), content);
   console.log(`Created ${filename}`);
 }
+
+// One fully fixed ADR so the test suite has a URL and dates that never
+// shift with the generation anchor.
+const fixtureContent = `---
+date: 2024-01-15
+status: accepted
+practiceArea: Engineering
+topics:
+  - lorem
+  - ipsum
+contributors:
+  - Dolor Amet
+  - Lorem Ipsum
+
+title: Fixture decision record with stable dates
+context: Deterministic sample ADR referenced by the automated test suite.
+---
+## Decision
+
+${loremParagraphs[0]}
+
+${loremParagraphs[1]}
+
+## Consequences
+
+${loremParagraphs[2]}
+
+${loremParagraphs[3]}
+`;
+const fixtureFilename = '20240115-fixture-decision-record.md';
+writeFileSync(join(adrsDir, fixtureFilename), fixtureContent);
+console.log(`Created ${fixtureFilename} (fixed test fixture)`);
 
 console.log(`\nGenerated ${total} ADRs (${perArea} per practice area).`);

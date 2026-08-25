@@ -12,7 +12,7 @@ async function parkMouse(page) {
 const pages = [
   ['home', '/'],
   ['decisions', '/adrs/'],
-  ['adr-detail', '/adrs/20260729-pharetra-magna-placerat-vestibulum/'],
+  ['adr-detail', '/adrs/20240115-fixture-decision-record/'],
   ['topic', '/topics/tempor/'],
   ['practice-area', '/practice-areas/engineering/'],
   ['contributors', '/contributors/'],

@@ -51,6 +51,9 @@ test('search dialog with results', async ({ page }) => {
   await expect
     .poll(() => page.locator('#search-dialog li article').count())
     .toBeGreaterThan(0);
+  await expect(page.locator('#search-dialog .results-summary')).toHaveText(
+    /results for/,
+  );
   await parkMouse(page);
   await expect(page).toHaveScreenshot('search-dialog.png', {
     mask: [page.locator('#search-dialog .age')],

@@ -42,6 +42,20 @@ function getSnippet(text, terms, contextChars = 80) {
   const dialog = document.getElementById('search-dialog');
   const searchInput = dialog.querySelector('input[type="search"]');
   const resultsList = dialog.querySelector('ol');
+  const summary = dialog.querySelector('.results-summary');
+  const status = dialog.querySelector('[aria-live="polite"]');
+
+  // Debounce announcements past the typing echo (VoiceOver's echo preempts
+  // polite announcements rather than queueing behind them), and write in a
+  // single mutation — every region mutation can cancel in-flight speech.
+  let announceTimer;
+  function announce(text) {
+    summary.textContent = text;
+    clearTimeout(announceTimer);
+    announceTimer = setTimeout(() => {
+      status.textContent = text;
+    }, 150);
+  }
   const resultTemplate = dialog.querySelector('template').content;
 
   let db;
@@ -79,23 +93,22 @@ function getSnippet(text, terms, contextChars = 80) {
     const query = searchInput.value.trim();
     if (!query) {
       resultsList.innerHTML = '';
+      clearTimeout(announceTimer);
+      summary.textContent = '';
+      status.textContent = '';
       return;
     }
 
     resultsList.innerHTML = '';
     const loading = document.createElement('li');
     loading.textContent = 'Loading search\u2026';
-    loading.setAttribute('aria-live', 'polite');
     resultsList.append(loading);
 
     try {
       await initializeSearch();
     } catch {
       resultsList.innerHTML = '';
-      const error = document.createElement('li');
-      error.textContent = 'Search is unavailable right now — please try again.';
-      error.setAttribute('aria-live', 'polite');
-      resultsList.append(error);
+      announce('Search is unavailable right now — please try again.');
       return;
     }
 
@@ -152,12 +165,12 @@ function getSnippet(text, terms, contextChars = 80) {
     });
 
     resultsList.innerHTML = '';
+    resultsList.append(...results);
     if (results.length) {
-      resultsList.append(...results);
+      const s = results.length === 1 ? '' : 's';
+      announce(`${results.length} result${s} for \u201c${query}\u201d`);
     } else {
-      const noResults = document.createElement('li');
-      noResults.textContent = `No results found for \u201c${query}\u201d`;
-      resultsList.append(noResults);
+      announce(`No results found for \u201c${query}\u201d`);
     }
   }
 

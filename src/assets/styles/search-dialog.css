@@ -81,6 +81,17 @@
     color: var(--color-text-muted);
   }
 
+  .results-summary {
+    padding: 0 var(--space-8) var(--space-3);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-sm);
+    color: var(--color-text-muted);
+  }
+
+  .results-summary:empty {
+    display: none;
+  }
+
   /* Results list */
   ol {
     max-height: 50vh;

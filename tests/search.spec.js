@@ -23,11 +23,24 @@ test.describe('search dialog', () => {
     await expect(page.locator('h1')).toBeVisible();
   });
 
+  test('announces a results summary to assistive tech', async ({ page }) => {
+    const status = page.locator('#search-dialog [aria-live="polite"]');
+    await page.getByRole('searchbox').fill('lorem');
+    await expect(status).toHaveText(/\d+ results? for \u{201c}lorem\u{201d}/u);
+
+    await page.getByRole('searchbox').fill('xyzzyplugh');
+    await expect(status).toHaveText(/No results found/);
+
+    await page.getByRole('searchbox').fill('');
+    await expect(status).toHaveText('');
+  });
+
   test('shows a message when nothing matches', async ({ page }) => {
     await page.getByRole('searchbox').fill('xyzzyplugh');
-    await expect(page.locator('#search-dialog ol')).toContainText(
+    await expect(page.locator('#search-dialog .results-summary')).toContainText(
       'No results found',
     );
+    await expect(page.locator('#search-dialog li')).toHaveCount(0);
   });
 
   test('surfaces index fetch failures and recovers', async ({
@@ -38,7 +51,7 @@ test.describe('search dialog', () => {
       route.fulfill({ status: 500 }),
     );
     await page.getByRole('searchbox').fill('lorem');
-    await expect(page.locator('#search-dialog ol')).toContainText(
+    await expect(page.locator('#search-dialog .results-summary')).toContainText(
       'Search is unavailable',
     );
 

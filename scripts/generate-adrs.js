@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { writeFileSync } from 'fs';
+import { writeFileSync, readdirSync, unlinkSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import practiceAreasData from '../src/_data/practiceAreas.json' with { type: 'json' };
@@ -130,8 +130,19 @@ const loremParagraphs = [
   'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.',
 ];
 
-// Generate dates spanning from 2 days ago to 3 years ago
-const now = Date.now();
+// Remove previously generated ADRs so stale date-relative filenames
+// don't accumulate. The .template file is untouched.
+for (const file of readdirSync(adrsDir)) {
+  if (file.endsWith('.md')) {
+    unlinkSync(join(adrsDir, file));
+  }
+}
+
+// Generate dates spanning from 2 days ago to 3 years ago. Tests pin
+// SAMPLE_CONTENT_TODAY (YYYY-MM-DD) to make filenames deterministic.
+const now = process.env.SAMPLE_CONTENT_TODAY
+  ? Date.parse(process.env.SAMPLE_CONTENT_TODAY)
+  : Date.now();
 const twoDaysAgo = now - 2 * 24 * 60 * 60 * 1000;
 const threeYearsAgo = now - 3 * 365 * 24 * 60 * 60 * 1000;
 const range = twoDaysAgo - threeYearsAgo;

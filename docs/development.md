@@ -29,3 +29,24 @@ Notes:
 - **Linting** — GitHub Actions runs `npm run lint` on pull requests (`.github/workflows/eslint.yml`).
 - **Tugboat** — Preview environments build and serve from `dist/` (`.tugboat/config.yml`).
 - **Renovate** — Manages dependency updates with a 3-day stability window and auto-merge.
+
+## Testing
+
+Playwright covers visual regression of the main page types (desktop and mobile
+Chromium) and functional behavior of search and the sidebar toggle (Chromium
+and Firefox). Test content is generated with a pinned `SAMPLE_CONTENT_TODAY`
+date so URLs are deterministic; `<time>` elements are masked in screenshots
+because relative ages drift with the build clock.
+
+| Command                      | Description                                       |
+| ---------------------------- | ------------------------------------------------- |
+| `npm test`                   | Run all tests in Docker (consistent rendering)    |
+| `npm run test:update`        | Update visual snapshots in Docker                 |
+| `npm test -- --tests search` | Run only specs matching a name                    |
+| `npm run test:local`         | Run functional tests directly (snapshots skipped) |
+
+Visual baselines live in `tests/visual.spec.js-snapshots/` and must only be
+generated via Docker (`npm run test:update`) — host-rendered screenshots
+differ by platform and would churn the baselines. The runner
+(`bin/run-e2e.sh`) uses the `mcr.microsoft.com/playwright` image matching the
+installed `@playwright/test` version.

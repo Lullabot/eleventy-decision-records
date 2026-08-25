@@ -12,7 +12,10 @@
     "lint:fix": "eslint --fix && prettier -w .",
     "lint-staged": "lint-staged",
     "prepare": "husky",
-    "sample-content": "node ./scripts/generate-adrs.js"
+    "sample-content": "node ./scripts/generate-adrs.js",
+    "test": "bash bin/run-e2e.sh",
+    "test:update": "bash bin/run-e2e.sh --update",
+    "test:local": "playwright test"
   },
   "author": "Lullabot, Inc.",
   "repository": {
@@ -27,6 +30,7 @@
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
     "@eslint/js": "^10.0.0",
+    "@playwright/test": "^1.62.1",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.0.3",
     "eslint-plugin-prettier": "^5.2.1",

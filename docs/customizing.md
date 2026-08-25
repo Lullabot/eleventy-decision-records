@@ -36,6 +36,7 @@ Add, remove, or rename practice areas to match your team's structure. When writi
 - **Colors and design tokens** — Edit `src/assets/styles/tokens.css` to update the color palette, typography, spacing, and other design tokens. The semantic aliases at the top (e.g., `--color-brand-primary`) are the quickest way to change the look.
 - **Fonts** — Replace the font files in `src/assets/fonts/` and update `src/assets/styles/fonts.css` with your `@font-face` declarations. Then update the `--font-family-base` token in `tokens.css`.
 - **Images** — Replace the header images in `src/assets/images/`.
+- **Icons** — Custom icons can be added to `src/assets/icons`. Icon usage can be used in templates with `{% icon "icon-name" %}`. Custom icons are resolved first, then fallback to `node_modules/@material-symbols`.
 
 ## Homepage
 

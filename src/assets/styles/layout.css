@@ -156,39 +156,45 @@ body {
     flex-shrink: 0;
   }
 
-  /* Tooltips (CSS Anchor Positioning — uses implicit anchor from ::after) */
-  & > a::after,
-  .menu a::after,
-  .menu button::after,
-  footer button::after {
-    content: attr(aria-label);
-    position: fixed;
-    left: anchor(right);
-    margin-left: var(--space-12);
-    align-self: anchor-center;
-    white-space: nowrap;
-    background-color: var(--gray-900);
-    color: var(--gray-0);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-sm);
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-md);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-    z-index: 20;
-  }
+  /* Tooltips (CSS Anchor Positioning — uses implicit anchor from ::after).
+     Guarded so browsers without anchor positioning get no tooltip instead of
+     one revealed at the wrong spot; aria-labels still cover assistive tech. */
+  @supports (left: anchor(right)) and (position-anchor: auto) {
+    & > a::after,
+    .menu a::after,
+    .menu button::after,
+    footer button::after {
+      content: attr(aria-label);
+      position: fixed;
+      position-anchor: auto;
+      left: anchor(right);
+      top: anchor(center);
+      translate: 0 -50%;
+      margin-left: var(--space-6);
+      white-space: nowrap;
+      background-color: var(--gray-900);
+      color: var(--gray-0);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
+      line-height: var(--line-height-sm);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-md);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 20;
+    }
 
-  & > a:hover::after,
-  & > a:focus-visible::after,
-  .menu a:hover::after,
-  .menu a:focus-visible::after,
-  .menu button:hover::after,
-  .menu button:focus-visible::after,
-  footer button:hover::after,
-  footer button:focus-visible::after {
-    opacity: 1;
+    & > a:hover::after,
+    & > a:focus-visible::after,
+    .menu a:hover::after,
+    .menu a:focus-visible::after,
+    .menu button:hover::after,
+    .menu button:focus-visible::after,
+    footer button:hover::after,
+    footer button:focus-visible::after {
+      opacity: 1;
+    }
   }
 
   /* Footer toggle */

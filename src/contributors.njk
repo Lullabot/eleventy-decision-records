@@ -27,7 +27,11 @@ eleventyExcludeFromCollections: true
         {%- endfor %}
       {%- endfor %}
       <tr>
-        <td>{{ contributor }}</td>
+        <td>
+          <a href="/contributors/{{ contributor | slugify }}/"
+            >{{ contributor }}</a
+          >
+        </td>
         <td>{{ adrs | length }}</td>
         <td>
           <div class="tags">

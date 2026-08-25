@@ -19,6 +19,6 @@ services:
         - ln -snf "${TUGBOAT_ROOT}/dist" "${DOCROOT}"
         - apt-get install -y nodejs
       build:
-        - npm install
+        - npm ci
         - npm run sample-content
         - npm run build

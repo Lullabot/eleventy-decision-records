@@ -261,6 +261,7 @@ body {
     position: static;
     margin-left: 0;
     align-self: auto;
+    translate: none;
     background-color: transparent;
     padding: 0;
     border-radius: 0;
@@ -418,6 +419,7 @@ body {
       position: static;
       margin-left: 0;
       align-self: auto;
+      translate: none;
       background-color: transparent;
       padding: 0;
       border-radius: 0;

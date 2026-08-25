@@ -23,6 +23,15 @@ for (const [name, path] of pages) {
   });
 }
 
+test('expanded menu', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Menu' }).click();
+  await expect(page.locator('.site-nav')).toHaveClass(/expanded/);
+  await expect(page).toHaveScreenshot('expanded-menu.png', {
+    mask: [page.locator('time')],
+  });
+});
+
 test('search dialog with results', async ({ page }) => {
   await page.goto('/');
   // On mobile the search button lives inside the collapsed menu.

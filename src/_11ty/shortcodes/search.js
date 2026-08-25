@@ -1,7 +1,7 @@
 import { create, insert, save } from '@orama/orama';
 import striptags from 'striptags';
 import he from 'he';
-import { timeSince } from '../filters/dates.js';
+import { isoDate } from '../filters/dates.js';
 
 const SCHEMA = {
   url: 'string',
@@ -10,7 +10,7 @@ const SCHEMA = {
   context: 'string',
   content: 'string',
   status: 'string',
-  timeSince: 'string',
+  date: 'string',
 };
 
 export async function oramaIndex(adrs) {
@@ -24,7 +24,7 @@ export async function oramaIndex(adrs) {
       context: adr.data.context || '',
       content: he.decode(striptags(adr.content)),
       status: adr.data.status,
-      timeSince: timeSince(adr.data.date),
+      date: isoDate(adr.data.date),
     });
   }
 

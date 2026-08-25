@@ -1,4 +1,5 @@
 import { create, load, search } from '/js/orama/index.js';
+import { timeSince } from './time-since.js';
 
 function highlightTerms(text, terms) {
   const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -53,7 +54,7 @@ function getSnippet(text, terms, contextChars = 80) {
     context: 'string',
     content: 'string',
     status: 'string',
-    timeSince: 'string',
+    date: 'string',
   };
 
   function initializeSearch() {
@@ -138,7 +139,7 @@ function getSnippet(text, terms, contextChars = 80) {
       entry.querySelector('a').href = result.href;
       entry.querySelector('.snippet').innerHTML = result.snippet;
       entry.querySelector('.status').textContent = result.status;
-      entry.querySelector('.age').textContent = result.timeSince;
+      entry.querySelector('.age').textContent = timeSince(result.date);
 
       const tagsEl = entry.querySelector('.tags');
       for (const tag of result.topics) {

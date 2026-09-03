@@ -14,8 +14,12 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
+    // Serves the fixture site, which consumes the theme as a packaged
+    // dependency. cwd matters: the plugin resolves Nunjucks through the
+    // project's own Eleventy, so it has to run from the site directory.
     command:
-      'rm -rf dist && SAMPLE_CONTENT_TODAY=2026-08-01 node scripts/generate-adrs.js && npx eleventy --serve --port=8181',
+      'bash ../../bin/prepare-fixture-site.sh && npx eleventy --serve --port=8181',
+    cwd: 'tests/fixture-site',
     url: 'http://localhost:8181',
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,

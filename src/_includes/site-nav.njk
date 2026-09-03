@@ -1,0 +1,61 @@
+<nav class="site-nav" aria-label="Site navigation">
+  {# Logo #}
+  <a href="/" aria-label="{{ site.organization }}"> {% icon site.icon %} </a>
+
+  {# Navigation menu #}
+  <div class="menu">
+    {# Primary nav group #}
+    <ul>
+      {%- for item in navigation.primary %}
+        <li>
+          <a
+            href="{{ item.url }}"
+            aria-label="{{ item.label }}"
+            {{ ' aria-current="page"' | safe if page.url == item.url }}
+          >
+            {% icon item.icon %}
+          </a>
+        </li>
+      {%- endfor %}
+      <li>
+        <button aria-label="Search">{% icon "search" %}</button>
+      </li>
+    </ul>
+
+    {# Practice area nav group #}
+    <ul>
+      {%- for area in practiceAreas %}
+        <li>
+          <a
+            href="/practice-areas/{{ area.name | slugify }}/"
+            aria-label="{{ area.name }}"
+          >
+            {% icon area.icon %}
+          </a>
+        </li>
+      {%- endfor %}
+    </ul>
+
+    {# Utility nav group #}
+    <ul>
+      {%- for item in navigation.utility %}
+        <li>
+          <a
+            href="{{ item.url }}"
+            aria-label="{{ item.label }}"
+            {{ ' aria-current="page"' | safe if page.url == item.url }}
+          >
+            {% icon item.icon %}
+          </a>
+        </li>
+      {%- endfor %}
+    </ul>
+  </div>
+
+  {# Sidebar footer / toggle #}
+  <footer>
+    <button aria-label="Menu" aria-expanded="false">
+      {% icon "side_navigation" %}
+    </button>
+  </footer>
+</nav>

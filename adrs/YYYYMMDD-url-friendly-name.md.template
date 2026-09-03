@@ -7,11 +7,13 @@ date: YYYY-MM-DD
 # New ADRs start at accepted, and no longer relevant ADRs are deprecated.
 status: accepted
 
-# Tags are freeform - see existing ADRs for ideas
-tags:
+# Practice area - one of: Design, Engineering, Project Management, Strategy
+practiceArea: Engineering
+
+# Topics are freeform - see existing ADRs for ideas
+topics:
   - development
-  - design
-  - project management
+  - testing
 
 # Include anyone who was involved in the decision or discussions. The goal
 # is to have a list for the future so the team has a starting point to ask

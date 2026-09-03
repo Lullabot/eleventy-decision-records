@@ -1,0 +1,483 @@
+/* ==========================================================================
+   Site Layout
+   ========================================================================== */
+
+html,
+body {
+  min-height: 100vh;
+}
+
+body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr auto;
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  text-rendering: optimizeLegibility;
+}
+
+/* ==========================================================================
+   Skip Navigation
+   ========================================================================== */
+
+/* Visually hidden but available to assistive technology */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  transform: translateY(-100%);
+  opacity: 0;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Sidebar Navigation
+   ========================================================================== */
+
+@scope (.site-nav) {
+  :scope {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: var(--color-bg-dark);
+    grid-row: 1 / -1;
+    z-index: 10;
+    width: 72px;
+    overflow: hidden;
+    transition: width 0.2s ease;
+  }
+
+  /* Logo bar */
+  & > a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    background-color: var(--color-brand-primary);
+    color: var(--gray-0);
+    padding: var(--space-4) var(--space-4) var(--space-4) var(--space-5);
+    text-decoration: none;
+  }
+
+  & > a svg {
+    width: 32px;
+    height: 32px;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  /* Nav menu area */
+  .menu {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    padding: var(--space-4) var(--space-3);
+    padding-bottom: var(--space-22);
+    overflow-y: auto;
+  }
+
+  /* Nav groups */
+  ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    padding-block: var(--space-3);
+  }
+
+  ul:first-child {
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--color-border-dark);
+  }
+
+  ul:last-child {
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border-dark);
+  }
+
+  /* Individual nav items */
+  .menu a,
+  .menu button {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    color: var(--gray-300);
+    text-decoration: none;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .menu a:hover,
+  .menu button:hover {
+    background-color: var(--gray-800);
+    color: var(--gray-0);
+  }
+
+  .menu a:focus-visible,
+  .menu button:focus-visible {
+    background-color: var(--gray-800);
+    color: var(--gray-0);
+    outline: 2px solid var(--gray-0);
+    outline-offset: -2px;
+  }
+
+  .menu a[aria-current='page'] {
+    border: 1.25px solid var(--gray-500);
+    color: var(--gray-0);
+  }
+
+  .menu a svg,
+  .menu button svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  /* Tooltips (CSS Anchor Positioning — uses implicit anchor from ::after).
+     Guarded so browsers without anchor positioning get no tooltip instead of
+     one revealed at the wrong spot; aria-labels still cover assistive tech. */
+  @supports (left: anchor(right)) and (position-anchor: auto) {
+    & > a::after,
+    .menu a::after,
+    .menu button::after,
+    footer button::after {
+      content: attr(aria-label);
+      position: fixed;
+      position-anchor: auto;
+      left: anchor(right);
+      top: anchor(center);
+      translate: 0 -50%;
+      margin-left: var(--space-6);
+      white-space: nowrap;
+      background-color: var(--gray-900);
+      color: var(--gray-0);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
+      line-height: var(--line-height-sm);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-md);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 20;
+    }
+
+    & > a:hover::after,
+    & > a:focus-visible::after,
+    .menu a:hover::after,
+    .menu a:focus-visible::after,
+    .menu button:hover::after,
+    .menu button:focus-visible::after,
+    footer button:hover::after,
+    footer button:focus-visible::after {
+      opacity: 1;
+    }
+  }
+
+  /* Footer toggle */
+  footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-3);
+    background-color: var(--color-bg-dark);
+    border-top: 1px solid var(--color-border-dark);
+  }
+
+  footer button {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    color: var(--gray-300);
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  footer button:hover {
+    background-color: var(--gray-800);
+    color: var(--gray-0);
+  }
+
+  footer button:focus-visible {
+    background-color: var(--gray-800);
+    color: var(--gray-0);
+    outline: 2px solid var(--gray-0);
+    outline-offset: -2px;
+  }
+
+  footer button svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+    flex-shrink: 0;
+  }
+}
+
+/* ==========================================================================
+   Sidebar — Desktop Expanded
+   ========================================================================== */
+
+@scope (.site-nav.expanded) {
+  :scope {
+    width: 260px;
+  }
+
+  ul {
+    align-items: stretch;
+  }
+
+  /* Show ::after as inline labels instead of tooltips */
+  & > a::after,
+  .menu a::after,
+  .menu button::after,
+  footer button::after {
+    position: static;
+    margin-left: 0;
+    align-self: auto;
+    translate: none;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    opacity: 1;
+    pointer-events: auto;
+    color: inherit;
+  }
+
+  & > a::after {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+/* ==========================================================================
+   Main Content Area
+   ========================================================================== */
+
+.site-main {
+  padding: var(--space-22) var(--space-18);
+  overflow-x: clip;
+  overflow-y: auto;
+  min-height: 0;
+  box-shadow: var(--shadow-panel);
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   Recent Decisions Sidebar (right)
+   ========================================================================== */
+
+.recent-decisions {
+  display: none;
+  background-color: var(--color-bg-secondary);
+  padding: var(--space-16) var(--space-12);
+  overflow-x: clip;
+  overflow-y: auto;
+  min-height: 0;
+  border-left: 1px solid var(--color-border-default);
+}
+
+@media screen and (min-width: 75rem) {
+  body {
+    grid-template-columns: auto 1fr 25rem;
+  }
+
+  .recent-decisions {
+    display: block;
+    grid-row: 1 / -1;
+  }
+}
+
+/* ==========================================================================
+   Mobile Layout
+   ========================================================================== */
+
+@media screen and (max-width: 48rem) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  @scope (.site-nav) {
+    :scope {
+      position: sticky;
+      top: 0;
+      height: auto;
+      width: auto;
+      flex-direction: row;
+      align-items: stretch;
+      grid-row: auto;
+      z-index: 20;
+      overflow: visible;
+      transition: none;
+    }
+
+    & > a {
+      padding: var(--space-3);
+    }
+
+    footer {
+      display: flex;
+      align-items: center;
+    }
+
+    & > a svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Hide the menu by default on mobile */
+    .menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100svh;
+      padding: calc(var(--space-22) + var(--space-4)) var(--space-6)
+        var(--space-6);
+      background-color: var(--color-bg-dark);
+      overflow-y: auto;
+      z-index: 19;
+      flex-direction: column;
+    }
+
+    & > a {
+      position: relative;
+      z-index: 21;
+    }
+
+    /* Footer toggle moves inline to the right of the logo */
+    footer {
+      position: static;
+      margin-left: auto;
+      padding: var(--space-3);
+      border-top: none;
+      z-index: 21;
+    }
+
+    footer button svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Hide tooltips and labels on mobile (collapsed) */
+    & > a::after,
+    .menu a::after,
+    .menu button::after,
+    footer button::after {
+      display: none;
+    }
+  }
+
+  /* Mobile expanded: show menu as full-screen overlay */
+  @scope (.site-nav.expanded) {
+    :scope {
+      width: auto;
+    }
+
+    ul {
+      align-items: stretch;
+    }
+
+    .menu {
+      display: flex;
+      animation: nav-overlay-in 0.25s ease-out both;
+    }
+
+    /* Show ::after as inline labels in the mobile menu */
+    .menu a::after,
+    .menu button::after {
+      display: inline;
+      position: static;
+      margin-left: 0;
+      align-self: auto;
+      translate: none;
+      background-color: transparent;
+      padding: 0;
+      border-radius: 0;
+      opacity: 1;
+      pointer-events: auto;
+      color: inherit;
+    }
+  }
+
+  /* Closing animation */
+  @scope (.site-nav.closing) {
+    .menu {
+      display: flex;
+      animation: nav-overlay-out 0.2s ease-in both;
+    }
+
+    .menu a::after,
+    .menu button::after {
+      display: inline;
+    }
+  }
+
+  @keyframes nav-overlay-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes nav-overlay-out {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  /* Main content adjustments */
+  .site-main {
+    padding: var(--space-8) var(--space-4);
+  }
+}

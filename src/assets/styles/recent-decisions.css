@@ -1,0 +1,110 @@
+/* ==========================================================================
+   Recent Decisions Sidebar
+   ========================================================================== */
+
+@scope (.recent-decisions) {
+  .heading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-content: space-between;
+  }
+
+  h2 {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-sm);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-text-muted);
+  }
+
+  /* Decision list */
+  ol {
+    display: flex;
+    flex-direction: column;
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-6) var(--space-4);
+    margin-inline: calc(-1 * var(--space-4));
+    border-radius: var(--radius-lg);
+    transition: background-color 0.15s ease;
+  }
+
+  li + li {
+    border-top: 1px solid var(--color-border-default);
+  }
+
+  li:has(a:hover),
+  li:has(a:focus-visible) {
+    background-color: var(--color-bg-tertiary, var(--gray-100));
+  }
+
+  li:has(a:focus-visible) {
+    outline: 2px solid var(--color-text-primary);
+    outline-offset: -2px;
+  }
+
+  li:has(a:focus-visible) a {
+    outline: none;
+  }
+
+  /* Meta row — date + icon */
+  .meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .practice-area-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--color-brand-primary);
+  }
+
+  .practice-area-icon svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+
+  /* Date */
+  time {
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-sm);
+    letter-spacing: var(--letter-spacing-sm);
+    color: var(--color-text-tertiary);
+  }
+
+  /* Decision title link */
+  a {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-base);
+    color: var(--color-text-primary);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-brand-primary);
+  }
+
+  /* Tags */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+}

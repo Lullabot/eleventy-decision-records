@@ -1,0 +1,12 @@
+<footer class="site-footer">
+  <ul class="social-links">
+    {%- for item in site.social %}
+      <li>
+        <a href="{{ item.url }}" aria-label="{{ item.label }}">
+          {% icon item.icon %}
+        </a>
+      </li>
+    {%- endfor %}
+  </ul>
+  <p>&copy; {{ null | year }} {{ site.legalName }} CC-BY 4.0.</p>
+</footer>

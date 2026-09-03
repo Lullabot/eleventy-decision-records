@@ -1,0 +1,50 @@
+{
+  "organization": "Lullabot",
+  "url": "https://architecture.lullabot.com/",
+  "legalName": "Lullabot, Inc.",
+  "title": "Decision Records",
+  "description": "Documented architectural decisions and best practices for Lullabot's team",
+  "icon": "brand_family-fill",
+  "social": [
+    {
+      "label": "RSS",
+      "url": "/feed.xml",
+      "icon": "rss_feed"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://www.github.com/Lullabot",
+      "icon": "github"
+    },
+    {
+      "label": "X",
+      "url": "https://x.com/lullabot",
+      "icon": "x"
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/company/lullabot",
+      "icon": "linkedin"
+    },
+    {
+      "label": "YouTube",
+      "url": "https://www.youtube.com/c/lullabot",
+      "icon": "youtube"
+    },
+    {
+      "label": "Mastodon",
+      "url": "https://toot.cafe/@lullabot",
+      "icon": "mastodon"
+    },
+    {
+      "label": "Facebook",
+      "url": "https://www.facebook.com/lullabot",
+      "icon": "facebook"
+    },
+    {
+      "label": "Terms of Service",
+      "url": "https://www.lullabot.com/terms",
+      "icon": "contract"
+    }
+  ]
+}

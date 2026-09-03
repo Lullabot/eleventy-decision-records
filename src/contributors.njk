@@ -1,0 +1,46 @@
+---
+title: Contributors
+description: Team members who have contributed to our decision records
+permalink: /contributors/
+eleventyExcludeFromCollections: true
+---
+
+<h1>{{ title }}</h1>
+<p class="page-description">{{ description }}</p>
+
+<table class="contributor-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Decisions</th>
+      <th>Top Topics</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%- for contributor in collections.contributors %}
+      {%- set adrs = collections.adrs | byContributor(contributor) %}
+      {%- set topicCounts = {} %}
+      {%- for adr in adrs %}
+        {%- for topic in adr.data.topics %}
+          {%- set key = topic | lower %}
+          {%- set topicCounts = topicCounts | setKey(key, (topicCounts[key] or 0) + 1) %}
+        {%- endfor %}
+      {%- endfor %}
+      <tr>
+        <td>
+          <a href="/contributors/{{ contributor | slugify }}/"
+            >{{ contributor }}</a
+          >
+        </td>
+        <td>{{ adrs | length }}</td>
+        <td>
+          <div class="tags">
+            {%- for topic in topicCounts | topTopics(3) %}
+              <span class="tag">{{ topic }}</span>
+            {%- endfor %}
+          </div>
+        </td>
+      </tr>
+    {%- endfor %}
+  </tbody>
+</table>

@@ -1,0 +1,348 @@
+/* ==========================================================================
+   Page Styles
+   Shared styles for content pages (homepage, ADR listing, contributors, about)
+   ========================================================================== */
+
+/* Page description — intro text below page title */
+.page-description {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-md);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-10);
+}
+
+/* ==========================================================================
+   Homepage — Practice Areas
+   ========================================================================== */
+
+/* Section heading — uppercase label above practice areas / topics */
+.section-heading {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  padding-top: var(--space-12);
+  padding-bottom: var(--space-6);
+}
+
+@scope (.practice-areas) {
+  :scope {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-bottom: 1px solid var(--color-border-default);
+    border-right: 1px solid var(--color-border-default);
+  }
+
+  .practice-area {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-6);
+    border-top: 1px solid var(--color-border-default);
+    border-left: 1px solid var(--color-border-default);
+    text-decoration: none;
+    color: var(--color-text-primary);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .practice-area::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -1px;
+    right: 0;
+    height: var(--border-width-thick);
+    background-color: var(--color-brand-primary);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .practice-area:hover::after,
+  .practice-area:focus-visible::after {
+    opacity: 1;
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: var(--color-brand-primary);
+  }
+
+  .name {
+    flex: 1;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-base);
+  }
+
+  .count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    background-color: var(--color-bg-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-xs);
+    letter-spacing: var(--letter-spacing-sm);
+    color: var(--color-text-muted);
+  }
+
+  @media screen and (max-width: 30rem) {
+    :scope {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+/* ==========================================================================
+   ADR Detail Page — Metadata
+   ========================================================================== */
+
+@scope (.adr-detail-meta) {
+  :scope {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-2) var(--space-6);
+    margin-bottom: var(--space-10);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--color-border-default);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+  }
+
+  dt {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+  }
+
+  dd {
+    color: var(--color-text-secondary);
+  }
+
+  .adr-detail-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ==========================================================================
+   ADR Detail Page — Table of Contents
+   ========================================================================== */
+
+@scope (.adr-body) {
+  @media screen and (min-width: 64rem) {
+    :scope.has-toc {
+      display: grid;
+      grid-template-columns: 15rem 1fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+
+    .toc-wrapper {
+      height: 100%;
+    }
+
+    .toc {
+      position: sticky;
+      top: var(--space-4);
+      margin-bottom: 0;
+    }
+  }
+}
+
+@scope (.toc) {
+  :scope {
+    width: 15rem;
+    max-width: 100%;
+    margin-inline: auto;
+    margin-bottom: var(--space-10);
+    padding: var(--space-4);
+    background-color: var(--color-bg-secondary);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-base);
+  }
+
+  h2 {
+    font: inherit;
+    margin-block: 0 var(--space-4);
+  }
+
+  ol {
+    border-left: 1px solid var(--color-border-default);
+    padding-left: var(--space-2);
+  }
+
+  ol ol {
+    border-left: none;
+    padding-left: var(--space-4);
+  }
+
+  li {
+    padding-block: var(--space-1);
+  }
+
+  a {
+    color: var(--color-link);
+  }
+}
+
+/* ==========================================================================
+   ADR Listing Page
+   ========================================================================== */
+
+.adr-filters {
+  margin-bottom: var(--space-6);
+}
+
+.adr-count {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+@scope (.adr-list) {
+  :scope {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .adr-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-block: var(--space-6);
+  }
+
+  .adr-item + .adr-item {
+    border-top: 1px solid var(--color-border-default);
+  }
+
+  .adr-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .adr-status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  .adr-status svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .adr-status--accepted {
+    color: var(--sky-800);
+  }
+
+  .adr-status--deprecated {
+    color: var(--color-text-muted);
+  }
+
+  time {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-sm);
+    color: var(--color-text-tertiary);
+  }
+
+  .adr-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-base);
+    color: var(--color-text-primary);
+    text-decoration: none;
+  }
+
+  .adr-title:hover {
+    color: var(--color-brand-primary);
+  }
+
+  .adr-context {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--color-text-secondary);
+  }
+
+  .adr-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+}
+
+/* ==========================================================================
+   Contributors Table
+   ========================================================================== */
+
+@scope (.contributor-table) {
+  :scope {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    text-align: left;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 2px solid var(--color-border-default);
+  }
+
+  td {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--color-border-default);
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  td:first-child {
+    font-weight: var(--font-weight-bold);
+  }
+
+  td:nth-child(2) {
+    text-align: center;
+    color: var(--color-text-secondary);
+  }
+
+  th:nth-child(2) {
+    text-align: center;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+}

@@ -1,6 +1,9 @@
+# REMOVE THIS LINE 👇
+adrs/*.md
 dist/
 node_modules/
 reports/eslint/
-package-lock.json
 .cache
 .DS_Store
+test-results/
+playwright-report/

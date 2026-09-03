@@ -1,0 +1,178 @@
+/* ==========================================================================
+   Design Tokens
+   Extracted from Figma: Architecture.Lullabot.com
+   ========================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------------------
+     Colors
+     --------------------------------------------------------------------------- */
+
+  /* Red */
+  --red-1000: #a51400;
+  --red-900: #cf1900;
+  --red-800: #f81e00;
+  --red-700: #f9442b;
+  --red-600: #fa6955;
+  --red-500: #fb8e80;
+  --red-400: #fdb4aa;
+  --red-300: #fed2cc;
+  --red-200: #fee0dc;
+  --red-100: #fee9e6;
+
+  /* Gray (Figma "Black" scale) */
+  --gray-1000: #01070b;
+  --gray-900: #171d21;
+  --gray-800: #272f35;
+  --gray-700: #323c43;
+  --gray-600: #434e56;
+  --gray-500: #5d686f;
+  --gray-400: #75818a;
+  --gray-300: #909ba2;
+  --gray-200: #b1b9be;
+  --gray-100: #d6d9dc;
+  --gray-50: #f4f5f6;
+  --gray-0: #fff;
+
+  /* Sky */
+  --sky-900: #1481b8;
+  --sky-800: #1d8fc9;
+  --sky-700: #38a5dc;
+  --sky-600: #4eb6eb;
+  --sky-500: #6bc3ef;
+  --sky-400: #86d0f5;
+  --sky-300: #a2dcf9;
+  --sky-200: #bfe8fd;
+  --sky-100: #d8f2ff;
+
+  /* Ocean */
+  --ocean-1000: #12212b;
+  --ocean-950: #1b303f;
+  --ocean-900: #20394b;
+  --ocean-800: #445a6a;
+  --ocean-700: #5e798d;
+  --ocean-600: #869eae;
+  --ocean-500: #aebec9;
+  --ocean-400: #c7d3db;
+  --ocean-300: #d7dfe5;
+  --ocean-200: #e0e6eb;
+  --ocean-100: #edf0f2;
+  --ocean-50: #f9fafb;
+
+  /* Gold */
+  --gold-800: #fac12e;
+  --gold-700: #ffcc47;
+  --gold-600: #ffd25d;
+  --gold-500: #ffdc80;
+  --gold-400: #ffe399;
+  --gold-300: #ffebb8;
+  --gold-200: #fff1cc;
+  --gold-100: #fff6df;
+
+  /* ---------------------------------------------------------------------------
+     Semantic Color Aliases
+     --------------------------------------------------------------------------- */
+  --color-brand-primary: var(--red-800);
+  --color-brand-primary-dark: var(--red-900);
+  --color-text-primary: var(--gray-1000);
+  --color-text-secondary: var(--gray-700);
+  --color-text-tertiary: var(--gray-600);
+  --color-text-muted: var(--gray-500);
+  --color-text-inverse: var(--gray-0);
+  --color-bg-primary: var(--gray-0);
+  --color-bg-secondary: var(--gray-50);
+  --color-bg-dark: var(--gray-1000);
+  --color-bg-dark-secondary: var(--gray-800);
+  --color-border-default: var(--gray-100);
+  --color-border-dark: var(--gray-800);
+  --color-link: var(--sky-800);
+
+  /* ---------------------------------------------------------------------------
+     Typography — Font Family
+     --------------------------------------------------------------------------- */
+  --font-family-base: 'Gabarito', verdana, sans-serif;
+
+  /* ---------------------------------------------------------------------------
+     Typography — Font Weights
+     Figma uses CircularXX (Book 450 / Medium 500 / Bold 700).
+     Gabarito maps to: Regular 400 / Medium 500 / Bold 700.
+     --------------------------------------------------------------------------- */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* ---------------------------------------------------------------------------
+     Typography — Font Sizes
+     --------------------------------------------------------------------------- */
+  --font-size-xs: 0.625rem; /* 10px — count badges */
+  --font-size-sm: 0.75rem; /* 12px */
+  --font-size-base: 0.875rem; /* 14px — labels, info */
+  --font-size-md: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px — body md, heading 2xs, info md */
+  --font-size-xl: 1.25rem; /* 20px — heading xs */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 2rem; /* 32px */
+  --font-size-4xl: 3rem; /* 48px — heading xl */
+
+  /* ---------------------------------------------------------------------------
+     Typography — Line Heights
+     --------------------------------------------------------------------------- */
+  --line-height-xs: 0.75rem; /* 12px */
+  --line-height-sm: 1rem; /* 16px */
+  --line-height-base: 1.5rem; /* 24px */
+  --line-height-md: 2rem; /* 32px */
+  --line-height-lg: 2.5rem; /* 40px */
+  --line-height-xl: 3.5rem; /* 56px */
+
+  /* ---------------------------------------------------------------------------
+     Typography — Letter Spacing
+     --------------------------------------------------------------------------- */
+  --letter-spacing-tight: -0.02em; /* headings xl */
+  --letter-spacing-normal: 0;
+  --letter-spacing-sm: 0.01em; /* info sm, body */
+  --letter-spacing-wide: 0.1em; /* labels, eyebrows */
+
+  /* ---------------------------------------------------------------------------
+     Spacing
+     --------------------------------------------------------------------------- */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+  --space-16: 4rem; /* 64px */
+  --space-18: 4.5rem; /* 72px */
+  --space-22: 5.5rem; /* 88px */
+
+  /* ---------------------------------------------------------------------------
+     Border Radius
+     --------------------------------------------------------------------------- */
+  --radius-sm: 2px;
+  --radius-md: 6px;
+  --radius-lg: 12px;
+
+  /* ---------------------------------------------------------------------------
+     Border Widths
+     --------------------------------------------------------------------------- */
+  --border-width-default: 1px;
+  --border-width-medium: 1.5px;
+  --border-width-thick: 4px;
+
+  /* ---------------------------------------------------------------------------
+     Shadows
+     --------------------------------------------------------------------------- */
+  --shadow-subtle: 0px 2px 2px 0px rgba(0, 0, 0, 0.02);
+  --shadow-panel:
+    0px 0px 48px 0px rgba(0, 0, 0, 0.04), 0px 0px 16px 0px rgba(0, 0, 0, 0.02);
+  --shadow-icon: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+
+  /* ---------------------------------------------------------------------------
+     Layout
+     --------------------------------------------------------------------------- */
+  --sidebar-width-collapsed: 56px;
+  --decisions-list-width: 400px;
+}

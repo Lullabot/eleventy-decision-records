@@ -7,7 +7,6 @@
     "lint:fix": "eslint --fix && prettier -w .",
     "lint-staged": "lint-staged",
     "prepare": "husky",
-    "sample-content": "node ./scripts/generate-adrs.js",
     "test": "bash bin/run-e2e.sh",
     "test:update": "bash bin/run-e2e.sh --update",
     "test:local": "playwright test"

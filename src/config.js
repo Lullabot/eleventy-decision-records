@@ -1,5 +1,5 @@
 import Merge from '@11ty/eleventy-utils/src/Merge.js';
-import defaultConfig from './config.json' with { type: 'json' };
+import defaultConfig from './defaultConfig.json' with { type: 'json' };
 
 const RESOLVED = Symbol.for('eleventy-decision-records.config.resolved');
 

@@ -1,5 +1,3 @@
-# REMOVE THIS LINE 👇
-adrs/*.md
 dist/
 node_modules/
 reports/eslint/

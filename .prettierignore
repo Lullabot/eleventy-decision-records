@@ -1,6 +1,7 @@
 # Skip auto-generated files.
 /dist
+/dist-package
 /node_modules
 
-# Skip the ADRs, format them manually.
-/adrs
+# Skip compiled test output
+/tests/fixture-site/_site/

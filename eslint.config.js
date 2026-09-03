@@ -14,7 +14,7 @@ export default [
     },
   },
   {
-    ignores: ['dist/'],
+    ignores: ['dist/', 'dist-package/', 'tests/fixture-site/_site/'],
   },
   eslintPluginPrettierRecommended,
 ];

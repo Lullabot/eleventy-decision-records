@@ -1,7 +1,7 @@
 {
-  "name": "eleventy-decision-records",
+  "name": "@lullabot/eleventy-decision-records",
   "version": "1.0.0",
-  "description": "An eleventy starter project for documenting decision records",
+  "description": "An Eleventy theme plugin for documenting decision records",
   "scripts": {
     "lint": "eslint && prettier -c .",
     "lint:fix": "eslint --fix && prettier -w .",
@@ -10,6 +10,23 @@
     "test": "bash bin/run-e2e.sh",
     "test:update": "bash bin/run-e2e.sh --update",
     "test:local": "playwright test"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src/index.js",
+    "src/config.js",
+    "src/defaultConfig.json",
+    "src/index.md",
+    "src/about.md",
+    "src/YYYYMMDD-decision-template.md",
+    "src/lib",
+    "src/templates",
+    "src/assets"
+  ],
+  "peerDependencies": {
+    "@11ty/eleventy": "^3.0.0"
   },
   "author": "Lullabot, Inc.",
   "repository": {

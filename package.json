@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "description": "An eleventy starter project for documenting decision records",
   "scripts": {
-    "start": "npm run develop",
-    "develop": "eleventy --serve",
-    "build": "eleventy",
-    "develop:debug": "DEBUG=Eleventy* eleventy --serve",
-    "build:debug": "DEBUG=Eleventy* eleventy",
     "lint": "eslint && prettier -c .",
     "lint:fix": "eslint --fix && prettier -w .",
     "lint-staged": "lint-staged",

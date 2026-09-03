@@ -13,6 +13,11 @@ export default defineConfig({
     baseURL: 'http://localhost:8181',
     trace: 'on-first-retry',
   },
+  expect: {
+    // Neutralises clock-derived text and its box size for every
+    // screenshot, so specs do not each have to mask <time> themselves.
+    toHaveScreenshot: { stylePath: './tests/screenshot.css' },
+  },
   webServer: {
     // Serves the fixture site, which consumes the theme as a packaged
     // dependency. cwd matters: the plugin resolves Nunjucks through the

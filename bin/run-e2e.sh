@@ -85,17 +85,31 @@ fi
 
 CONTAINER_NAME="edr-e2e-$$"
 
-# node_modules lives in a Docker-managed named volume so the container's
-# Linux install never touches the host's node_modules.
+# Everything the container writes into the bind mount, listed explicitly
+# rather than chowning /work/tests wholesale: that directory now holds
+# the fixture site's node_modules volume, and recursing through it would
+# cost thousands of needless chowns on every run.
+CHOWN_PATHS="/work/test-results \
+  /work/playwright-report \
+  /work/tests/visual.spec.js-snapshots \
+  /work/tests/fixture-site/_site \
+  /work/dist-package"
+
+# Both node_modules trees live in Docker-managed named volumes so the
+# container's Linux installs never touch the host's. The fixture site
+# needs its own: it sits inside the bind mount, so without a volume of
+# its own the Linux binaries the fixture install writes would land in
+# the host working tree.
 docker run --rm --name "$CONTAINER_NAME" --init \
   -e E2E_IN_DOCKER=1 \
   -e CI \
   -v "$(pwd)":/work \
   -v edr-e2e-node-modules:/work/node_modules \
+  -v edr-e2e-fixture-node-modules:/work/tests/fixture-site/node_modules \
   -v edr-e2e-npm-cache:/root/.npm \
   -w /work \
   "$IMAGE" \
-  bash -c "npm ci --no-audit --no-fund &> /dev/null; $playwright_cmd; status=\$?; chown -R $(id -u):$(id -g) /work/test-results /work/playwright-report /work/tests /work/adrs /work/dist &> /dev/null || true; exit \$status"
+  bash -c "npm ci --no-audit --no-fund &> /dev/null; $playwright_cmd; status=\$?; chown -R $(id -u):$(id -g) $CHOWN_PATHS &> /dev/null || true; exit \$status"
 
 echo ""
 if [[ $update_mode -eq 1 ]]; then

@@ -3,7 +3,29 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+  # Packs the theme once so every downstream job installs the exact bytes
+  # that would be published. A file: dependency would symlink the working
+  # tree instead, leaving the "files" and "exports" fields untested.
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          # Remember to update .tugboat/config.yml when changing this.
+          node-version: 24
+      # npm pack runs the prepare script, so dependencies must be present.
+      - run: npm ci
+      # npm pack will not create its destination directory.
+      - run: mkdir -p dist-package && npm pack --pack-destination dist-package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: theme-package
+          path: dist-package/*.tgz
+          retention-days: 7
+
   run-playwright:
+    needs: package
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -12,6 +34,12 @@ jobs:
           # Remember to update .tugboat/config.yml when changing this.
           node-version: 24
       - run: npm ci
+      # The fixture site installs from this tarball rather than packing
+      # again, so the suite and the published artifact cannot drift.
+      - uses: actions/download-artifact@v4
+        with:
+          name: theme-package
+          path: dist-package
       # Runs the suite in the same Docker image used for local snapshot
       # generation, so visual baselines match exactly.
       - run: npm test

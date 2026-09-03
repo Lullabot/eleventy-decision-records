@@ -47,8 +47,6 @@ const PAGES = [
   'practice-areas.njk',
   'contributors.njk',
   'contributor.njk',
-  'favicon.njk',
-  'search_index.njk',
 ];
 
 /**
@@ -56,6 +54,8 @@ const PAGES = [
  * includes directory unless the project overrides them on disk.
  */
 const LAYOUTS = ['page.njk', 'adr.njk'];
+
+const ASSETS = ['favicon.njk', 'search_index.njk'];
 
 export default function (eleventyConfig, options = {}) {
   const opts = themeConfig(options);
@@ -142,6 +142,15 @@ export default function (eleventyConfig, options = {}) {
       eleventyConfig.addTemplate(
         name,
         readFileSync(join(themeRoot, 'templates/pages', name), 'utf8'),
+      );
+    }
+  }
+
+  for (const name of ASSETS) {
+    if (!existsSync(join(inputDir, name))) {
+      eleventyConfig.addTemplate(
+        name,
+        readFileSync(join(themeRoot, 'templates/assets', name), 'utf8'),
       );
     }
   }

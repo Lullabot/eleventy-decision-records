@@ -72,7 +72,9 @@ IMAGE="mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble"
 
 playwright_cmd="npx playwright test"
 
-for pattern in "${test_patterns[@]}"; do
+# The ${a[@]+"${a[@]}"} form keeps `set -u` from treating an empty array as
+# unset, which it does on bash 3.2 — the version macOS still ships.
+for pattern in ${test_patterns[@]+"${test_patterns[@]}"}; do
   playwright_cmd="$playwright_cmd tests/*${pattern}*.spec.js"
 done
 

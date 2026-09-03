@@ -46,9 +46,6 @@ Visual baselines live in `tests/visual.spec.js-snapshots/` and must only be gene
 
 The fixture records carry fixed dates, so URLs are deterministic. Relative ages ("2 days ago") still move with the real clock, so `tests/screenshot.css` — injected only during screenshots via `expect.toHaveScreenshot.stylePath` — hides them and pins their width. Hiding the text alone is not enough: the element resizes as the string changes, which shifts surrounding pixels and fails the comparison.
 
-> [!NOTE]
-> `npm test` with no arguments needs bash 4.4 or newer. On stock macOS bash 3.2 it exits with `test_patterns[@]: unbound variable`, because `set -u` treats an empty array expansion as unset. Passing `--tests <name>` avoids it, and CI is unaffected.
-
 ## CI and Deployment
 
 - **Linting** — GitHub Actions runs `npm run lint` on pull requests (`.github/workflows/eslint.yml`).

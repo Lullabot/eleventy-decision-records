@@ -28,11 +28,28 @@
   "peerDependencies": {
     "@11ty/eleventy": "^3.0.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "eleventy",
+    "eleventy-plugin",
+    "eleventy-theme",
+    "11ty",
+    "adr",
+    "architecture-decision-record",
+    "decision-records",
+    "documentation"
+  ],
   "author": "Lullabot, Inc.",
   "repository": {
     "type": "git",
     "url": "https://github.com/Lullabot/eleventy-decision-records"
   },
+  "homepage": "https://github.com/Lullabot/eleventy-decision-records#readme",
   "bugs": {
     "url": "https://github.com/Lullabot/eleventy-decision-records/issues"
   },

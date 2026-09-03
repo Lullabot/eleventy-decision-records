@@ -58,7 +58,7 @@
       },
       {
         "label": "All decisions",
-        "url": "/adrs/",
+        "url": "/{decisions}/",
         "icon": "verified"
       }
     ],
@@ -92,5 +92,8 @@
       "name": "Engineering",
       "icon": "settings"
     }
-  ]
+  ],
+  "dirs": {
+    "decisions": "decisions"
+  }
 }

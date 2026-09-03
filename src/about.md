@@ -19,7 +19,7 @@ An ADR is immutable once accepted, beyond simple fixes and improvements that don
 
 ## How to contribute
 
-Create a new markdown file in the `adrs/` directory using the naming convention `YYYYMMDD-url-friendly-name.md`. Use the `.template` file as a starting point and fill in the required frontmatter fields:
+Create a new markdown file in the `{{ dirs.decisions }}/` directory using the naming convention `YYYYMMDD-url-friendly-name.md`. Use the decision template as a starting point and fill in the required frontmatter fields:
 
 - **date** — When the decision was made
 - **status** — `accepted` or `deprecated`

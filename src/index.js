@@ -79,6 +79,7 @@ export default function (eleventyConfig, options = {}) {
   eleventyConfig.addGlobalData('site', opts.site);
   eleventyConfig.addGlobalData('navigation', opts.navigation);
   eleventyConfig.addGlobalData('practiceAreas', opts.practiceAreas);
+  eleventyConfig.addGlobalData('dirs', opts.dirs);
 
   // Nunjucks resolves includes from the project first, then the theme,
   // so any theme partial or stylesheet can be overridden by creating a
@@ -96,8 +97,8 @@ export default function (eleventyConfig, options = {}) {
     ),
   );
 
-  collections(eleventyConfig, join(inputDir, 'adrs/*.md'));
-  data(eleventyConfig);
+  collections(eleventyConfig, join(inputDir, opts.dirs.decisions, '*.md'));
+  data(eleventyConfig, opts.dirs.decisions);
   filters(eleventyConfig);
   plugins(eleventyConfig, opts);
   shortcodes(eleventyConfig, opts);

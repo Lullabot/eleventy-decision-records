@@ -18,12 +18,20 @@ PACKAGE_DIR="$REPO_ROOT/dist-package"
 
 mkdir -p "$PACKAGE_DIR"
 
-if ! compgen -G "$PACKAGE_DIR/*.tgz" > /dev/null; then
-  echo "No packed theme in dist-package/; packing now..."
-  (cd "$REPO_ROOT" && npm pack --silent --pack-destination "$PACKAGE_DIR" > /dev/null)
-fi
+TARBALL="$(ls -t "$PACKAGE_DIR"/*.tgz 2> /dev/null | head -1 || true)"
 
-TARBALL="$(ls -t "$PACKAGE_DIR"/*.tgz | head -1)"
+# Repack when there is no artifact, or when the package has been edited
+# since the one sitting there was built. Reusing unconditionally would
+# mean a change to src/ gets silently tested against a stale build. In
+# CI the downloaded artifact is newer than the checkout, so it is reused
+# as intended.
+if [[ -z "$TARBALL" ]] ||
+  [[ -n "$(find "$REPO_ROOT/src" "$REPO_ROOT/package.json" -newer "$TARBALL" -print -quit)" ]]; then
+  echo "Packing the theme..."
+  rm -f "$PACKAGE_DIR"/*.tgz
+  (cd "$REPO_ROOT" && npm pack --silent --pack-destination "$PACKAGE_DIR" > /dev/null)
+  TARBALL="$(ls -t "$PACKAGE_DIR"/*.tgz | head -1)"
+fi
 echo "Installing $(basename "$TARBALL") into tests/fixture-site"
 
 cd "$SITE"

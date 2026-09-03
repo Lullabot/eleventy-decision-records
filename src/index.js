@@ -24,17 +24,25 @@ function packageRoot(name, probe = name) {
 }
 
 /**
- * Loads the same Nunjucks copy the project's Eleventy uses. Each copy
- * carries its own SafeString class, so an environment built from the
- * theme's own copy makes `{{ content | safe }}` fail Eleventy's
- * `instanceof` check and every page renders double-escaped.
+ * Adds the theme's template directories to the Nunjucks environment
+ * Eleventy builds for the project.
+ *
+ * The theme deliberately extends that environment rather than supplying
+ * one of its own. Constructing an environment here would mean loading a
+ * second copy of Nunjucks, which will conflict with Eleventy's.
+ *
+ * Eleventy's own search paths (the project's includes directory, then
+ * its working directory) stay ahead of the theme's, so a project file
+ * of the same name still takes precedence.
  */
-function projectNunjucks() {
-  const projectRequire = createRequire(join(process.cwd(), 'package.json'));
-  const eleventyRequire = createRequire(
-    projectRequire.resolve('@11ty/eleventy'),
-  );
-  return eleventyRequire('nunjucks');
+function addThemeSearchPaths(eleventyConfig, searchPaths) {
+  eleventyConfig.on('eleventy.engine.njk', ({ environment }) => {
+    for (const loader of environment.loaders ?? []) {
+      if (Array.isArray(loader.searchPaths)) {
+        loader.searchPaths.push(...searchPaths);
+      }
+    }
+  });
 }
 
 /**
@@ -109,18 +117,10 @@ export default function (eleventyConfig, options = {}) {
   // Nunjucks resolves includes from the project first, then the theme,
   // so any theme partial or stylesheet can be overridden by creating a
   // file of the same name in the project's includes directory.
-  const searchPaths = [
-    includesDir,
+  addThemeSearchPaths(eleventyConfig, [
     join(themeRoot, 'templates/partials'),
     join(themeRoot, 'assets'),
-  ].filter(existsSync);
-  const Nunjucks = projectNunjucks();
-  eleventyConfig.setLibrary(
-    'njk',
-    new Nunjucks.Environment(
-      new Nunjucks.FileSystemLoader(searchPaths, { noCache: true }),
-    ),
-  );
+  ]);
 
   collections(eleventyConfig, join(inputDir, opts.dirs.decisions, '*.md'));
   data(eleventyConfig, opts.dirs.decisions);

@@ -26,15 +26,16 @@ contributors:
 
 title: A simple statement describing the decision
 context: A sentence or two describing the context of the decision.
-
 ---
+
 <!-- Begin Markdown and HTML -->
+
 ## Decision
 
 <!-- Write the decision here -->
 <!-- Headings will be shown in a table of contents with links -->
 
-##  Consequences
+## Consequences
 
 <!-- What has to be done now that we've made the decision? -->
 <!-- How will this impact us or our clients? -->

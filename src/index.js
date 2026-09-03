@@ -2,7 +2,6 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, relative, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
-import Nunjucks from 'nunjucks';
 
 import collections from './lib/collections/index.js';
 import data from './lib/data/index.js';
@@ -22,6 +21,20 @@ function packageRoot(name, probe = name) {
   const entry = require.resolve(probe);
   const marker = join('node_modules', ...name.split('/'));
   return entry.slice(0, entry.indexOf(marker) + marker.length);
+}
+
+/**
+ * Loads the same Nunjucks copy the project's Eleventy uses. Each copy
+ * carries its own SafeString class, so an environment built from the
+ * theme's own copy makes `{{ content | safe }}` fail Eleventy's
+ * `instanceof` check and every page renders double-escaped.
+ */
+function projectNunjucks() {
+  const projectRequire = createRequire(join(process.cwd(), 'package.json'));
+  const eleventyRequire = createRequire(
+    projectRequire.resolve('@11ty/eleventy'),
+  );
+  return eleventyRequire('nunjucks');
 }
 
 /**
@@ -75,6 +88,7 @@ export default function (eleventyConfig, options = {}) {
     join(themeRoot, 'templates/partials'),
     join(themeRoot, 'assets'),
   ].filter(existsSync);
+  const Nunjucks = projectNunjucks();
   eleventyConfig.setLibrary(
     'njk',
     new Nunjucks.Environment(

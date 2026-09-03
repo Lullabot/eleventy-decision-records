@@ -1,11 +1,11 @@
-import { favicon, icon } from './icons.js';
+import { makeFavicon, makeIcon } from './icons.js';
 import { oramaIndex } from './search.js';
 
 /**
  * Register all custom shortcodes with Eleventy.
  */
-export default function (eleventyConfig) {
-  eleventyConfig.addShortcode('favicon', favicon);
-  eleventyConfig.addShortcode('icon', icon);
+export default function (eleventyConfig, opts) {
+  eleventyConfig.addShortcode('favicon', makeFavicon(opts.iconDirs));
+  eleventyConfig.addShortcode('icon', makeIcon(opts.iconDirs));
   eleventyConfig.addShortcode('oramaIndex', oramaIndex);
 }

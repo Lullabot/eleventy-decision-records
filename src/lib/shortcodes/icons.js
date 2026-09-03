@@ -2,27 +2,19 @@ import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { parse } from 'node-html-parser';
 
-const CUSTOM_ICON_DIR = join(import.meta.dirname, '../../assets/icons');
-
-const MATERIAL_ICON_DIR = join(
-  import.meta.dirname,
-  '../../..',
-  'node_modules',
-  '@material-symbols',
-  'svg-400',
-  'rounded',
-);
-
 /**
- * Resolves an icon name to a file path, checking the custom icons
- * directory first and falling back to Material Symbols.
+ * Resolves an icon name to a file path by checking each directory in
+ * order. The plugin assembles the list as: project icon overrides,
+ * then the theme's custom icons, then Material Symbols.
  */
-function resolveIcon(name) {
-  const customPath = join(CUSTOM_ICON_DIR, `${name}.svg`);
-  if (existsSync(customPath)) {
-    return customPath;
+function resolveIcon(iconDirs, name) {
+  for (const dir of iconDirs) {
+    const path = join(dir, `${name}.svg`);
+    if (existsSync(path)) {
+      return path;
+    }
   }
-  return join(MATERIAL_ICON_DIR, `${name}.svg`);
+  throw new Error(`Icon "${name}" not found in: ${iconDirs.join(', ')}`);
 }
 
 /**
@@ -31,15 +23,16 @@ function resolveIcon(name) {
  *
  * Usage: {% favicon "brand_family-fill" %}
  */
-export function favicon(name) {
-  const file = resolveIcon(name);
-  const root = parse(readFileSync(file, 'utf8'));
-  const svg = root.querySelector('svg');
+export function makeFavicon(iconDirs) {
+  return function favicon(name) {
+    const file = resolveIcon(iconDirs, name);
+    const root = parse(readFileSync(file, 'utf8'));
+    const svg = root.querySelector('svg');
 
-  svg.removeAttribute('width');
-  svg.removeAttribute('height');
+    svg.removeAttribute('width');
+    svg.removeAttribute('height');
 
-  const style = parse(`
+    const style = parse(`
     <style>
       svg {
         background-color: #fff;
@@ -59,37 +52,40 @@ export function favicon(name) {
       }
     </style>
   `);
-  svg.insertAdjacentHTML('afterbegin', style.toString());
+    svg.insertAdjacentHTML('afterbegin', style.toString());
 
-  return root.toString();
+    return root.toString();
+  };
 }
 
 /**
- * Inlines an SVG icon. Checks src/assets/icons/ for custom SVGs first,
- * then falls back to Material Symbols.
+ * Inlines an SVG icon. Checks the project's icon directory first, then
+ * the theme's custom SVGs, then falls back to Material Symbols.
  *
  * Usage: {% icon "home-fill" %}
  *        {% icon "github", "GitHub" %}
  */
-export function icon(name, label) {
-  const file = resolveIcon(name);
-  const root = parse(readFileSync(file, 'utf8'));
-  const svg = root.querySelector('svg');
+export function makeIcon(iconDirs) {
+  return function icon(name, label) {
+    const file = resolveIcon(iconDirs, name);
+    const root = parse(readFileSync(file, 'utf8'));
+    const svg = root.querySelector('svg');
 
-  svg.removeAttribute('width');
-  svg.removeAttribute('height');
-  svg.setAttribute('fill', 'currentColor');
+    svg.removeAttribute('width');
+    svg.removeAttribute('height');
+    svg.setAttribute('fill', 'currentColor');
 
-  for (const el of svg.querySelectorAll('[fill]')) {
-    el.setAttribute('fill', 'currentColor');
-  }
+    for (const el of svg.querySelectorAll('[fill]')) {
+      el.setAttribute('fill', 'currentColor');
+    }
 
-  if (label) {
-    svg.setAttribute('role', 'img');
-    svg.setAttribute('aria-label', label);
-  } else {
-    svg.setAttribute('aria-hidden', 'true');
-  }
+    if (label) {
+      svg.setAttribute('role', 'img');
+      svg.setAttribute('aria-label', label);
+    } else {
+      svg.setAttribute('aria-hidden', 'true');
+    }
 
-  return root.toString();
+    return root.toString();
+  };
 }

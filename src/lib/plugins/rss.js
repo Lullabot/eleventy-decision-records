@@ -1,10 +1,9 @@
 import { feedPlugin } from '@11ty/eleventy-plugin-rss';
-import site from '../../_data/site.json' with { type: 'json' };
 
 /**
  * Register the Atom feed plugin, served at /feed.xml.
  */
-export function rss(eleventyConfig) {
+export function rss(eleventyConfig, site) {
   eleventyConfig.addPlugin(feedPlugin, {
     type: 'atom',
     outputPath: '/feed.xml',

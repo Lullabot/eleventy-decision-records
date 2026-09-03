@@ -57,6 +57,31 @@ const LAYOUTS = ['page.njk', 'adr.njk'];
 
 const ASSETS = ['favicon.njk', 'search_index.njk'];
 
+/**
+ * Default content the theme ships so a fresh project has a homepage and
+ * an about page. These live at the theme root rather than under
+ * templates/ because they are prose a project is expected to replace.
+ */
+const CONTENT = ['index.md', 'about.md'];
+
+/**
+ * Extensions Eleventy will render a page from, used to decide whether a
+ * project already provides its own version of a theme page.
+ */
+const TEMPLATE_EXTENSIONS = ['md', 'njk', 'html', 'liquid', '11ty.js'];
+
+/**
+ * True when the project has its own template that would take the theme
+ * page's place. The extension is ignored so a project's about.njk
+ * replaces the theme's about.md rather than fighting it for /about/.
+ */
+function hasOverride(dir, name) {
+  const base = name.slice(0, name.indexOf('.'));
+  return TEMPLATE_EXTENSIONS.some((ext) =>
+    existsSync(join(dir, `${base}.${ext}`)),
+  );
+}
+
 export default function (eleventyConfig, options = {}) {
   const opts = themeConfig(options);
 
@@ -138,7 +163,7 @@ export default function (eleventyConfig, options = {}) {
   }
 
   for (const name of PAGES) {
-    if (!existsSync(join(inputDir, name))) {
+    if (!hasOverride(inputDir, name)) {
       eleventyConfig.addTemplate(
         name,
         readFileSync(join(themeRoot, 'templates/pages', name), 'utf8'),
@@ -146,8 +171,17 @@ export default function (eleventyConfig, options = {}) {
     }
   }
 
+  for (const name of CONTENT) {
+    if (!hasOverride(inputDir, name)) {
+      eleventyConfig.addTemplate(
+        name,
+        readFileSync(join(themeRoot, name), 'utf8'),
+      );
+    }
+  }
+
   for (const name of ASSETS) {
-    if (!existsSync(join(inputDir, name))) {
+    if (!hasOverride(inputDir, name)) {
       eleventyConfig.addTemplate(
         name,
         readFileSync(join(themeRoot, 'templates/assets', name), 'utf8'),

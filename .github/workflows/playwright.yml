@@ -40,6 +40,9 @@ jobs:
         with:
           name: theme-package
           path: dist-package
+      # Builds the fixture under several consumer configurations. Fast and
+      # browserless, so it runs before the Docker suite.
+      - run: npm run test:config
       # Runs the suite in the same Docker image used for local snapshot
       # generation, so visual baselines match exactly.
       - run: npm test

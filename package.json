@@ -8,6 +8,7 @@
     "lint-staged": "lint-staged",
     "prepare": "husky",
     "test": "bash bin/run-e2e.sh",
+    "test:config": "bash bin/prepare-fixture-site.sh && npm --prefix tests/fixture-site test",
     "test:update": "bash bin/run-e2e.sh --update",
     "test:local": "playwright test"
   },
@@ -70,6 +71,7 @@
     "@11ty/eleventy-plugin-bundle": "^3.0.7",
     "@11ty/eleventy-plugin-rss": "^2.0.4",
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
+    "@11ty/eleventy-utils": "^2.0.7",
     "@js-temporal/polyfill": "^0.5.1",
     "@material-symbols/svg-400": "^0.40.2",
     "@orama/orama": "^3.1.18",

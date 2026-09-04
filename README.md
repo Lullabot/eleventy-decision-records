@@ -41,6 +41,8 @@ export default function (eleventyConfig) {
 
 Both template engines must be set to `njk` — the theme's pages and layouts are Nunjucks, including the markdown ones. Your project also needs `"type": "module"` in its `package.json`.
 
+Site metadata, navigation, and practice areas are configured through the plugin options only. The theme registers them as global data, which Eleventy merges _over_ any `_data/site.json`, `_data/navigation.json`, or `_data/practiceAreas.json` in your project.
+
 Then write decision records as markdown files in `docs/decisions/`, and build as usual:
 
 ```bash

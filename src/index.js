@@ -94,8 +94,10 @@ export default function (eleventyConfig, options = {}) {
   const opts = themeConfig(options);
 
   const inputDir = eleventyConfig.directories?.input ?? './src/';
-  const includesDir =
-    eleventyConfig.directories?.includes ?? './src/_includes/';
+  const layoutsDir =
+    eleventyConfig.directories?.layouts ??
+    eleventyConfig.directories?.includes ??
+    './src/_includes/';
 
   opts.iconDirs = [
     ...(options.iconDirs ?? [join(inputDir, 'assets/icons')]),
@@ -154,9 +156,9 @@ export default function (eleventyConfig, options = {}) {
   eleventyConfig.addWatchTarget(relative('.', themeRoot));
 
   for (const name of LAYOUTS) {
-    if (!existsSync(join(includesDir, name))) {
+    if (!existsSync(join(layoutsDir, name))) {
       eleventyConfig.addTemplate(
-        join('_includes', name),
+        relative(inputDir, join(layoutsDir, name)),
         readFileSync(join(themeRoot, 'templates/layouts', name), 'utf8'),
       );
     }
@@ -176,6 +178,7 @@ export default function (eleventyConfig, options = {}) {
       eleventyConfig.addTemplate(
         name,
         readFileSync(join(themeRoot, name), 'utf8'),
+        { templateEngineOverride: 'njk,md' },
       );
     }
   }

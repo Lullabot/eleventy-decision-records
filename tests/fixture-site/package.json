@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "eleventy",
-    "serve": "eleventy --serve --port=8181"
+    "serve": "eleventy --serve --port=8181",
+    "test": "node --test config.test.js"
   }
 }

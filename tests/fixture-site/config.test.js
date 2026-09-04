@@ -5,6 +5,9 @@ import { dirname, join } from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 
+// Paths below are relative to the fixture site, wherever the runner started.
+process.chdir(import.meta.dirname);
+
 const ELEVENTY = 'node_modules/@11ty/eleventy/cmd.cjs';
 
 const FIXTURE_INPUT = 'src';

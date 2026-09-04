@@ -1,5 +1,50 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const desktop = {
+  ...devices['Desktop Chrome'],
+  viewport: { width: 1440, height: 900 },
+};
+const mobile = {
+  ...devices['Desktop Chrome'],
+  viewport: { width: 375, height: 812 },
+};
+
+const defaultProjects = [
+  {
+    name: 'chromium-desktop',
+    testIgnore: /accessibility\.spec\.js/,
+    use: desktop,
+  },
+  {
+    name: 'chromium-mobile',
+    testMatch: /visual\.spec\.js/,
+    use: mobile,
+  },
+  {
+    name: 'firefox',
+    testMatch: /(search|sidebar)\.spec\.js/,
+    use: {
+      ...devices['Desktop Firefox'],
+      viewport: { width: 1440, height: 900 },
+    },
+  },
+];
+
+// The axe suite is opt-in (E2E_A11Y=1) while known contrast and labelling
+// failures stand; CI runs it as a separate job that cannot block a PR.
+const accessibilityProjects = [
+  {
+    name: 'a11y-desktop',
+    testMatch: /accessibility\.spec\.js/,
+    use: desktop,
+  },
+  {
+    name: 'a11y-mobile',
+    testMatch: /accessibility\.spec\.js/,
+    use: mobile,
+  },
+];
+
 export default defineConfig({
   testDir: './tests',
   // Visual baselines are rendered in the Docker container (npm test);
@@ -29,29 +74,5 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
   },
-  projects: [
-    {
-      name: 'chromium-desktop',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1440, height: 900 },
-      },
-    },
-    {
-      name: 'chromium-mobile',
-      testMatch: /visual\.spec\.js/,
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 375, height: 812 },
-      },
-    },
-    {
-      name: 'firefox',
-      testMatch: /(search|sidebar)\.spec\.js/,
-      use: {
-        ...devices['Desktop Firefox'],
-        viewport: { width: 1440, height: 900 },
-      },
-    },
-  ],
+  projects: process.env.E2E_A11Y ? accessibilityProjects : defaultProjects,
 });

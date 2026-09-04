@@ -42,6 +42,7 @@ Playwright covers visual regression of the main page types (desktop and mobile C
 | `npm test -- --tests search` | Run only specs matching a name                    |
 | `npm run test:local`         | Run functional tests directly (snapshots skipped) |
 | `npm run test:config`        | Build the fixture under several consumer configs  |
+| `npm run test:a11y`          | Run the axe accessibility suite in Docker         |
 
 Every test command accepts `ELEVENTY_VERSION`, an npm tag or exact version installed into the fixture for that run in place of the lockfile pin. CI runs the whole job twice, once on the pin and once on `canary`, the 4.x prerelease line. The theme is expected to render identically on both, but only the pinned run blocks a PR; a canary failure shows up in the checks without failing them.
 
@@ -49,6 +50,8 @@ Every test command accepts `ELEVENTY_VERSION`, an npm tag or exact version insta
 ELEVENTY_VERSION=canary npm run test:config
 ELEVENTY_VERSION=canary npm test
 ```
+
+`tests/accessibility.spec.js` runs [axe-core](https://github.com/dequelabs/axe-core) against every page type at desktop and mobile widths, plus the expanded menu and the search dialog, checking WCAG 2.2 AA. Each page is also rescanned for colour contrast with every link and button forced into `:hover`, and again into `:focus-visible`, through the DevTools protocol (`CSS.forcePseudoState`), which is why the suite is Chromium only. Those state tests report only what the state introduces; anything already failing at rest belongs to the page's own test. It is opt-in (`E2E_A11Y=1`, or `npm run test:a11y`) and CI runs it as a job that cannot block a PR, because the current design has known contrast and icon-labelling failures. Once those are fixed, fold it into the default run by dropping the `E2E_A11Y` switch in `playwright.config.js`. On the host, `E2E_A11Y=1 npm run test:local` works too; there are no snapshots involved.
 
 `tests/fixture-site/config.test.js` builds the fixture through the Eleventy CLI with generated config files: custom `includes` and `layouts` directories, the default (liquid) markdown engine, and project files overriding a theme page or layout. It catches the class of bug where the theme only works with the fixture's own settings. Each case is a separate process because Eleventy caches layouts per process, which would let one case's result leak into the next.
 

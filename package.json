@@ -10,7 +10,8 @@
     "test": "bash bin/run-e2e.sh",
     "test:config": "bash bin/prepare-fixture-site.sh && npm --prefix tests/fixture-site test",
     "test:update": "bash bin/run-e2e.sh --update",
-    "test:local": "playwright test"
+    "test:local": "playwright test",
+    "test:a11y": "E2E_A11Y=1 bash bin/run-e2e.sh"
   },
   "exports": {
     ".": "./src/index.js"
@@ -57,6 +58,7 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^10.0.0",
     "@playwright/test": "^1.62.1",
     "eslint": "^10.0.3",

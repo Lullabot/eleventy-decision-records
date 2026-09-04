@@ -27,6 +27,23 @@ jobs:
   run-playwright:
     needs: package
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        eleventy:
+          # The lockfile pin, which Renovate keeps on the latest 3.x.
+          - name: v3
+            version: ''
+            experimental: false
+          # The 4.x prerelease line, published under the canary tag. A
+          # failure here is reported but does not block the PR.
+          - name: v4
+            version: canary
+            experimental: true
+    name: run-playwright (${{ matrix.eleventy.name }})
+    continue-on-error: ${{ matrix.eleventy.experimental }}
+    env:
+      ELEVENTY_VERSION: ${{ matrix.eleventy.version }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
@@ -49,7 +66,7 @@ jobs:
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.eleventy.name }}
           path: |
             playwright-report/
             test-results/

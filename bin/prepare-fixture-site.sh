@@ -38,4 +38,11 @@ cd "$SITE"
 npm install --no-audit --no-fund --silent
 # --no-save keeps the tarball out of package.json. It has to run after
 # the dependency install, which would otherwise prune an unsaved package.
-npm install --no-audit --no-fund --silent --no-save "$TARBALL"
+# ELEVENTY_VERSION swaps in another Eleventy (a tag like `canary` or an
+# exact version) for this run only; the lockfile pin is the default.
+UNSAVED=("$TARBALL")
+if [[ -n "${ELEVENTY_VERSION:-}" ]]; then
+  echo "Using @11ty/eleventy@${ELEVENTY_VERSION}"
+  UNSAVED+=("@11ty/eleventy@${ELEVENTY_VERSION}")
+fi
+npm install --no-audit --no-fund --silent --no-save "${UNSAVED[@]}"

@@ -21,6 +21,7 @@ Examples:
   $(basename "${BASH_SOURCE[0]}")                        # Run all tests
   $(basename "${BASH_SOURCE[0]}") --update               # Update all snapshots
   $(basename "${BASH_SOURCE[0]}") --tests search         # Run search specs only
+  ELEVENTY_VERSION=canary $(basename "${BASH_SOURCE[0]}")  # Run against another Eleventy
 EOF
   exit
 }
@@ -102,12 +103,17 @@ CHOWN_PATHS="/work/test-results \
 # needs its own: it sits inside the bind mount, so without a volume of
 # its own the Linux binaries the fixture install writes would land in
 # the host working tree.
+# A separate fixture volume per Eleventy version keeps the two installs
+# from replacing each other on every switch.
+FIXTURE_VOLUME="edr-e2e-fixture-node-modules${ELEVENTY_VERSION:+-$ELEVENTY_VERSION}"
+
 docker run --rm --name "$CONTAINER_NAME" --init \
   -e E2E_IN_DOCKER=1 \
   -e CI \
+  -e ELEVENTY_VERSION \
   -v "$(pwd)":/work \
   -v edr-e2e-node-modules:/work/node_modules \
-  -v edr-e2e-fixture-node-modules:/work/tests/fixture-site/node_modules \
+  -v "$FIXTURE_VOLUME":/work/tests/fixture-site/node_modules \
   -v edr-e2e-npm-cache:/root/.npm \
   -w /work \
   "$IMAGE" \

@@ -43,6 +43,13 @@ Playwright covers visual regression of the main page types (desktop and mobile C
 | `npm run test:local`         | Run functional tests directly (snapshots skipped) |
 | `npm run test:config`        | Build the fixture under several consumer configs  |
 
+Every test command accepts `ELEVENTY_VERSION`, an npm tag or exact version installed into the fixture for that run in place of the lockfile pin. CI runs the whole job twice, once on the pin and once on `canary`, the 4.x prerelease line. The theme is expected to render identically on both, but only the pinned run blocks a PR; a canary failure shows up in the checks without failing them.
+
+```bash
+ELEVENTY_VERSION=canary npm run test:config
+ELEVENTY_VERSION=canary npm test
+```
+
 `tests/fixture-site/config.test.js` builds the fixture through the Eleventy CLI with generated config files: custom `includes` and `layouts` directories, the default (liquid) markdown engine, and project files overriding a theme page or layout. It catches the class of bug where the theme only works with the fixture's own settings. Each case is a separate process because Eleventy caches layouts per process, which would let one case's result leak into the next.
 
 Visual baselines live in `tests/visual.spec.js-snapshots/` and must only be generated via Docker (`npm run test:update`) — host-rendered screenshots differ by platform and would churn the baselines. The runner (`bin/run-e2e.sh`) uses the `mcr.microsoft.com/playwright` image matching the installed `@playwright/test` version, and gives both `node_modules` trees their own named volumes so container installs never land in the host working tree.

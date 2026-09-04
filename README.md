@@ -1,6 +1,6 @@
 # @lullabot/eleventy-decision-records
 
-An [Eleventy](https://www.11ty.dev/) (v3) theme plugin for documenting architectural decision records (ADRs).
+An [Eleventy](https://www.11ty.dev/) (v3 or v4) theme plugin for documenting architectural decision records (ADRs).
 
 Install it into an Eleventy project and you get the listing pages, per-topic and per-contributor pages, search, and an Atom feed — without copying any of it into your repository.
 
@@ -10,7 +10,7 @@ Install it into an Eleventy project and you get the listing pages, per-topic and
 npm install @lullabot/eleventy-decision-records
 ```
 
-Eleventy v3 is a peer dependency, so install it too if you have not already:
+Eleventy is a peer dependency (3.x, or the 4.x prereleases), so install it too if you have not already:
 
 ```bash
 npm install --save-dev @11ty/eleventy

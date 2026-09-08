@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "An Eleventy theme plugin for documenting decision records",
   "scripts": {
+    "start": "bash bin/link-fixture-site.sh && npm --prefix tests/fixture-site run serve",
     "lint": "eslint && prettier -c .",
     "lint:fix": "eslint --fix && prettier -w .",
     "lint-staged": "lint-staged",

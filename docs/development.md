@@ -4,23 +4,33 @@ This repository is an npm package, not a site. There is no dev server or build s
 
 ## Commands
 
-| Command            | Description                         |
-| ------------------ | ----------------------------------- |
-| `npm run lint`     | Run ESLint and Prettier checks      |
-| `npm run lint:fix` | Auto-fix lint and formatting issues |
+| Command            | Description                                  |
+| ------------------ | -------------------------------------------- |
+| `npm start`        | Serve the fixture site with the theme linked |
+| `npm run lint`     | Run ESLint and Prettier checks               |
+| `npm run lint:fix` | Auto-fix lint and formatting issues          |
 
 ## The Fixture Site
 
 `tests/fixture-site/` is a real consumer project: it has its own `package.json` and Eleventy config, keeps 41 lorem-ipsum decision records in `src/adrs/`, and installs the theme the way anyone else would. It backs both the Playwright suite and Tugboat previews.
 
 ```bash
+npm start # http://localhost:8181, also reachable from other machines on port 8181
+```
+
+`npm start` symlinks the working tree into the fixture site (`bin/link-fixture-site.sh`) and serves it. Edits to partials, styles, and scripts rebuild and the dev server hot-swaps the page. The virtual layouts and pages (`index.md`, `about.md`, `templates/layouts`, `templates/pages`) are read once at config time, so those need a restart.
+
+To see the packed build instead, the way tests and consumers do:
+
+```bash
 bash bin/prepare-fixture-site.sh          # pack the theme, install it into the site
-npm --prefix tests/fixture-site run serve # http://localhost:8181
+npm --prefix tests/fixture-site run serve
 ```
 
 Two details worth knowing before changing any of this:
 
 - The theme is installed **from a packed tarball**, not a `file:` dependency. A `file:` dependency symlinks the working tree, which exercises neither the `files` nor the `exports` field in `package.json` — the two things most likely to break a published package while every local build stays green.
+- `link-fixture-site.sh` and `prepare-fixture-site.sh` both install with `--no-save`, so whichever ran last wins and neither touches the fixture's `package.json`. Every test command runs the latter, so a linked checkout is swapped back to the tarball automatically.
 - `prepare-fixture-site.sh` reuses a tarball already sitting in `dist-package/` and only packs when there isn't one. CI packs once in a separate job and passes it along as an artifact, so the suite tests the exact bytes that would be published.
 - Eleventy must run with the fixture site as its working directory (hence `npm --prefix`), because the plugin resolves Nunjucks through the consuming project's own Eleventy install.
 

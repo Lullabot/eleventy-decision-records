@@ -18,7 +18,7 @@ This repository is an npm package, not a site. There is no dev server or build s
 npm start # http://localhost:8181, also reachable from other machines on port 8181
 ```
 
-`npm start` symlinks the working tree into the fixture site (`bin/link-fixture-site.sh`) and serves it. Edits to partials, styles, and scripts rebuild and the dev server hot-swaps the page. The virtual layouts and pages (`index.md`, `about.md`, `templates/layouts`, `templates/pages`) are read once at config time, so those need a restart.
+`npm start` symlinks the working tree into the fixture site (`bin/link-fixture-site.sh`) and serves it with `DECISION_RECORDS_DEV=1`. Edits under `src/` rebuild and the dev server hot-swaps the page. With that variable set, and only then, the plugin registers its own directory as a `resetConfig` watch target, so the virtual layouts and pages are re-read rather than served from the copy loaded at startup. Two Eleventy quirks shape how (see `watchTheme` in `src/index.js`): Eleventy 4 keeps directory targets bare and then rejects every file under them, so the target is a `/**` glob; and Eleventy 3 reports changes outside the project relative to the nearest shared parent without mapping them back, so on 3.x the target is registered a second time in that form.
 
 To see the packed build instead, the way tests and consumers do:
 

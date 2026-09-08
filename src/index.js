@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { join, relative, dirname } from 'node:path';
+import { join, relative, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 
@@ -90,6 +90,39 @@ function hasOverride(dir, name) {
   );
 }
 
+/**
+ * Development only (DECISION_RECORDS_DEV=1, set by `npm start`): watches
+ * the theme's own files so a linked checkout rebuilds on edit. The virtual
+ * templates are read at config time, so the watch also resets the config.
+ *
+ * Registered as a glob because Eleventy 4 keeps directory targets bare and
+ * then rejects every file under them as unmatched. Eleventy 3 has a
+ * different problem: it reports changes outside the project relative to
+ * the nearest shared parent directory, so the reset target is registered
+ * a second time in that form, without its leading `../` segments.
+ */
+function watchTheme(eleventyConfig) {
+  if (!process.env.DECISION_RECORDS_DEV) {
+    return;
+  }
+  const rel = relative('.', themeRoot).split(sep).join('/');
+  eleventyConfig.addWatchTarget(`${rel}/**`, { resetConfig: true });
+
+  const remapped = rel.replace(/^(\.\.\/)+/, '');
+  if (remapped !== rel && !isEleventy4(eleventyConfig)) {
+    eleventyConfig.addWatchTarget(`${remapped}/**`, { resetConfig: true });
+  }
+}
+
+function isEleventy4(eleventyConfig) {
+  try {
+    eleventyConfig.versionCheck('>=4.0.0-0');
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export default function (eleventyConfig, options = {}) {
   const opts = themeConfig(options);
 
@@ -153,7 +186,7 @@ export default function (eleventyConfig, options = {}) {
       '/js/orama',
   });
 
-  eleventyConfig.addWatchTarget(relative('.', themeRoot));
+  watchTheme(eleventyConfig);
 
   for (const name of LAYOUTS) {
     if (!existsSync(join(layoutsDir, name))) {

@@ -85,7 +85,7 @@
   --color-bg-dark-secondary: var(--gray-800);
   --color-border-default: var(--gray-100);
   --color-border-dark: var(--gray-800);
-  --color-link: var(--sky-800);
+  --color-link: #0f618a;
 
   /* ---------------------------------------------------------------------------
      Typography — Font Family

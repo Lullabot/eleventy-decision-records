@@ -14,8 +14,8 @@
             </time>
             {%- for area in practiceAreas %}
               {%- if area.name == adr.data.practiceArea %}
-                <span class="practice-area-icon" aria-label="{{ area.name }}"
-                  >{% icon area.icon %}</span
+                <span class="practice-area-icon"
+                  >{% icon area.icon, area.name %}</span
                 >
               {%- endif %}
             {%- endfor %}

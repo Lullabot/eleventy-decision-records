@@ -63,7 +63,7 @@ body {
 }
 
 :where(a:hover) {
-  color: var(--color-brand-primary);
+  color: var(--color-brand-primary-dark);
 }
 
 /* Block spacing */

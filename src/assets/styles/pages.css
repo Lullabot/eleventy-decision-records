@@ -258,7 +258,7 @@
   }
 
   .adr-status--accepted {
-    color: var(--sky-800);
+    color: var(--sky-999);
   }
 
   .adr-status--deprecated {

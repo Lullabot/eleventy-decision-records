@@ -7,10 +7,10 @@ jobs:
   # that would be published. A file: dependency would symlink the working
   # tree instead, leaving the "files" and "exports" fields untested.
   package:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           # Remember to update .tugboat/config.yml when changing this.
           node-version: 24
@@ -18,7 +18,7 @@ jobs:
       - run: npm ci
       # npm pack will not create its destination directory.
       - run: mkdir -p dist-package && npm pack --pack-destination dist-package
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: theme-package
           path: dist-package/*.tgz
@@ -26,7 +26,7 @@ jobs:
 
   run-playwright:
     needs: package
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -45,15 +45,15 @@ jobs:
     env:
       ELEVENTY_VERSION: ${{ matrix.eleventy.version }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           # Remember to update .tugboat/config.yml when changing this.
           node-version: 24
       - run: npm ci
       # The fixture site installs from this tarball rather than packing
       # again, so the suite and the published artifact cannot drift.
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: theme-package
           path: dist-package
@@ -64,7 +64,7 @@ jobs:
       # generation, so visual baselines match exactly.
       - run: npm test
       - if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: playwright-report-${{ matrix.eleventy.name }}
           path: |
@@ -76,22 +76,22 @@ jobs:
   # match the current design, so this reports without blocking a PR.
   run-accessibility:
     needs: package
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     continue-on-error: true
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           # Remember to update .tugboat/config.yml when changing this.
           node-version: 24
       - run: npm ci
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: theme-package
           path: dist-package
       - run: npm run test:a11y
       - if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: playwright-report-accessibility
           path: |

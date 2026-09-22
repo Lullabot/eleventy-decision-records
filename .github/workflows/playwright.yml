@@ -12,8 +12,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          # Remember to update .tugboat/config.yml when changing this.
-          node-version: 24
+          node-version-file: .nvmrc
       # npm pack runs the prepare script, so dependencies must be present.
       - run: npm ci
       # npm pack will not create its destination directory.
@@ -48,8 +47,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          # Remember to update .tugboat/config.yml when changing this.
-          node-version: 24
+          node-version-file: .nvmrc
       - run: npm ci
       # The fixture site installs from this tarball rather than packing
       # again, so the suite and the published artifact cannot drift.

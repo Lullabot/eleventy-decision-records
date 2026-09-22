@@ -21,5 +21,12 @@
       "datasourceTemplate": "node-version",
       "versioningTemplate": "node"
     }
+  ],
+  "packageRules": [
+    {
+      "description": "Keep CI (.nvmrc) and Tugboat on the same Node.js release.",
+      "matchDepNames": ["node"],
+      "groupName": "Node.js"
+    }
   ]
 }

@@ -22,7 +22,6 @@ Examples:
   $(basename "${BASH_SOURCE[0]}") --update               # Update all snapshots
   $(basename "${BASH_SOURCE[0]}") --tests search         # Run search specs only
   ELEVENTY_VERSION=canary $(basename "${BASH_SOURCE[0]}")  # Run against another Eleventy
-  E2E_A11Y=1 $(basename "${BASH_SOURCE[0]}")              # Run the axe accessibility suite
 EOF
   exit
 }
@@ -112,7 +111,6 @@ docker run --rm --name "$CONTAINER_NAME" --init \
   -e E2E_IN_DOCKER=1 \
   -e CI \
   -e ELEVENTY_VERSION \
-  -e E2E_A11Y \
   -v "$(pwd)":/work \
   -v edr-e2e-node-modules:/work/node_modules \
   -v "$FIXTURE_VOLUME":/work/tests/fixture-site/node_modules \

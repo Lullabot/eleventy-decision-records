@@ -9,7 +9,7 @@ const mobile = {
   viewport: { width: 375, height: 812 },
 };
 
-const defaultProjects = [
+const projects = [
   {
     name: 'chromium-desktop',
     testIgnore: /accessibility\.spec\.js/,
@@ -28,11 +28,6 @@ const defaultProjects = [
       viewport: { width: 1440, height: 900 },
     },
   },
-];
-
-// The axe suite is opt-in (E2E_A11Y=1) while known contrast and labelling
-// failures stand; CI runs it as a separate job that cannot block a PR.
-const accessibilityProjects = [
   {
     name: 'a11y-desktop',
     testMatch: /accessibility\.spec\.js/,
@@ -74,5 +69,5 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
   },
-  projects: process.env.E2E_A11Y ? accessibilityProjects : defaultProjects,
+  projects,
 });

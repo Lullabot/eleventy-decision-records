@@ -11,8 +11,7 @@
     "test": "bash bin/run-e2e.sh",
     "test:config": "bash bin/prepare-fixture-site.sh && npm --prefix tests/fixture-site test",
     "test:update": "bash bin/run-e2e.sh --update",
-    "test:local": "playwright test",
-    "test:a11y": "E2E_A11Y=1 bash bin/run-e2e.sh"
+    "test:local": "playwright test"
   },
   "exports": {
     ".": "./src/index.js"

@@ -14,7 +14,13 @@ export default [
     },
   },
   {
-    ignores: ['dist/', 'dist-package/', 'tests/fixture-site/_site/'],
+    ignores: [
+      'dist/',
+      'dist-package/',
+      'playwright-report/',
+      'test-results/',
+      'tests/fixture-site/_site/',
+    ],
   },
   eslintPluginPrettierRecommended,
 ];

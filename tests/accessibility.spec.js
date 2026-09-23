@@ -4,7 +4,7 @@ import { checkAccessibility } from '@lullabot/playwright-drupal';
 import { baseline } from './a11y-baseline.js';
 
 // Same deterministic URLs the visual suite screenshots, so every page
-// type the theme renders gets an axe scan.
+// type and content specimen the theme renders gets an axe scan.
 const pages = [
   ['home', '/'],
   ['decisions', '/adrs/'],
@@ -14,6 +14,9 @@ const pages = [
   ['contributors', '/contributors/'],
   ['contributor', '/contributors/lorem-ipsum/'],
   ['about', '/about/'],
+  ['typography', '/adrs/20230801-typography-specimen/'],
+  ['tables', '/adrs/20230802-html-tables/'],
+  ['syntax-highlighting', '/adrs/20230803-syntax-highlighting/'],
 ];
 
 function describeViolations(violations) {
@@ -139,4 +142,58 @@ test('search dialog with results', async ({ page }, testInfo) => {
     .toBeGreaterThan(0);
   await expectNoViolations(page, testInfo);
   await expectNoStateViolations(page, ['hover']);
+});
+
+test.describe('scroll boxes', () => {
+  const boxes = (page) =>
+    page.locator('.adr-content pre, .adr-content .table-scroll').all();
+
+  const overflows = (box) =>
+    box.evaluate((el) => el.scrollWidth > el.clientWidth);
+
+  for (const path of [
+    '/adrs/20230802-html-tables/',
+    '/adrs/20230803-syntax-highlighting/',
+  ]) {
+    test(`are focusable only while overflowing on ${path}`, async ({
+      page,
+    }) => {
+      await page.goto(path);
+      await page.evaluate(() => document.fonts.ready);
+      for (const box of await boxes(page)) {
+        if (await overflows(box)) {
+          await expect(box).toHaveAttribute('tabindex', '0');
+        } else {
+          await expect(box).not.toHaveAttribute('tabindex');
+        }
+      }
+    });
+  }
+
+  test('large table is a region named by its caption', async ({ page }) => {
+    await page.goto('/adrs/20230802-html-tables/');
+    const box = page.locator('.table-scroll').nth(1);
+    expect(await overflows(box)).toBe(true);
+    await expect(box).toHaveRole('region');
+    await expect(box).toHaveAccessibleName(
+      'Lorem ipsum options compared across every environment',
+    );
+  });
+
+  test('small table has no tab stop', async ({ page }) => {
+    await page.goto('/adrs/20230802-html-tables/');
+    const box = page.locator('.table-scroll').first();
+    expect(await overflows(box)).toBe(false);
+    await expect(box).not.toHaveAttribute('tabindex');
+    await expect(box).not.toHaveAttribute('role');
+  });
+
+  test('lose the tab stop once the content fits', async ({ page }) => {
+    await page.goto('/adrs/20230802-html-tables/');
+    const box = page.locator('.table-scroll').nth(1);
+    await expect(box).toHaveAttribute('tabindex', '0');
+    await page.setViewportSize({ width: 3000, height: 900 });
+    await expect(box).not.toHaveAttribute('tabindex');
+    await expect(box).not.toHaveAttribute('role');
+  });
 });

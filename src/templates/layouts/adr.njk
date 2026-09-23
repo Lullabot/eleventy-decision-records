@@ -53,5 +53,7 @@ layout: page.njk
     </div>
   {%- endif %}
 
-  <div class="adr-content">{{ content | safe }}</div>
+  <div class="adr-content">{{ content | scrollable | safe }}</div>
 </div>
+
+<script type="module" src="/js/scrollable.js"></script>

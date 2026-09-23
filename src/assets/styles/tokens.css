@@ -92,6 +92,8 @@
      Typography — Font Family
      --------------------------------------------------------------------------- */
   --font-family-base: 'Gabarito', verdana, sans-serif;
+  --font-family-mono:
+    ui-monospace, 'SFMono-Regular', 'Cascadia Code', menlo, consolas, monospace;
 
   /* ---------------------------------------------------------------------------
      Typography — Font Weights

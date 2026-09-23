@@ -29,6 +29,34 @@ for (const [name, path] of pages) {
   });
 }
 
+// The layout pins the body to the viewport and scrolls .site-main, so a
+// fullPage screenshot stops at the fold. Growing the viewport by the
+// hidden overflow shows the whole article instead.
+async function fitMainToViewport(page) {
+  const overflow = await page
+    .locator('.site-main')
+    .evaluate((main) => main.scrollHeight - main.clientHeight);
+  const { width, height } = page.viewportSize();
+  await page.setViewportSize({ width, height: height + overflow });
+}
+
+// Content specimens, captured full length since what they test sits
+// mostly below the fold.
+const specimens = [
+  ['typography', '/adrs/20230801-typography-specimen/'],
+  ['tables', '/adrs/20230802-html-tables/'],
+  ['syntax-highlighting', '/adrs/20230803-syntax-highlighting/'],
+];
+
+for (const [name, path] of specimens) {
+  test(`${name} specimen`, async ({ page }) => {
+    await page.goto(path);
+    await fitMainToViewport(page);
+    await parkMouse(page);
+    await expect(page).toHaveScreenshot(`${name}.png`);
+  });
+}
+
 test('expanded menu', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Menu' }).click();

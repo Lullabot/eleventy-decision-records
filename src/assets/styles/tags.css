@@ -1,4 +1,5 @@
-.tag {
+/* Prism also marks up HTML tags in code blocks as .token.tag. */
+.tag:not(.token) {
   display: inline-flex;
   align-items: center;
   padding: var(--space-1) var(--space-2);

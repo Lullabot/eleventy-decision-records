@@ -6,7 +6,7 @@ import {
   setKey,
   topTopics,
 } from './collections.js';
-import { spaceless } from './strings.js';
+import { spaceless, scrollable } from './strings.js';
 
 /**
  * Register all custom filters with Eleventy.
@@ -22,4 +22,5 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter('setKey', setKey);
   eleventyConfig.addFilter('topTopics', topTopics);
   eleventyConfig.addFilter('spaceless', spaceless);
+  eleventyConfig.addFilter('scrollable', scrollable);
 }

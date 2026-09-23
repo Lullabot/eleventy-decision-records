@@ -61,6 +61,10 @@ jobs:
       # Runs the suite in the same Docker image used for local snapshot
       # generation, so visual baselines match exactly.
       - run: npm test
+      # Inline annotations are skipped: the JSON report records spec paths
+      # relative to tests/, so GitHub cannot place them on the diff.
+      - if: always()
+        run: npx playwright-drupal-a11y-summary --mode=summary >> "$GITHUB_STEP_SUMMARY"
       - if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:

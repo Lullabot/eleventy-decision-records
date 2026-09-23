@@ -5,6 +5,8 @@ permalink: /about/
 eleventyExcludeFromCollections: true
 ---
 
+# {{ title }}
+
 ## What is an ADR?
 
 An Architectural Decision (AD) is a software design choice that addresses a functional or non-functional requirement that is architecturally significant. An Architectural Decision Record (ADR) captures a single AD — the collection of ADRs created and maintained in a project constitutes its decision log.

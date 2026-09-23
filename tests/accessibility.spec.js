@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { checkAccessibility } from '@lullabot/playwright-drupal';
+import { baseline } from './a11y-baseline.js';
 
 // Same deterministic URLs the visual suite screenshots, so every page
 // type the theme renders gets an axe scan.
@@ -34,12 +36,12 @@ function describeViolations(violations) {
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
-async function expectNoViolations(
-  page,
-  builder = new AxeBuilder({ page }).withTags(WCAG_TAGS),
-) {
-  const { violations } = await builder.analyze();
-  expect(describeViolations(violations)).toBe('');
+async function expectNoViolations(page, testInfo) {
+  await checkAccessibility(page, testInfo, {
+    wcagTags: WCAG_TAGS,
+    baseline,
+    disableDefaultExclusions: true,
+  });
 }
 
 const INTERACTIVE = 'a[href], button, input, select, textarea, summary';
@@ -104,9 +106,9 @@ async function expectNoStateViolations(page, pseudoClasses) {
 }
 
 for (const [name, path] of pages) {
-  test(`${name} page`, async ({ page }) => {
+  test(`${name} page`, async ({ page }, testInfo) => {
     await page.goto(path);
-    await expectNoViolations(page);
+    await expectNoViolations(page, testInfo);
   });
 
   for (const [state, pseudoClasses] of STATES) {
@@ -117,15 +119,15 @@ for (const [name, path] of pages) {
   }
 }
 
-test('expanded menu', async ({ page }) => {
+test('expanded menu', async ({ page }, testInfo) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Menu' }).click();
   await expect(page.locator('.site-nav')).toHaveClass(/expanded/);
-  await expectNoViolations(page);
+  await expectNoViolations(page, testInfo);
   await expectNoStateViolations(page, ['hover']);
 });
 
-test('search dialog with results', async ({ page }) => {
+test('search dialog with results', async ({ page }, testInfo) => {
   await page.goto('/');
   if (page.viewportSize().width < 768) {
     await page.getByRole('button', { name: 'Menu' }).click();
@@ -135,6 +137,6 @@ test('search dialog with results', async ({ page }) => {
   await expect
     .poll(() => page.locator('#search-dialog li article').count())
     .toBeGreaterThan(0);
-  await expectNoViolations(page);
+  await expectNoViolations(page, testInfo);
   await expectNoStateViolations(page, ['hover']);
 });

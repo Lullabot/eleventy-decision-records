@@ -61,3 +61,5 @@ The theme supplies a homepage and an about page until you add your own. Anything
 ## License
 
 See [LICENSE](LICENSE) for details.
+
+The Gabarito font files in `src/assets/fonts/` are licensed separately under the SIL Open Font License 1.1. See [src/assets/fonts/OFL.txt](src/assets/fonts/OFL.txt).

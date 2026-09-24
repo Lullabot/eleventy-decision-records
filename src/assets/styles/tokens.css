@@ -35,7 +35,8 @@
   --gray-0: #fff;
 
   /* Sky */
-  --sky-900: #1481b8;
+  --sky-999: #046595;
+  --sky-900: #0974aa;
   --sky-800: #1d8fc9;
   --sky-700: #38a5dc;
   --sky-600: #4eb6eb;
@@ -85,12 +86,14 @@
   --color-bg-dark-secondary: var(--gray-800);
   --color-border-default: var(--gray-100);
   --color-border-dark: var(--gray-800);
-  --color-link: var(--sky-800);
+  --color-link: var(--sky-999);
 
   /* ---------------------------------------------------------------------------
      Typography — Font Family
      --------------------------------------------------------------------------- */
   --font-family-base: 'Gabarito', verdana, sans-serif;
+  --font-family-mono:
+    ui-monospace, 'SFMono-Regular', 'Cascadia Code', menlo, consolas, monospace;
 
   /* ---------------------------------------------------------------------------
      Typography — Font Weights

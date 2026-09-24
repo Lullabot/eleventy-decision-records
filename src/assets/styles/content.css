@@ -1,0 +1,149 @@
+/* ==========================================================================
+   Decision Record Content
+   Block elements in ADR bodies. Listing pages style their own lists and
+   tables; inline elements live in typography.css.
+   ========================================================================== */
+
+@scope (.adr-content) {
+  /* Grid items default to min-width: auto, so a long code line would
+     widen the column instead of scrolling inside its block. */
+  :scope {
+    min-width: 0;
+  }
+
+  img {
+    height: auto;
+    margin-block: var(--space-4);
+  }
+
+  /* Code blocks */
+  pre {
+    margin: 0 0 var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    overflow-x: auto;
+    background-color: var(--color-bg-dark);
+    color: var(--gray-50);
+    border-radius: var(--radius-md);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    tab-size: 2;
+
+    & code {
+      font-size: inherit;
+    }
+  }
+
+  /* Tables */
+  .table-scroll {
+    margin-bottom: var(--space-4);
+    overflow-x: auto;
+  }
+
+  table {
+    width: max-content;
+    min-width: 100%;
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-base);
+  }
+
+  caption {
+    padding-bottom: var(--space-2);
+    text-align: left;
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-base);
+  }
+
+  th,
+  td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: var(--border-width-default) solid var(--color-border-default);
+    max-width: 20rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    font-weight: var(--font-weight-bold);
+  }
+
+  thead th {
+    background-color: var(--color-bg-secondary);
+    border-bottom-color: var(--gray-200);
+    white-space: nowrap;
+  }
+
+  tfoot :is(th, td) {
+    border-top: var(--border-width-default) solid var(--gray-200);
+    border-bottom: 0;
+  }
+
+  ul {
+    list-style: disc;
+
+    & ul {
+      list-style: circle;
+
+      & ul {
+        list-style: square;
+      }
+    }
+  }
+
+  ol {
+    list-style: decimal;
+
+    & ol {
+      list-style: lower-alpha;
+    }
+  }
+
+  li > :is(ul, ol) {
+    margin-top: var(--space-2);
+    margin-bottom: 0;
+  }
+}
+
+/* Syntax highlighting (Prism tokens), tuned for the dark code block. */
+@scope (pre[class*='language-']) {
+  .token:is(.comment, .prolog, .doctype, .cdata) {
+    color: var(--gray-200);
+    font-style: italic;
+  }
+
+  .token:is(.punctuation, .operator) {
+    color: var(--gray-100);
+  }
+
+  .token:is(.property, .tag, .constant, .symbol, .deleted) {
+    color: var(--red-500);
+  }
+
+  .token:is(.boolean, .number) {
+    color: var(--gold-600);
+  }
+
+  .token:is(.selector, .attr-name, .string, .char, .builtin, .inserted) {
+    color: var(--sky-400);
+  }
+
+  .token:is(.atrule, .attr-value, .keyword) {
+    color: var(--red-400);
+  }
+
+  .token:is(.function, .class-name) {
+    color: var(--gold-400);
+  }
+
+  .token:is(.regex, .important, .variable) {
+    color: var(--ocean-400);
+  }
+
+  .token:is(.important, .bold) {
+    font-weight: var(--font-weight-bold);
+  }
+
+  .token.italic {
+    font-style: italic;
+  }
+}

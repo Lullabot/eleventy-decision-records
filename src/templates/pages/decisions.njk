@@ -1,0 +1,41 @@
+---
+title: All Decisions
+description: A complete list of architectural decision records
+permalink: /{{ dirs.decisions }}/
+eleventyExcludeFromCollections: true
+---
+
+<h1>{{ title }}</h1>
+<p class="page-description">{{ description }}</p>
+
+<div class="adr-filters">
+  <span class="adr-count">{{ collections.adrs | length }} decisions</span>
+</div>
+
+<ol class="adr-list" reversed>
+  {%- for adr in collections.adrs %}
+    <li class="adr-item">
+      <div class="adr-header">
+        <span class="adr-status adr-status--{{ adr.data.status }}">
+          {% if adr.data.status == "accepted" %}{% icon "verified" %}{% else %}{% icon "cancel" %}{% endif %}
+          {{ adr.data.status }}
+        </span>
+        <time datetime="{{ adr.date | isoDate }}"
+          >{{ adr.date | timeSince }}</time
+        >
+      </div>
+      <a class="adr-title" href="{{ adr.url }}">{{ adr.data.title }}</a>
+      {%- if adr.data.context %}
+        <p class="adr-context">{{ adr.data.context }}</p>
+      {%- endif %}
+      <div class="adr-meta">
+        {%- if adr.data.practiceArea %}
+          <span class="tag">{{ adr.data.practiceArea }}</span>
+        {%- endif %}
+        {%- for topic in adr.data.topics %}
+          <span class="tag">{{ topic }}</span>
+        {%- endfor %}
+      </div>
+    </li>
+  {%- endfor %}
+</ol>

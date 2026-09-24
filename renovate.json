@@ -2,6 +2,15 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
   "minimumReleaseAge": "3 days",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/test/**",
+    "**/__fixtures__/**"
+  ],
   "automerge": true,
   "customManagers": [
     {
@@ -11,6 +20,13 @@
       "depNameTemplate": "node",
       "datasourceTemplate": "node-version",
       "versioningTemplate": "node"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Keep CI (.nvmrc) and Tugboat on the same Node.js release.",
+      "matchDepNames": ["node"],
+      "groupName": "Node.js"
     }
   ]
 }

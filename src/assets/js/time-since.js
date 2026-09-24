@@ -1,4 +1,4 @@
-// TODO: Replace with Temporal (matching src/_11ty/filters/dates.js) once
+// TODO: Replace with Temporal (matching src/lib/filters/dates.js) once
 // browser support is baseline:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal#browser_compatibility
 export function timeSince(isoDate) {

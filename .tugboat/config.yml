@@ -13,12 +13,18 @@ services:
     commands:
       # Commands that set up the basic preview infrastructure
       init:
-        # Link the document root to the expected path. This example links the
-        # root of the git repository to the docroot
+        # Link the document root to the expected path. The preview serves
+        # the fixture site, which consumes the theme the way a real
+        # project does, so the docroot is that site's Eleventy output.
         - curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
-        - ln -snf "${TUGBOAT_ROOT}/dist" "${DOCROOT}"
+        - ln -snf "${TUGBOAT_ROOT}/tests/fixture-site/_site" "${DOCROOT}"
         - apt-get install -y nodejs
       build:
         - npm ci
-        - npm run sample-content
-        - npm run build
+        # Packs the theme and installs the tarball into the fixture site,
+        # matching what the Playwright suite builds.
+        - bash bin/prepare-fixture-site.sh
+        # --prefix runs the script with the fixture site as its working
+        # directory, which the plugin needs to resolve Nunjucks through
+        # that project's own Eleventy.
+        - npm --prefix tests/fixture-site run build

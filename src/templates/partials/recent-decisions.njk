@@ -1,0 +1,33 @@
+<aside class="recent-decisions" aria-label="Accepted decisions">
+  <div class="heading">
+    <h2>Accepted Decisions</h2>
+    <span class="icon">{% icon "verified" %}</span>
+  </div>
+
+  <ol>
+    {%- for adr in collections.adrs %}
+      {%- if adr.data.status == "accepted" %}
+        <li>
+          <div class="meta">
+            <time datetime="{{ adr.date | isoDate }}">
+              {{ adr.date | timeSince }}
+            </time>
+            {%- for area in practiceAreas %}
+              {%- if area.name == adr.data.practiceArea %}
+                <span class="practice-area-icon"
+                  >{% icon area.icon, area.name %}</span
+                >
+              {%- endif %}
+            {%- endfor %}
+          </div>
+          <a href="{{ adr.url }}"> {{ adr.data.title }} </a>
+          <div class="tags">
+            {%- for topic in adr.data.topics %}
+              <span class="tag">{{ topic }}</span>
+            {%- endfor %}
+          </div>
+        </li>
+      {%- endif %}
+    {%- endfor %}
+  </ol>
+</aside>

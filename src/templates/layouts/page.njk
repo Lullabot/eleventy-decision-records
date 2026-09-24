@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title or site.title }} — {{ site.organization }}</title>
+    <meta name="description" content="{{ description or site.description }}" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <style>
+      @view-transition {
+        navigation: auto;
+      }
+    </style>
+    <link
+      rel="preload"
+      href="/fonts/gabarito-v9-latin-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/gabarito-v9-latin-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/gabarito-v9-latin-700.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    {% css %}{% include "styles/reset.css" %}{% endcss %}
+    {% css %}{% include "styles/fonts.css" %}{% endcss %}
+    {% css %}{% include "styles/tokens.css" %}{% endcss %}
+    {% css %}{% include "styles/typography.css" %}{% endcss %}
+    {% css %}{% include "styles/layout.css" %}{% endcss %}
+    {% css %}{% include "styles/recent-decisions.css" %}{% endcss %}
+    {% css %}{% include "styles/search-dialog.css" %}{% endcss %}
+    {% css %}{% include "styles/footer.css" %}{% endcss %}
+    {% css %}{% include "styles/pages.css" %}{% endcss %}
+    {% css %}{% include "styles/content.css" %}{% endcss %}
+    {% css %}{% include "styles/tags.css" %}{% endcss %}
+    {% css %}{% include "styles/view-transitions.css" %}{% endcss %}
+    <link rel="stylesheet" href="{% getBundleFileUrl 'css' %}" />
+  </head>
+  <body>
+    <a href="#site-main" class="skip-link">Skip to main content</a>
+
+    {% include "site-nav.njk" %}
+
+    <main class="site-main" id="site-main">{{ content | safe }}</main>
+
+    {% include "recent-decisions.njk" %}
+    {% include "footer.njk" %}
+
+    <dialog id="search-dialog" aria-labelledby="search-dialog-title">
+      <header>
+        <h2 id="search-dialog-title">Search Decisions</h2>
+        <form method="dialog">
+          <button aria-label="Close search">{% icon "close" %}</button>
+        </form>
+      </header>
+      <input
+        type="search"
+        placeholder="Search decisions…"
+        aria-label="Search decisions"
+        autofocus
+      />
+      <p class="results-summary" aria-hidden="true"></p>
+      <p class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
+      <ol>
+        <template>
+          <li>
+            <article>
+              <h3><a></a></h3>
+              <p class="snippet"></p>
+              <footer>
+                <span class="status"></span>
+                <span class="tags"></span>
+                <span class="age"></span>
+              </footer>
+            </article>
+          </li>
+        </template>
+      </ol>
+    </dialog>
+
+    <script>
+      document
+        .querySelector('.site-nav footer button')
+        .addEventListener('click', () => {
+          const nav = document.querySelector('.site-nav');
+          const btn = document.querySelector('.site-nav footer button');
+          const isExpanded = nav.classList.contains('expanded');
+          const isMobile = window.matchMedia('(max-width: 48rem)').matches;
+
+          if (isExpanded && isMobile) {
+            nav.classList.add('closing');
+            nav.classList.remove('expanded');
+            btn.setAttribute('aria-expanded', 'false');
+            nav.querySelector('.menu').addEventListener(
+              'animationend',
+              () => {
+                nav.classList.remove('closing');
+              },
+              { once: true },
+            );
+          } else {
+            const expanded = nav.classList.toggle('expanded');
+            btn.setAttribute('aria-expanded', String(expanded));
+          }
+        });
+
+      const searchDialog = document.getElementById('search-dialog');
+      document
+        .querySelector('.site-nav button[aria-label="Search"]')
+        .addEventListener('click', () => {
+          searchDialog.showModal();
+        });
+    </script>
+    <script type="module" src="/js/search.js"></script>
+    <script type="speculationrules">
+      {
+        "prefetch": [
+          {
+            "where": { "href_matches": "/*" },
+            "eagerness": "moderate"
+          }
+        ]
+      }
+    </script>
+  </body>
+</html>

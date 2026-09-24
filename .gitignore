@@ -1,6 +1,5 @@
-# REMOVE THIS LINE 👇
-adrs/*.md
 dist/
+dist-package/
 node_modules/
 reports/eslint/
 .cache

@@ -1,0 +1,17 @@
+/*
+ * Injected only while screenshots are captured, via
+ * expect.toHaveScreenshot.stylePath in playwright.config.js.
+ *
+ * Relative ages are derived from the clock: the timeSince filter bakes
+ * them in at build time for listings, and search.js computes them in the
+ * browser for search results. Hiding the text alone is not enough --
+ * the box resizes as the string changes ("29 days ago" -> "1 month
+ * ago"), which shifts the pixels around it and fails the comparison.
+ * Pinning the geometry too is what actually makes baselines stable.
+ */
+time,
+#search-dialog .age {
+  visibility: hidden;
+  display: inline-block;
+  width: 8em;
+}

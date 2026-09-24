@@ -37,17 +37,11 @@
     gap: var(--space-4);
     padding: var(--space-6) var(--space-4);
     margin-inline: calc(-1 * var(--space-4));
-    border-radius: var(--radius-lg);
     transition: background-color 0.15s ease;
   }
 
   li + li {
     border-top: 1px solid var(--color-border-default);
-  }
-
-  li:has(a:hover),
-  li:has(a:focus-visible) {
-    background-color: var(--color-bg-tertiary, var(--gray-100));
   }
 
   li:has(a:focus-visible) {
@@ -98,7 +92,7 @@
   }
 
   a:hover {
-    color: var(--color-brand-primary);
+    color: var(--color-brand-primary-dark);
   }
 
   /* Tags */

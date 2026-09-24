@@ -1,0 +1,59 @@
+---
+layout: page.njk
+---
+
+<h1>{{ title }}</h1>
+
+<dl class="adr-detail-meta">
+  <dt>Date</dt>
+  <dd>
+    <time datetime="{{ date | isoDate }}">{{ date | datetimeFormat }}</time>
+  </dd>
+
+  {%- if practiceArea %}
+    <dt>Practice Area</dt>
+    <dd>
+      <a href="/practice-areas/{{ practiceArea | slugify }}/"
+        >{{ practiceArea }}</a
+      >
+    </dd>
+  {%- endif %}
+
+  {%- if contributors | length %}
+    <dt>Contributors</dt>
+    <dd>
+      {%- for contributor in contributors %}
+        <a href="/contributors/{{ contributor | slugify }}/"
+          >{{ contributor }}</a
+        >{% if not loop.last %},{% endif %}
+      {%- endfor %}
+    </dd>
+  {%- endif %}
+
+  {%- if topics | length %}
+    <dt>Topics</dt>
+    <dd class="adr-detail-topics">
+      {%- for topic in topics %}
+        <a class="tag" href="/topics/{{ topic | lower | slugify }}/"
+          >{{ topic }}</a
+        >
+      {%- endfor %}
+    </dd>
+  {%- endif %}
+</dl>
+
+{%- set tocList = content | toc %}
+<div class="adr-body{{ ' has-toc' if tocList }}">
+  {%- if tocList %}
+    <div class="toc-wrapper">
+      <nav class="toc" aria-labelledby="toc-heading">
+        <h2 id="toc-heading">On this page:</h2>
+        {{ tocList | safe }}
+      </nav>
+    </div>
+  {%- endif %}
+
+  <div class="adr-content">{{ content | scrollable | safe }}</div>
+</div>
+
+<script type="module" src="/js/scrollable.js"></script>

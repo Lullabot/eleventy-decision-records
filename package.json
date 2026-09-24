@@ -1,35 +1,66 @@
 {
-  "name": "eleventy-decision-records",
+  "name": "@lullabot/eleventy-decision-records",
   "version": "1.0.0",
-  "description": "An eleventy starter project for documenting decision records",
+  "description": "An Eleventy theme plugin for documenting decision records",
   "scripts": {
-    "start": "npm run develop",
-    "develop": "eleventy --serve",
-    "build": "eleventy",
-    "develop:debug": "DEBUG=Eleventy* eleventy --serve",
-    "build:debug": "DEBUG=Eleventy* eleventy",
+    "start": "bash bin/link-fixture-site.sh && DECISION_RECORDS_DEV=1 npm --prefix tests/fixture-site run serve",
     "lint": "eslint && prettier -c .",
     "lint:fix": "eslint --fix && prettier -w .",
     "lint-staged": "lint-staged",
     "prepare": "husky",
-    "sample-content": "node ./scripts/generate-adrs.js",
     "test": "bash bin/run-e2e.sh",
+    "test:config": "bash bin/prepare-fixture-site.sh && npm --prefix tests/fixture-site test",
     "test:update": "bash bin/run-e2e.sh --update",
     "test:local": "playwright test"
   },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src/index.js",
+    "src/config.js",
+    "src/defaultConfig.json",
+    "src/index.md",
+    "src/about.md",
+    "src/YYYYMMDD-decision-template.md",
+    "src/lib",
+    "src/templates",
+    "src/assets"
+  ],
+  "peerDependencies": {
+    "@11ty/eleventy": "^3.0.0 || ^4.0.0-0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "eleventy",
+    "eleventy-plugin",
+    "eleventy-theme",
+    "11ty",
+    "adr",
+    "architecture-decision-record",
+    "decision-records",
+    "documentation"
+  ],
   "author": "Lullabot, Inc.",
   "repository": {
     "type": "git",
     "url": "https://github.com/Lullabot/eleventy-decision-records"
   },
+  "homepage": "https://github.com/Lullabot/eleventy-decision-records#readme",
   "bugs": {
     "url": "https://github.com/Lullabot/eleventy-decision-records/issues"
   },
   "license": "MIT",
   "type": "module",
   "devDependencies": {
-    "@11ty/eleventy": "^3.0.0",
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^10.0.0",
+    "@lullabot/playwright-drupal": "^1.11.0",
     "@playwright/test": "^1.62.1",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.0.3",
@@ -40,8 +71,10 @@
     "prettier": "^3.4.2"
   },
   "dependencies": {
+    "@11ty/eleventy-plugin-bundle": "^3.0.7",
     "@11ty/eleventy-plugin-rss": "^2.0.4",
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
+    "@11ty/eleventy-utils": "^2.0.7",
     "@js-temporal/polyfill": "^0.5.1",
     "@material-symbols/svg-400": "^0.40.2",
     "@orama/orama": "^3.1.18",

@@ -1,50 +1,45 @@
 ---
-pagination:
-  data: collections.topics
-  size: 1
-  alias: topic
-permalink: 'topics/{{ topic.label | slugify }}/'
+title: Topics
+description: Every topic our decision records are tagged with
+permalink: /topics/
 eleventyExcludeFromCollections: true
-eleventyComputed:
-  title: 'Decisions about {{ topic.label }}'
-  description: 'Architectural decision records tagged with {{ topic.label }}'
 ---
 
-{%- set topicAdrs = collections.adrs | withTopic(topic.label) %}
-
-<h1>Decisions about {{ topic.label }}</h1>
+<h1>{{ title }}</h1>
 <p class="page-description">{{ description }}</p>
 
-<div class="adr-filters">
-  <span class="adr-count"
-    >{{ topicAdrs | length }} decision{{ "s" if topicAdrs | length != 1 }}</span
-  >
-</div>
-
-<ol class="adr-list" reversed>
-  {%- for adr in topicAdrs %}
-    <li class="adr-item">
-      <div class="adr-header">
-        <span class="adr-status adr-status--{{ adr.data.status }}">
-          {% if adr.data.status == "accepted" %}{% icon "verified" %}{% else %}{% icon "cancel" %}{% endif %}
-          {{ adr.data.status }}
-        </span>
-        <time datetime="{{ adr.date | isoDate }}"
-          >{{ adr.date | timeSince }}</time
-        >
-      </div>
-      <a class="adr-title" href="{{ adr.url }}">{{ adr.data.title }}</a>
-      {%- if adr.data.context %}
-        <p class="adr-context">{{ adr.data.context }}</p>
-      {%- endif %}
-      <div class="adr-meta">
-        {%- if adr.data.practiceArea %}
-          <span class="tag">{{ adr.data.practiceArea }}</span>
+<table class="index-table">
+  <thead>
+    <tr>
+      <th>Topic</th>
+      <th>Decisions</th>
+      <th>Practice Areas</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%- for topic in collections.topics %}
+      {%- set adrs = collections.adrs | withTopic(topic.label) %}
+      {%- set areas = [] %}
+      {%- for adr in adrs %}
+        {%- if adr.data.practiceArea and adr.data.practiceArea not in areas %}
+          {%- set areas = (areas.push(adr.data.practiceArea), areas) %}
         {%- endif %}
-        {%- for t in adr.data.topics %}
-          <span class="tag">{{ t }}</span>
-        {%- endfor %}
-      </div>
-    </li>
-  {%- endfor %}
-</ol>
+      {%- endfor %}
+      <tr>
+        <td>
+          <a href="/topics/{{ topic.label | slugify }}/">{{ topic.label }}</a>
+        </td>
+        <td>{{ topic.count }}</td>
+        <td>
+          <div class="tags">
+            {%- for area in areas %}
+              <a class="tag" href="/practice-areas/{{ area | slugify }}/"
+                >{{ area }}</a
+              >
+            {%- endfor %}
+          </div>
+        </td>
+      </tr>
+    {%- endfor %}
+  </tbody>
+</table>

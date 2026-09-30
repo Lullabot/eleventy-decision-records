@@ -95,13 +95,13 @@ This moves the source glob, the listing page's URL, the layout assignment, and a
 
 Create a file with the same name in your project and the theme's version steps aside:
 
-| To replace                                                                      | Add                                            |
-| ------------------------------------------------------------------------------- | ---------------------------------------------- |
-| A layout (`page.njk`, `adr.njk`)                                                | The same filename in your includes directory   |
-| A page (`decisions`, `topics`, `practice-areas`, `contributors`, `contributor`) | The same base name in your input directory     |
-| The homepage or about page                                                      | `index.*` or `about.*` in your input directory |
-| A partial (`site-nav`, `footer`, `recent-decisions`)                            | The same filename in your includes directory   |
-| A stylesheet (`tokens.css`, `layout.css`, …)                                    | `styles/<name>.css` in your includes directory |
+| To replace                                                                               | Add                                            |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| A layout (`page.njk`, `adr.njk`)                                                         | The same filename in your includes directory   |
+| A page (`decisions`, `topics`, `topic`, `practice-areas`, `contributors`, `contributor`) | The same base name in your input directory     |
+| The homepage or about page                                                               | `index.*` or `about.*` in your input directory |
+| A partial (`site-nav`, `footer`, `recent-decisions`)                                     | The same filename in your includes directory   |
+| A stylesheet (`tokens.css`, `layout.css`, …)                                             | `styles/<name>.css` in your includes directory |
 
 For pages and content the extension does not matter — your `about.njk` replaces the theme's `about.md`.
 

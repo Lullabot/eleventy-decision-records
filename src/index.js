@@ -52,6 +52,7 @@ function addThemeSearchPaths(eleventyConfig, searchPaths) {
 const PAGES = [
   'decisions.njk',
   'topics.njk',
+  'topic.njk',
   'practice-areas.njk',
   'contributors.njk',
   'contributor.njk',

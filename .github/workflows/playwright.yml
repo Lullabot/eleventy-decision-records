@@ -2,6 +2,7 @@ name: Run Playwright tests
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_call:
 jobs:
   # Packs the theme once so every downstream job installs the exact bytes
   # that would be published. A file: dependency would symlink the working

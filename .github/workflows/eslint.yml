@@ -2,6 +2,7 @@ name: Run eslint
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_call:
 jobs:
   run-eslint:
     runs-on: ubuntu-24.04

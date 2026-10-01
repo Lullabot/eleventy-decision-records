@@ -9,6 +9,7 @@ const pages = [
   ['home', '/'],
   ['decisions', '/adrs/'],
   ['adr-detail', '/adrs/20240115-fixture-decision-record/'],
+  ['topics', '/topics/'],
   ['topic', '/topics/tempor/'],
   ['practice-area', '/practice-areas/engineering/'],
   ['contributors', '/contributors/'],

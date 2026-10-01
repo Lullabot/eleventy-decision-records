@@ -11,7 +11,7 @@ src/
   lib/                 # collections, data, filters, plugins, shortcodes
   templates/
     layouts/           # page.njk, adr.njk
-    pages/             # decisions, topics, practice-areas, contributors, contributor
+    pages/             # decisions, topics, topic, practice-areas, contributors, contributor
     partials/          # site-nav, footer, recent-decisions
     assets/            # favicon.njk, search_index.njk
   assets/              # fonts, icons, images, js, styles

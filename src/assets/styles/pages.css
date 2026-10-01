@@ -297,10 +297,10 @@
 }
 
 /* ==========================================================================
-   Contributors Table
+   Index Tables (contributors, topics)
    ========================================================================== */
 
-@scope (.contributor-table) {
+@scope (.index-table) {
   :scope {
     width: 100%;
     border-collapse: collapse;

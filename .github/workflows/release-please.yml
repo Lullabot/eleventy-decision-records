@@ -8,14 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  eslint:
-    uses: ./.github/workflows/eslint.yml
-
-  playwright:
-    uses: ./.github/workflows/playwright.yml
-
   release-please:
-    needs: [eslint, playwright]
     runs-on: ubuntu-24.04
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}

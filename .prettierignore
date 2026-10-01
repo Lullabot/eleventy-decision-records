@@ -2,6 +2,7 @@
 /dist
 /dist-package
 /node_modules
+/CHANGELOG.md
 
 # Skip compiled test output
 /tests/fixture-site/_site/

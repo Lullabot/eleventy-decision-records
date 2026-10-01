@@ -1,6 +1,6 @@
 {
   "name": "@lullabot/eleventy-decision-records",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An Eleventy theme plugin for documenting decision records",
   "scripts": {
     "start": "bash bin/link-fixture-site.sh && DECISION_RECORDS_DEV=1 npm --prefix tests/fixture-site run serve",

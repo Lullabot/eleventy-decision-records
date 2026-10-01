@@ -31,6 +31,11 @@
       "description": "Keep CI (.nvmrc) and Tugboat on the same Node.js release.",
       "matchDepNames": ["node"],
       "groupName": "Node.js"
+    },
+    {
+      "description": "Bundle plugin v4 requires Eleventy 4; hold it at v3 while the theme supports Eleventy 3.",
+      "matchPackageNames": ["@11ty/eleventy-plugin-bundle"],
+      "allowedVersions": "<4"
     }
   ]
 }

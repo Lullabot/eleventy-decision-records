@@ -1,6 +1,8 @@
 <nav class="site-nav" aria-label="Site navigation">
   {# Logo #}
-  <a href="/" aria-label="{{ site.organization }}"> {% icon site.icon %} </a>
+  <a href="{{ site.homepage or '/' }}" aria-label="{{ site.organization }}">
+    {% icon site.icon %}
+  </a>
 
   {# Navigation menu #}
   <div class="menu">

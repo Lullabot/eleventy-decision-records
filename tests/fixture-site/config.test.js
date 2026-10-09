@@ -123,3 +123,14 @@ test(
     assertThemeSite(await build({ plugin: { dirs: { decisions: 'adrs/' } } }));
   },
 );
+
+test('site icon links to the organization homepage', async () => {
+  const logo = (pages) =>
+    byUrl(pages, '/')[0].content.match(
+      /class="site-nav"[^]*?<a href="([^"]*)"/,
+    )[1];
+
+  assert.equal(logo(await build()), 'https://www.lullabot.com/');
+  const plugin = { dirs: { decisions: 'adrs' }, site: { homepage: '' } };
+  assert.equal(logo(await build({ plugin })), '/');
+});

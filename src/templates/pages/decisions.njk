@@ -7,6 +7,10 @@ eleventyExcludeFromCollections: true
 
 <h1>{{ title }}</h1>
 <p class="page-description">{{ description }}</p>
+{%- set intro %}{% include "decisions-intro.njk" %}{% endset %}
+{%- if intro | trim %}
+  <div class="page-intro">{{ intro | safe }}</div>
+{%- endif %}
 
 <div class="adr-filters">
   <span class="adr-count">{{ collections.adrs | length }} decisions</span>

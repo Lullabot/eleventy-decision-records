@@ -12,7 +12,7 @@ src/
   templates/
     layouts/           # page.njk, adr.njk
     pages/             # decisions, topics, topic, practice-areas, contributors, contributor
-    partials/          # site-nav, footer, recent-decisions
+    partials/          # site-nav, footer, recent-decisions, *-intro
     assets/            # favicon.njk, search_index.njk
   assets/              # fonts, icons, images, js, styles
 tests/

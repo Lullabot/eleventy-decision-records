@@ -14,6 +14,13 @@ eleventyComputed:
 
 <h1>Decisions by {{ contributor }}</h1>
 <p class="page-description">{{ description }}</p>
+{%- set intro %}{% include "contributor-intro/" + (contributor | slugify) + ".njk" ignore missing %}{% endset %}
+{%- if not (intro | trim) %}
+  {%- set intro %}{% include "contributor-intro.njk" %}{% endset %}
+{%- endif %}
+{%- if intro | trim %}
+  <div class="page-intro">{{ intro | safe }}</div>
+{%- endif %}
 
 <div class="adr-filters">
   <span class="adr-count"

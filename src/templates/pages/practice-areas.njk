@@ -15,6 +15,13 @@ eleventyComputed:
 <h1>{{ area.name }} Decisions</h1>
 
 <p class="page-description">{{ description }}</p>
+{%- set intro %}{% include "practice-area-intro/" + (area.name | slugify) + ".njk" ignore missing %}{% endset %}
+{%- if not (intro | trim) %}
+  {%- set intro %}{% include "practice-area-intro.njk" %}{% endset %}
+{%- endif %}
+{%- if intro | trim %}
+  <div class="page-intro">{{ intro | safe }}</div>
+{%- endif %}
 
 <div class="adr-filters">
   <span class="adr-count"

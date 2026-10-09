@@ -4,6 +4,7 @@ import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { parse } from 'node-html-parser';
 
 // Paths below are relative to the fixture site, wherever the runner started.
 process.chdir(import.meta.dirname);
@@ -126,9 +127,9 @@ test(
 
 test('site icon links to the organization homepage', async () => {
   const logo = (pages) =>
-    byUrl(pages, '/')[0].content.match(
-      /class="site-nav"[^]*?<a href="([^"]*)"/,
-    )[1];
+    parse(byUrl(pages, '/')[0].content)
+      .querySelector('.site-nav > a')
+      .getAttribute('href');
 
   assert.equal(logo(await build()), 'https://www.lullabot.com/');
   const plugin = { dirs: { decisions: 'adrs' }, site: { homepage: '' } };

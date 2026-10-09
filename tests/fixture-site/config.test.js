@@ -166,3 +166,14 @@ test('project partials add intro text to listing pages', async () => {
   assert.match(pm, /<p id="pm">PM<\/p>/);
   assert.doesNotMatch(pm, /id="intro"/);
 });
+
+test('site icon links to the organization homepage', async () => {
+  const logo = (pages) =>
+    byUrl(pages, '/')[0].content.match(
+      /class="site-nav"[^]*?<a href="([^"]*)"/,
+    )[1];
+
+  assert.equal(logo(await build()), 'https://www.lullabot.com/');
+  const plugin = { dirs: { decisions: 'adrs' }, site: { homepage: '' } };
+  assert.equal(logo(await build({ plugin })), '/');
+});

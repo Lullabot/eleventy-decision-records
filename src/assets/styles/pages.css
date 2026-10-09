@@ -48,6 +48,10 @@
     overflow: hidden;
   }
 
+  .practice-area:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
   .practice-area::after {
     content: '';
     position: absolute;

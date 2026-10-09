@@ -33,7 +33,7 @@ This repository is the package, not a site: there is no Eleventy config, input d
 
 ## Eleventy modules (`src/lib/`)
 
-- `collections/` — `adrs` (newest first), `topics` (deduplicated, lowercased), `contributors` (deduplicated, sorted). All three are built from a single glob derived from `dirs.decisions`, so moving the records moves every collection with them
+- `collections/` — `adrs` (newest first), `topics` (deduplicated, lowercased), `contributors` (deduplicated, sorted), `practiceAreas` (configured areas that have at least one ADR, in config order; drives the homepage, nav, and practice area pages). All four are built from a single glob derived from `dirs.decisions`, so moving the records moves every collection with them
 - `data/` — default layout `page.njk`, plus an `eleventyComputed` rule that switches markdown files inside the decisions directory to `adr.njk`
 - `filters/` — date formatting via the Temporal polyfill (`dates.js`; relative and absolute formats all render in UTC), collection helpers (`collections.js`), `spaceless` (`strings.js`)
 - `plugins/` — markdown-it with anchor links, bundle plugin with lightningcss minification, TOC (bare-list output, wrapped by `adr.njk`), Atom feed at `/feed.xml` (absolute URLs from `site.url`), syntax highlighting

@@ -123,3 +123,24 @@ test(
     assertThemeSite(await build({ plugin: { dirs: { decisions: 'adrs/' } } }));
   },
 );
+
+test('practice areas without decisions are hidden', async () => {
+  const plugin = {
+    dirs: { decisions: 'adrs' },
+    practiceAreas: [{ name: 'Accessibility', icon: 'accessibility' }],
+  };
+  const link = /href="\/practice-areas\/accessibility\/"/;
+
+  const empty = await build({ plugin });
+  assert.equal(byUrl(empty, '/practice-areas/accessibility/').length, 0);
+  assert.doesNotMatch(byUrl(empty, '/')[0].content, link);
+  assert.equal(byUrl(empty, '/practice-areas/engineering/').length, 1);
+
+  const input = inputWith({
+    'adrs/20260101-accessible-forms.md':
+      '---\ndate: 2026-01-01\ntitle: Accessible forms\npracticeArea: Accessibility\nstatus: accepted\n---\nBody',
+  });
+  const used = await build({ input, plugin });
+  assert.equal(byUrl(used, '/practice-areas/accessibility/').length, 1);
+  assert.match(byUrl(used, '/')[0].content, link);
+});

@@ -77,6 +77,8 @@ eleventyConfig.addPlugin(decisionRecords, {
 
 The `practiceArea` frontmatter field in each ADR must match one of these names exactly. The example uses `override:` because arrays otherwise concatenate — without it you would end up with these _plus_ the four defaults.
 
+A practice area with no decisions yet is left out of the homepage and the navigation, and gets no page of its own. It shows up on the next build after its first decision is added, so a project can configure every area it plans to use up front.
+
 ## Where Records Live
 
 By default the theme looks for `<input>/decisions/*.md`. To use a different directory name:

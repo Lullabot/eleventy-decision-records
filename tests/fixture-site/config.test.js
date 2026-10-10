@@ -123,3 +123,46 @@ test(
     assertThemeSite(await build({ plugin: { dirs: { decisions: 'adrs/' } } }));
   },
 );
+
+test('practice areas without decisions are hidden', async () => {
+  const plugin = {
+    dirs: { decisions: 'adrs' },
+    practiceAreas: [{ name: 'Accessibility', icon: 'accessibility' }],
+  };
+  const link = /href="\/practice-areas\/accessibility\/"/;
+
+  const empty = await build({ plugin });
+  assert.equal(byUrl(empty, '/practice-areas/accessibility/').length, 0);
+  assert.doesNotMatch(byUrl(empty, '/')[0].content, link);
+  assert.equal(byUrl(empty, '/practice-areas/engineering/').length, 1);
+
+  const input = inputWith({
+    'adrs/20260101-accessible-forms.md':
+      '---\ndate: 2026-01-01\ntitle: Accessible forms\npracticeArea: Accessibility\nstatus: accepted\n---\nBody',
+  });
+  const used = await build({ input, plugin });
+  assert.equal(byUrl(used, '/practice-areas/accessibility/').length, 1);
+  assert.match(byUrl(used, '/')[0].content, link);
+});
+
+test('project partials add intro text to listing pages', async () => {
+  const defaults = await build();
+  for (const page of defaults) {
+    assert.doesNotMatch(page.content, /class="page-intro"/, page.url);
+  }
+
+  const input = inputWith({
+    '_includes/decisions-intro.njk': '<p id="intro">All</p>',
+    '_includes/practice-area-intro.njk': '<p id="intro">{{ area.name }}</p>',
+    '_includes/practice-area-intro/project-management.njk': '<p id="pm">PM</p>',
+  });
+  const pages = await build({ input });
+  assert.match(byUrl(pages, '/adrs/')[0].content, /<p id="intro">All<\/p>/);
+  assert.match(
+    byUrl(pages, '/practice-areas/design/')[0].content,
+    /<p id="intro">Design<\/p>/,
+  );
+  const pm = byUrl(pages, '/practice-areas/project-management/')[0].content;
+  assert.match(pm, /<p id="pm">PM<\/p>/);
+  assert.doesNotMatch(pm, /id="intro"/);
+});

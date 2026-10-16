@@ -74,7 +74,7 @@
     "@11ty/eleventy-plugin-bundle": "^3.0.7",
     "@11ty/eleventy-plugin-rss": "^3.0.0",
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
-    "@11ty/eleventy-utils": "^2.0.7",
+    "@11ty/eleventy-utils": "^3.0.0",
     "@js-temporal/polyfill": "^0.5.1",
     "@material-symbols/svg-400": "^0.48.0",
     "@orama/orama": "^3.1.18",

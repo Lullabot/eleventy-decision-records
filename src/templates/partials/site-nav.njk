@@ -23,18 +23,20 @@
     </ul>
 
     {# Practice area nav group #}
-    <ul>
-      {%- for area in practiceAreas %}
-        <li>
-          <a
-            href="/practice-areas/{{ area.name | slugify }}/"
-            aria-label="{{ area.name }}"
-          >
-            {% icon area.icon %}
-          </a>
-        </li>
-      {%- endfor %}
-    </ul>
+    {%- if collections.practiceAreas | length %}
+      <ul>
+        {%- for area in collections.practiceAreas %}
+          <li>
+            <a
+              href="/practice-areas/{{ area.name | slugify }}/"
+              aria-label="{{ area.name }}"
+            >
+              {% icon area.icon %}
+            </a>
+          </li>
+        {%- endfor %}
+      </ul>
+    {%- endif %}
 
     {# Utility nav group #}
     <ul>

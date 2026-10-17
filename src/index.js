@@ -158,7 +158,11 @@ export default function (eleventyConfig, options = {}) {
     join(themeRoot, 'assets'),
   ]);
 
-  collections(eleventyConfig, join(inputDir, opts.dirs.decisions, '*.md'));
+  collections(
+    eleventyConfig,
+    join(inputDir, opts.dirs.decisions, '*.md'),
+    opts.practiceAreas,
+  );
   data(eleventyConfig, opts.dirs.decisions);
   filters(eleventyConfig);
   plugins(eleventyConfig, opts);

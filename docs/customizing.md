@@ -77,6 +77,8 @@ eleventyConfig.addPlugin(decisionRecords, {
 
 The `practiceArea` frontmatter field in each ADR must match one of these names exactly. The example uses `override:` because arrays otherwise concatenate — without it you would end up with these _plus_ the four defaults.
 
+A practice area with no decisions yet is left out of the homepage and the navigation, and gets no page of its own. It shows up on the next build after its first decision is added, so a project can configure every area it plans to use up front.
+
 ## Where Records Live
 
 By default the theme looks for `<input>/decisions/*.md`. To use a different directory name:
@@ -101,9 +103,27 @@ Create a file with the same name in your project and the theme's version steps a
 | A page (`decisions`, `topics`, `topic`, `practice-areas`, `contributors`, `contributor`) | The same base name in your input directory     |
 | The homepage or about page                                                               | `index.*` or `about.*` in your input directory |
 | A partial (`site-nav`, `footer`, `recent-decisions`)                                     | The same filename in your includes directory   |
+| Intro text on a listing page (see below)                                                 | The same filename in your includes directory   |
 | A stylesheet (`tokens.css`, `layout.css`, …)                                             | `styles/<name>.css` in your includes directory |
 
 For pages and content the extension does not matter — your `about.njk` replaces the theme's `about.md`.
+
+### Intro Text on Listing Pages
+
+Each decision listing page includes an empty partial between the page description and the list. Add one to your includes directory to put your own text there:
+
+| Page                    | Partial                   | Variables                                                 |
+| ----------------------- | ------------------------- | --------------------------------------------------------- |
+| All decisions           | `decisions-intro.njk`     | `collections.adrs`                                        |
+| Each practice area page | `practice-area-intro.njk` | `area` (`name`, `icon`), `areaAdrs`                       |
+| Each topic page         | `topic-intro.njk`         | `topic` (`label`, `count`), `topicAdrs`                   |
+| Each contributor page   | `contributor-intro.njk`   | `contributor` (the contributor's name), `contributorAdrs` |
+
+The `*Adrs` variables hold that page's decision records, newest first. Page data (`title`, `description`) and the theme's global data (`site`, `navigation`, `practiceAreas`, `dirs`) are available too, along with every theme filter and shortcode. Each theme partial lists its variables in a comment at the top.
+
+For text specific to one practice area, topic, or contributor, add a partial named after its slug in a folder of the same name: `practice-area-intro/engineering.njk`, `topic-intro/accessibility.njk`, `contributor-intro/jane-doe.njk`. It replaces the shared partial on that page only, so you can write intros for as many or as few as you like.
+
+Write the partial as HTML. The theme wraps it in a `.page-intro` element only when it renders something, so pages without one get no extra markup.
 
 ## Branding and Styles
 

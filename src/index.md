@@ -14,10 +14,11 @@ Maintaining these records helps us:
 - Avoid blindly accepting or reversing past decisions
 - Formalize the decision-making process across the team
 
+{% if collections.practiceAreas | length %}
 <h2 class="section-heading" id="practice-areas">Explore by Practice Area</h2>
 
 <div class="practice-areas">
-{%- for area in practiceAreas %}
+{%- for area in collections.practiceAreas %}
   {%- set areaAdrs = collections.adrs | withPracticeArea(area.name) %}
   <a href="/practice-areas/{{ area.name | slugify }}/" class="practice-area">
     <span class="icon">{% icon area.icon %}</span>
@@ -26,3 +27,4 @@ Maintaining these records helps us:
   </a>
 {%- endfor %}
 </div>
+{%- endif %}

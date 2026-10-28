@@ -1,6 +1,6 @@
 import { create, insert, save } from '@orama/orama';
 import striptags from 'striptags';
-import he from 'he';
+import { decode } from 'he';
 import { isoDate } from '../filters/dates.js';
 
 const SCHEMA = {
@@ -22,7 +22,7 @@ export async function oramaIndex(adrs) {
       title: adr.data.title,
       topics: adr.data.topics || [],
       context: adr.data.context || '',
-      content: he.decode(striptags(adr.content)),
+      content: decode(striptags(adr.content)),
       status: adr.data.status,
       date: isoDate(adr.data.date),
     });

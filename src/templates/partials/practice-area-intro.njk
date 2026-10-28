@@ -1,0 +1,15 @@
+{#
+
+Intro text for each practice area page, empty by default.
+Override with a file of the same name in your includes directory, or with
+practice-area-intro/<slug>.njk for a single practice area
+(e.g. practice-area-intro/engineering.njk).
+
+- {{ area.name }} the practice area's name
+- {{ area.icon }} the practice area's icon, for {% icon area.icon %}
+- {{ areaAdrs }} decision records in this practice area, newest first
+- {{ title }} the page title
+- {{ description }} the page description
+- {{ site }}, {{ navigation }}, {{ practiceAreas }}, {{ dirs }} theme config
+
+#}

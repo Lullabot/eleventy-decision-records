@@ -11,6 +11,10 @@
   margin-bottom: var(--space-10);
 }
 
+.page-intro {
+  margin-bottom: var(--space-10);
+}
+
 /* ==========================================================================
    Homepage — Practice Areas
    ========================================================================== */
@@ -31,8 +35,7 @@
   :scope {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    border-bottom: 1px solid var(--color-border-default);
-    border-right: 1px solid var(--color-border-default);
+    padding: 1px 0 0 1px;
   }
 
   .practice-area {
@@ -40,8 +43,8 @@
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-6);
-    border-top: 1px solid var(--color-border-default);
-    border-left: 1px solid var(--color-border-default);
+    margin: -1px 0 0 -1px;
+    border: 1px solid var(--color-border-default);
     text-decoration: none;
     color: var(--color-text-primary);
     position: relative;

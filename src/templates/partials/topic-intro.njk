@@ -1,0 +1,15 @@
+{#
+
+Intro text for each topic page, empty by default.
+Override with a file of the same name in your includes directory, or with
+topic-intro/<slug>.njk for a single topic
+(e.g. topic-intro/accessibility.njk).
+
+- {{ topic.label }} the topic, lowercased
+- {{ topic.count }} how many decision records use this topic
+- {{ topicAdrs }} decision records with this topic, newest first
+- {{ title }} the page title
+- {{ description }} the page description
+- {{ site }}, {{ navigation }}, {{ practiceAreas }}, {{ dirs }} theme config
+
+#}

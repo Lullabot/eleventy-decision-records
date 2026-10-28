@@ -296,6 +296,7 @@ body {
   padding: var(--space-22) var(--space-18);
   overflow-x: clip;
   overflow-y: auto;
+  min-width: 0;
   min-height: 0;
   box-shadow: var(--shadow-panel);
   position: relative;
@@ -312,6 +313,7 @@ body {
   padding: var(--space-16) var(--space-12);
   overflow-x: clip;
   overflow-y: auto;
+  min-width: 0;
   min-height: 0;
   border-left: 1px solid var(--color-border-default);
 }

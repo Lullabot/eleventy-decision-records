@@ -296,9 +296,6 @@ body {
   padding: var(--space-22) var(--space-18);
   overflow-x: clip;
   overflow-y: auto;
-  /* overflow: clip is not a scroll container, so it leaves the grid
-     item's min-width: auto in place and wide tables would widen the
-     column past the viewport. */
   min-width: 0;
   min-height: 0;
   box-shadow: var(--shadow-panel);

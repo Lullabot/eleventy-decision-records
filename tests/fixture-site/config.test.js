@@ -4,6 +4,7 @@ import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { parse } from 'node-html-parser';
 
 // Paths below are relative to the fixture site, wherever the runner started.
 process.chdir(import.meta.dirname);
@@ -165,4 +166,15 @@ test('project partials add intro text to listing pages', async () => {
   const pm = byUrl(pages, '/practice-areas/project-management/')[0].content;
   assert.match(pm, /<p id="pm">PM<\/p>/);
   assert.doesNotMatch(pm, /id="intro"/);
+});
+
+test('site icon links to the organization homepage', async () => {
+  const logo = (pages) =>
+    parse(byUrl(pages, '/')[0].content)
+      .querySelector('.site-nav > a')
+      .getAttribute('href');
+
+  assert.equal(logo(await build()), 'https://www.lullabot.com/');
+  const plugin = { dirs: { decisions: 'adrs' }, site: { homepage: '' } };
+  assert.equal(logo(await build({ plugin })), '/');
 });

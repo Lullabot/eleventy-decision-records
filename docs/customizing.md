@@ -28,6 +28,7 @@ eleventyConfig.addPlugin(decisionRecords, {
 eleventyConfig.addPlugin(decisionRecords, {
   site: {
     organization: 'Your Organization',
+    homepage: 'https://www.example.com/',
     url: 'https://decisions.example.com/',
     legalName: 'Your Organization, Inc.',
     title: 'Decision Records',
@@ -41,7 +42,7 @@ eleventyConfig.addPlugin(decisionRecords, {
 });
 ```
 
-`icon` is a [Material Symbols](https://fonts.google.com/icons) identifier used in the site header. `url` is the production base URL, used to build absolute links in the Atom feed at `/feed.xml`. `social` links appear in the footer, and each `icon` resolves the same way as the `{% icon %}` shortcode.
+`icon` is a [Material Symbols](https://fonts.google.com/icons) identifier used in the site header, where it links to `homepage`, your organization's main site. Set `homepage` to an empty string to link the icon to the decision records homepage instead. `url` is the production base URL, used to build absolute links in the Atom feed at `/feed.xml`. `social` links appear in the footer, and each `icon` resolves the same way as the `{% icon %}` shortcode.
 
 ## Navigation
 

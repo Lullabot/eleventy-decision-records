@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "maxNodeModuleJsDepth": 1,
+    "rootDir": "src",
+    "outDir": "dist",
+    "paths": {
+      "/js/orama/index.js": ["./node_modules/@orama/orama"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}

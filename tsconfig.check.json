@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "declaration": false,
+    "rootDir": null,
+    "outDir": null,
+    "paths": {
+      "/js/orama/index.js": ["./node_modules/@orama/orama"],
+      "@lullabot/eleventy-decision-records": ["./src/index.ts"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "bin/**/*.ts",
+    "tests/**/*.ts",
+    "playwright.config.ts",
+    "eslint.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests/fixture-site/node_modules",
+    "tests/fixture-site/_site"
+  ]
+}

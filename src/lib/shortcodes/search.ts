@@ -18,7 +18,7 @@ export async function oramaIndex(adrs: AdrItem[]): Promise<string> {
   const db = create({ schema: SCHEMA });
 
   for (const adr of adrs) {
-    insert(db, {
+    await insert(db, {
       url: adr.page.url,
       title: adr.data.title,
       topics: adr.data.topics || [],

@@ -50,7 +50,7 @@ function getSnippet(text: string, terms: string[], contextChars = 80): string {
   return highlightTerms(snippet, terms);
 }
 
-(async () => {
+(() => {
   const dialog = document.getElementById('search-dialog');
   if (!dialog) {
     throw new Error('Search dialog is missing element: #search-dialog');
@@ -92,7 +92,7 @@ function getSnippet(text: string, terms: string[], contextChars = 80): string {
       if (!response.ok) {
         throw new Error(`Search index returned ${response.status}`);
       }
-      const rawData: RawData = await response.json();
+      const rawData = (await response.json()) as RawData;
 
       db = create({ schema: SCHEMA });
       load(db, rawData);
@@ -197,13 +197,17 @@ function getSnippet(text: string, terms: string[], contextChars = 80): string {
   // Start fetching the index on the first keystroke, ahead of the debounce.
   searchInput.addEventListener(
     'input',
-    () => initializeSearch().catch(() => {}),
+    () => {
+      initializeSearch().catch(() => {});
+    },
     { once: true },
   );
 
   let debounceTimer: ReturnType<typeof setTimeout> | undefined;
   searchInput.addEventListener('input', () => {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(doSearch, 250);
+    debounceTimer = setTimeout(() => {
+      void doSearch();
+    }, 250);
   });
 })();

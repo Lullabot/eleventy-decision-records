@@ -4,7 +4,7 @@
   "description": "An Eleventy theme plugin for documenting decision records",
   "scripts": {
     "start": "bash bin/start.sh",
-    "lint": "eslint && prettier -c .",
+    "lint": "eslint && prettier -c . && tsc -p tsconfig.check.json --noEmit",
     "lint:fix": "eslint --fix && prettier -w .",
     "lint-staged": "lint-staged",
     "prepare": "husky",
@@ -91,7 +91,7 @@
     "striptags": "^3.2.0"
   },
   "lint-staged": {
-    "*.js": "eslint",
-    "*.{js,njk,json,md,css,yml,yaml}": "prettier --check"
+    "*.ts": "eslint",
+    "*.{ts,njk,json,md,css,yml,yaml}": "prettier --check"
   }
 }

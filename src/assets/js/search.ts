@@ -1,7 +1,19 @@
 import { create, load, search } from '/js/orama/index.js';
+import type { Orama, RawData } from '/js/orama/index.js';
 import { timeSince } from './time-since.js';
 
-function highlightTerms(text, terms) {
+function must<T extends Element = Element>(
+  root: ParentNode,
+  selector: string,
+): T {
+  const element = root.querySelector<T>(selector);
+  if (!element) {
+    throw new Error(`Search dialog is missing element: ${selector}`);
+  }
+  return element;
+}
+
+function highlightTerms(text: string, terms: string[]): string {
   const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const pattern = terms
     .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
@@ -9,7 +21,7 @@ function highlightTerms(text, terms) {
   return escaped.replace(new RegExp(`(${pattern})`, 'gi'), '<mark>$1</mark>');
 }
 
-function getSnippet(text, terms, contextChars = 80) {
+function getSnippet(text: string, terms: string[], contextChars = 80): string {
   const lowerText = text.toLowerCase();
   let bestIndex = -1;
 
@@ -40,26 +52,26 @@ function getSnippet(text, terms, contextChars = 80) {
 
 (async () => {
   const dialog = document.getElementById('search-dialog');
-  const searchInput = dialog.querySelector('input[type="search"]');
-  const resultsList = dialog.querySelector('ol');
-  const summary = dialog.querySelector('.results-summary');
-  const status = dialog.querySelector('[aria-live="polite"]');
+  if (!dialog) {
+    throw new Error('Search dialog is missing element: #search-dialog');
+  }
+  const searchInput = must<HTMLInputElement>(dialog, 'input[type="search"]');
+  const resultsList = must<HTMLOListElement>(dialog, 'ol');
+  const summary = must(dialog, '.results-summary');
+  const status = must(dialog, '[aria-live="polite"]');
 
   // Debounce announcements past the typing echo (VoiceOver's echo preempts
   // polite announcements rather than queueing behind them), and write in a
   // single mutation — every region mutation can cancel in-flight speech.
-  let announceTimer;
-  function announce(text) {
+  let announceTimer: ReturnType<typeof setTimeout> | undefined;
+  function announce(text: string): void {
     summary.textContent = text;
     clearTimeout(announceTimer);
     announceTimer = setTimeout(() => {
       status.textContent = text;
     }, 150);
   }
-  const resultTemplate = dialog.querySelector('template').content;
-
-  let db;
-  let initPromise = null;
+  const resultTemplate = must<HTMLTemplateElement>(dialog, 'template').content;
 
   const SCHEMA = {
     url: 'string',
@@ -69,19 +81,22 @@ function getSnippet(text, terms, contextChars = 80) {
     content: 'string',
     status: 'string',
     date: 'string',
-  };
+  } as const;
 
-  function initializeSearch() {
+  let db: Orama<typeof SCHEMA> | undefined;
+  let initPromise: Promise<void> | null = null;
+
+  function initializeSearch(): Promise<void> {
     initPromise ??= (async () => {
       const response = await fetch('/searchindex.json');
       if (!response.ok) {
         throw new Error(`Search index returned ${response.status}`);
       }
-      const rawData = await response.json();
+      const rawData: RawData = await response.json();
 
       db = create({ schema: SCHEMA });
       load(db, rawData);
-    })().catch((error) => {
+    })().catch((error: unknown) => {
       // Allow the next search to retry the fetch.
       initPromise = null;
       throw error;
@@ -89,7 +104,7 @@ function getSnippet(text, terms, contextChars = 80) {
     return initPromise;
   }
 
-  async function doSearch() {
+  async function doSearch(): Promise<void> {
     const query = searchInput.value.trim();
     if (!query) {
       resultsList.innerHTML = '';
@@ -112,7 +127,11 @@ function getSnippet(text, terms, contextChars = 80) {
       return;
     }
 
-    const { hits } = search(db, {
+    if (!db) {
+      throw new Error('Search index loaded without creating a database');
+    }
+
+    const { hits } = await search(db, {
       term: query,
       properties: ['title', 'topics', 'context', 'content'],
       boost: { title: 3, topics: 2, context: 1.5 },
@@ -126,7 +145,7 @@ function getSnippet(text, terms, contextChars = 80) {
       .split(/\s+/)
       .filter((t) => t.length > 0);
 
-    let results = hits.map((hit) => ({
+    const results = hits.map((hit) => ({
       ...hit.document,
       href: hit.document.url,
       snippet: getSnippet(hit.document.content, queryTerms),
@@ -139,22 +158,23 @@ function getSnippet(text, terms, contextChars = 80) {
       return 0;
     });
 
-    results = results.map((result, i) => {
+    const entries = results.map((result, i) => {
       const entry = resultTemplate.cloneNode(true);
+      if (!(entry instanceof DocumentFragment)) {
+        throw new Error('Search dialog template did not clone to a fragment');
+      }
 
-      const li = entry.querySelector('li');
+      const li = must<HTMLElement>(entry, 'li');
       li.style.animationDelay = `${i * 50}ms`;
 
-      entry.querySelector('a').innerHTML = highlightTerms(
-        result.title,
-        queryTerms,
-      );
-      entry.querySelector('a').href = result.href;
-      entry.querySelector('.snippet').innerHTML = result.snippet;
-      entry.querySelector('.status').textContent = result.status;
-      entry.querySelector('.age').textContent = timeSince(result.date);
+      const link = must<HTMLAnchorElement>(entry, 'a');
+      link.innerHTML = highlightTerms(result.title, queryTerms);
+      link.href = result.href;
+      must(entry, '.snippet').innerHTML = result.snippet;
+      must(entry, '.status').textContent = result.status;
+      must(entry, '.age').textContent = timeSince(result.date);
 
-      const tagsEl = entry.querySelector('.tags');
+      const tagsEl = must(entry, '.tags');
       for (const tag of result.topics) {
         const span = document.createElement('span');
         span.textContent = tag;
@@ -165,10 +185,10 @@ function getSnippet(text, terms, contextChars = 80) {
     });
 
     resultsList.innerHTML = '';
-    resultsList.append(...results);
-    if (results.length) {
-      const s = results.length === 1 ? '' : 's';
-      announce(`${results.length} result${s} for \u201c${query}\u201d`);
+    resultsList.append(...entries);
+    if (entries.length) {
+      const s = entries.length === 1 ? '' : 's';
+      announce(`${entries.length} result${s} for \u201c${query}\u201d`);
     } else {
       announce(`No results found for \u201c${query}\u201d`);
     }
@@ -181,7 +201,7 @@ function getSnippet(text, terms, contextChars = 80) {
     { once: true },
   );
 
-  let debounceTimer;
+  let debounceTimer: ReturnType<typeof setTimeout> | undefined;
   searchInput.addEventListener('input', () => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(doSearch, 250);

@@ -1,10 +1,12 @@
-import { feedPlugin } from '@11ty/eleventy-plugin-rss';
+import type UserConfig from '@11ty/eleventy/UserConfig';
+import { feedPlugin, type FeedPluginOptions } from '@11ty/eleventy-plugin-rss';
+import type { SiteConfig } from '../../types.js';
 
 /**
  * Register the Atom feed plugin, served at /feed.xml.
  */
-export function rss(eleventyConfig, site) {
-  eleventyConfig.addPlugin(feedPlugin, {
+export function rss(eleventyConfig: UserConfig, site: SiteConfig): void {
+  const options: FeedPluginOptions = {
     type: 'atom',
     outputPath: '/feed.xml',
     collection: {
@@ -20,5 +22,6 @@ export function rss(eleventyConfig, site) {
         name: site.organization,
       },
     },
-  });
+  };
+  eleventyConfig.addPlugin(feedPlugin, options);
 }

@@ -1,5 +1,8 @@
-const Temporal =
-  globalThis.Temporal ?? (await import('@js-temporal/polyfill')).Temporal;
+type TemporalApi = typeof import('@js-temporal/polyfill').Temporal;
+
+const Temporal: TemporalApi =
+  (globalThis as { Temporal?: TemporalApi }).Temporal ??
+  (await import('@js-temporal/polyfill')).Temporal;
 
 /**
  * Returns a relative time string (e.g. "3 months ago").
@@ -8,7 +11,7 @@ const Temporal =
  * {{ adr.data.date | timeSince }}
  * → "3 months ago"
  */
-export function timeSince(date) {
+export function timeSince(date: Date | string): string {
   const from = Temporal.PlainDate.from(
     new Date(date).toISOString().slice(0, 10),
   );
@@ -35,7 +38,7 @@ export function timeSince(date) {
  * {{ adr.data.date | datetimeFormat }}
  * → "January 1, 2024"
  */
-export function datetimeFormat(date) {
+export function datetimeFormat(date: Date | string): string {
   const d = new Date(date);
   return d.toLocaleDateString('en-US', {
     year: 'numeric',
@@ -52,7 +55,7 @@ export function datetimeFormat(date) {
  * {{ null | year }}
  * → "2026"
  */
-export function year() {
+export function year(): string {
   return new Date().getFullYear().toString();
 }
 
@@ -63,6 +66,6 @@ export function year() {
  * {{ adr.data.date | isoDate }}
  * → "2024-01-01"
  */
-export function isoDate(date) {
+export function isoDate(date: Date | string): string {
   return new Date(date).toISOString().slice(0, 10);
 }

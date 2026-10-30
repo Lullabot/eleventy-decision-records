@@ -8,7 +8,7 @@ const boxes = document.querySelectorAll(
 
 let captionCount = 0;
 
-function label(box) {
+function label(box: Element): void {
   const caption = box.querySelector('caption');
   if (!caption) {
     box.setAttribute('aria-label', 'Scrollable table');
@@ -18,7 +18,7 @@ function label(box) {
   box.setAttribute('aria-labelledby', caption.id);
 }
 
-function update(box) {
+function update(box: Element): void {
   const overflows = box.scrollWidth > box.clientWidth;
   if (overflows === box.hasAttribute('tabindex')) return;
 
@@ -39,7 +39,8 @@ function update(box) {
 // widen a table without the box itself changing size.
 const observer = new ResizeObserver((entries) => {
   for (const { target } of entries) {
-    update(target.closest('pre, .table-scroll'));
+    const box = target.closest('pre, .table-scroll');
+    if (box) update(box);
   }
 });
 

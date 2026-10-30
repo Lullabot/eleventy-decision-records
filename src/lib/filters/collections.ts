@@ -1,3 +1,5 @@
+import type { AdrItem } from '../../types.js';
+
 /**
  * Filters a collection of ADRs to those with a given contributor.
  *
@@ -5,7 +7,10 @@
  * {{ collections.adrs | byContributor("Jane Doe") }}
  * → [adr1, adr3]
  */
-export function byContributor(collection, contributor) {
+export function byContributor(
+  collection: AdrItem[],
+  contributor: string,
+): AdrItem[] {
   return collection.filter((item) =>
     (item.data.contributors || []).includes(contributor),
   );
@@ -18,7 +23,7 @@ export function byContributor(collection, contributor) {
  * {{ collections.adrs | withTopic("accessibility") }}
  * → [adr2, adr5]
  */
-export function withTopic(collection, topic) {
+export function withTopic(collection: AdrItem[], topic: string): AdrItem[] {
   const needle = topic.toLowerCase();
   return collection.filter((item) =>
     (item.data.topics || []).some((t) => t.toLowerCase() === needle),
@@ -32,7 +37,10 @@ export function withTopic(collection, topic) {
  * {{ collections.adrs | withPracticeArea("Engineering") }}
  * → [adr1, adr4]
  */
-export function withPracticeArea(collection, practiceArea) {
+export function withPracticeArea(
+  collection: AdrItem[],
+  practiceArea: string,
+): AdrItem[] {
   return collection.filter((item) => item.data.practiceArea === practiceArea);
 }
 
@@ -43,7 +51,11 @@ export function withPracticeArea(collection, practiceArea) {
  * @example
  * {% set counts = counts | setKey("css", 3) %}
  */
-export function setKey(obj, key, value) {
+export function setKey<T extends object>(
+  obj: T,
+  key: string,
+  value: unknown,
+): T & Record<string, unknown> {
   return { ...obj, [key]: value };
 }
 
@@ -55,7 +67,7 @@ export function setKey(obj, key, value) {
  * {{ topicCounts | topTopics(3) }}
  * → ["css", "accessibility", "react"]
  */
-export function topTopics(counts, n) {
+export function topTopics(counts: Record<string, number>, n: number): string[] {
   return Object.entries(counts)
     .sort((a, b) => b[1] - a[1])
     .slice(0, n)

@@ -2,6 +2,7 @@ import { create, insert, save } from '@orama/orama';
 import striptags from 'striptags';
 import { decode } from 'he';
 import { isoDate } from '../filters/dates.js';
+import type { AdrItem } from '../../types.js';
 
 const SCHEMA = {
   url: 'string',
@@ -11,9 +12,9 @@ const SCHEMA = {
   content: 'string',
   status: 'string',
   date: 'string',
-};
+} as const;
 
-export async function oramaIndex(adrs) {
+export async function oramaIndex(adrs: AdrItem[]): Promise<string> {
   const db = create({ schema: SCHEMA });
 
   for (const adr of adrs) {

@@ -16,7 +16,9 @@
     "rootDir": "src",
     "outDir": "dist",
     "paths": {
-      "/js/orama/index.js": ["./node_modules/@orama/orama"]
+      "/js/orama/index.js": [
+        "./node_modules/@orama/orama/dist/browser/index.d.ts"
+      ]
     }
   },
   "include": ["src/**/*.ts"]

@@ -1,13 +1,17 @@
+import type UserConfig from '@11ty/eleventy/UserConfig';
 import { transform } from 'lightningcss';
-import pluginBundle from '@11ty/eleventy-plugin-bundle';
+import pluginBundle, {
+  type BundlePluginOptions,
+  type BundleTransformContext,
+} from '@11ty/eleventy-plugin-bundle';
 
 /**
  * Register the bundle plugin with lightningcss minification.
  */
-export function bundle(eleventyConfig) {
-  eleventyConfig.addPlugin(pluginBundle, {
+export function bundle(eleventyConfig: UserConfig): void {
+  const options: BundlePluginOptions = {
     transforms: [
-      function (content) {
+      function (this: BundleTransformContext, content: string): string {
         if (this.type === 'css') {
           const { code } = transform({
             filename: 'bundle.css',
@@ -19,5 +23,6 @@ export function bundle(eleventyConfig) {
         return content;
       },
     ],
-  });
+  };
+  eleventyConfig.addPlugin(pluginBundle, options);
 }

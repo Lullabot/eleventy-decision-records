@@ -1,7 +1,7 @@
-// TODO: Replace with Temporal (matching src/lib/filters/dates.js) once
+// TODO: Replace with Temporal (matching src/lib/filters/dates.ts) once
 // browser support is baseline:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal#browser_compatibility
-export function timeSince(isoDate) {
+export function timeSince(isoDate: string): string {
   const then = new Date(isoDate);
   const now = new Date();
   let years = now.getUTCFullYear() - then.getUTCFullYear();

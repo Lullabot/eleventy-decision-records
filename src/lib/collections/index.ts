@@ -1,3 +1,5 @@
+import type UserConfig from '@11ty/eleventy/UserConfig';
+import type { PracticeArea } from '../../types.js';
 import { makeAdrs } from './adrs.js';
 import { makeTopics } from './topics.js';
 import { makeContributors } from './contributors.js';
@@ -8,7 +10,11 @@ import { makePracticeAreas } from './practice-areas.js';
  * same glob, so `dirs.decisions` is the single place a project changes to
  * move its records.
  */
-export default function (eleventyConfig, glob, practiceAreas) {
+export default function (
+  eleventyConfig: UserConfig,
+  glob: string,
+  practiceAreas: PracticeArea[],
+): void {
   eleventyConfig.addCollection('adrs', makeAdrs(glob));
   eleventyConfig.addCollection('topics', makeTopics(glob));
   eleventyConfig.addCollection('contributors', makeContributors(glob));

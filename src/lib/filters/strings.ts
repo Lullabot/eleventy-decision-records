@@ -3,7 +3,7 @@ import { parse } from 'node-html-parser';
 /**
  * Strips whitespace at the start/end and between HTML tags.
  */
-export function spaceless(html) {
+export function spaceless(html: string): string {
   return html.replace(/^\s+/, '').replace(/>\s+</g, '><').replace(/\s+$/, '');
 }
 
@@ -14,7 +14,7 @@ export function spaceless(html) {
  *
  * {{ content | scrollable | safe }}
  */
-export function scrollable(html) {
+export function scrollable(html: string): string {
   const root = parse(html);
   for (const table of root.querySelectorAll('table')) {
     table.replaceWith(`<div class="table-scroll">${table.toString()}</div>`);

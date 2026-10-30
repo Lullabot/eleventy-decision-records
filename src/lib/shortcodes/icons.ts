@@ -1,13 +1,13 @@
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { parse } from 'node-html-parser';
+import { parse, type HTMLElement } from 'node-html-parser';
 
 /**
  * Resolves an icon name to a file path by checking each directory in
  * order. The plugin assembles the list as: project icon overrides,
  * then the theme's custom icons, then Material Symbols.
  */
-function resolveIcon(iconDirs, name) {
+function resolveIcon(iconDirs: string[], name: string): string {
   for (const dir of iconDirs) {
     const path = join(dir, `${name}.svg`);
     if (existsSync(path)) {
@@ -18,16 +18,27 @@ function resolveIcon(iconDirs, name) {
 }
 
 /**
+ * Parses an icon file and returns the document root along with its
+ * <svg> element.
+ */
+function loadIcon(file: string): { root: HTMLElement; svg: HTMLElement } {
+  const root = parse(readFileSync(file, 'utf8'));
+  const svg = root.querySelector('svg');
+  if (svg === null) {
+    throw new Error(`Icon file "${file}" has no <svg> element`);
+  }
+  return { root, svg };
+}
+
+/**
  * Returns a standalone SVG suitable for use as a favicon.
  * Embeds a <style> block so the icon adapts to light/dark mode.
  *
  * Usage: {% favicon "brand_family-fill" %}
  */
-export function makeFavicon(iconDirs) {
-  return function favicon(name) {
-    const file = resolveIcon(iconDirs, name);
-    const root = parse(readFileSync(file, 'utf8'));
-    const svg = root.querySelector('svg');
+export function makeFavicon(iconDirs: string[]): (name: string) => string {
+  return function favicon(name: string): string {
+    const { root, svg } = loadIcon(resolveIcon(iconDirs, name));
 
     svg.removeAttribute('width');
     svg.removeAttribute('height');
@@ -65,11 +76,11 @@ export function makeFavicon(iconDirs) {
  * Usage: {% icon "home-fill" %}
  *        {% icon "github", "GitHub" %}
  */
-export function makeIcon(iconDirs) {
-  return function icon(name, label) {
-    const file = resolveIcon(iconDirs, name);
-    const root = parse(readFileSync(file, 'utf8'));
-    const svg = root.querySelector('svg');
+export function makeIcon(
+  iconDirs: string[],
+): (name: string, label?: string) => string {
+  return function icon(name: string, label?: string): string {
+    const { root, svg } = loadIcon(resolveIcon(iconDirs, name));
 
     svg.removeAttribute('width');
     svg.removeAttribute('height');

@@ -4,7 +4,7 @@ ADRs are markdown files in your project's decisions directory — `<input>/decis
 
 To create a new ADR:
 
-1. Start from the template the package ships at `node_modules/@lullabot/eleventy-decision-records/src/YYYYMMDD-decision-template.md`
+1. Start from the template the package ships at `node_modules/@lullabot/eleventy-decision-records/dist/YYYYMMDD-decision-template.md`
 2. Name it with the decision's date and a descriptive slug, e.g. `docs/decisions/20260313-adopt-graphql.md`
 3. Fill in the frontmatter fields:
 

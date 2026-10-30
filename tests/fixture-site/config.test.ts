@@ -6,29 +6,50 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { parse } from 'node-html-parser';
 
+interface RenderedPage {
+  url: string;
+  content: string;
+  inputPath: string;
+}
+
+type TemplateEngines = {
+  markdownTemplateEngine?: string;
+  htmlTemplateEngine?: string;
+};
+
+interface BuildOptions {
+  input?: string;
+  dir?: Record<string, string>;
+  engines?: TemplateEngines;
+  plugin?: Record<string, unknown>;
+}
+
 // Paths below are relative to the fixture site, wherever the runner started.
 process.chdir(import.meta.dirname);
 
 const ELEVENTY = 'node_modules/@11ty/eleventy/cmd.cjs';
 
 const FIXTURE_INPUT = 'src';
-const NJK = { markdownTemplateEngine: 'njk', htmlTemplateEngine: 'njk' };
+const NJK: TemplateEngines = {
+  markdownTemplateEngine: 'njk',
+  htmlTemplateEngine: 'njk',
+};
 
-const scratch = [];
+const scratch: string[] = [];
 after(() => {
   for (const dir of scratch) rmSync(dir, { recursive: true, force: true });
 });
 
 // Created inside the fixture site so the config file resolves the packed
 // theme from the fixture's node_modules and Eleventy sees a relative path.
-function scratchDir() {
+function scratchDir(): string {
   const dir = mkdtempSync('.config-test-');
   scratch.push(dir);
   return dir;
 }
 
 // A copy of the fixture input with extra files layered on top.
-function inputWith(files) {
+function inputWith(files: Record<string, string>): string {
   const dir = scratchDir();
   cpSync(FIXTURE_INPUT, dir, { recursive: true });
   for (const [name, content] of Object.entries(files)) {
@@ -46,7 +67,7 @@ async function build({
   dir = {},
   engines = NJK,
   plugin = { dirs: { decisions: 'adrs' } },
-} = {}) {
+}: BuildOptions = {}): Promise<RenderedPage[]> {
   const configPath = join(scratchDir(), 'eleventy.config.js');
   writeFileSync(
     configPath,
@@ -62,13 +83,24 @@ export default function (eleventyConfig) {
     [ELEVENTY, `--config=${configPath}`, '--to=json', '--quiet'],
     { maxBuffer: 64 * 1024 * 1024 },
   );
-  return JSON.parse(stdout);
+  return JSON.parse(stdout) as RenderedPage[];
 }
 
-const byUrl = (pages, url) => pages.filter((p) => p.url === url);
-const adrPages = (pages) => pages.filter((p) => /^\/adrs\/\d{8}-/.test(p.url));
+const byUrl = (pages: RenderedPage[], url: string): RenderedPage[] =>
+  pages.filter((p) => p.url === url);
+const adrPages = (pages: RenderedPage[]): RenderedPage[] =>
+  pages.filter((p) => /^\/adrs\/\d{8}-/.test(p.url));
 
-function assertThemeSite(pages) {
+// The single page at a URL; fails the test rather than returning undefined.
+function pageAt(pages: RenderedPage[], url: string): RenderedPage {
+  const matches = byUrl(pages, url);
+  assert.equal(matches.length, 1, `expected one page at ${url}`);
+  const [page] = matches;
+  assert.ok(page);
+  return page;
+}
+
+function assertThemeSite(pages: RenderedPage[]): void {
   assert.equal(byUrl(pages, '/').length, 1);
   assert.equal(byUrl(pages, '/about/').length, 1);
   assert.equal(byUrl(pages, '/adrs/').length, 1);
@@ -104,9 +136,7 @@ test('project template replaces a theme page', async () => {
     'about.njk': '---\npermalink: /about/\n---\n<p id="own-about">Ours</p>',
   });
   const pages = await build({ input });
-  const about = byUrl(pages, '/about/');
-  assert.equal(about.length, 1);
-  assert.match(about[0].content, /id="own-about"/);
+  assert.match(pageAt(pages, '/about/').content, /id="own-about"/);
 });
 
 test('project layout replaces a theme layout', async () => {
@@ -114,7 +144,7 @@ test('project layout replaces a theme layout', async () => {
     '_includes/page.njk': '<body id="own-layout">{{ content | safe }}</body>',
   });
   const pages = await build({ input });
-  assert.match(byUrl(pages, '/about/')[0].content, /id="own-layout"/);
+  assert.match(pageAt(pages, '/about/').content, /id="own-layout"/);
 });
 
 test(
@@ -134,7 +164,7 @@ test('practice areas without decisions are hidden', async () => {
 
   const empty = await build({ plugin });
   assert.equal(byUrl(empty, '/practice-areas/accessibility/').length, 0);
-  assert.doesNotMatch(byUrl(empty, '/')[0].content, link);
+  assert.doesNotMatch(pageAt(empty, '/').content, link);
   assert.equal(byUrl(empty, '/practice-areas/engineering/').length, 1);
 
   const input = inputWith({
@@ -143,7 +173,7 @@ test('practice areas without decisions are hidden', async () => {
   });
   const used = await build({ input, plugin });
   assert.equal(byUrl(used, '/practice-areas/accessibility/').length, 1);
-  assert.match(byUrl(used, '/')[0].content, link);
+  assert.match(pageAt(used, '/').content, link);
 });
 
 test('project partials add intro text to listing pages', async () => {
@@ -158,21 +188,21 @@ test('project partials add intro text to listing pages', async () => {
     '_includes/practice-area-intro/project-management.njk': '<p id="pm">PM</p>',
   });
   const pages = await build({ input });
-  assert.match(byUrl(pages, '/adrs/')[0].content, /<p id="intro">All<\/p>/);
+  assert.match(pageAt(pages, '/adrs/').content, /<p id="intro">All<\/p>/);
   assert.match(
-    byUrl(pages, '/practice-areas/design/')[0].content,
+    pageAt(pages, '/practice-areas/design/').content,
     /<p id="intro">Design<\/p>/,
   );
-  const pm = byUrl(pages, '/practice-areas/project-management/')[0].content;
+  const pm = pageAt(pages, '/practice-areas/project-management/').content;
   assert.match(pm, /<p id="pm">PM<\/p>/);
   assert.doesNotMatch(pm, /id="intro"/);
 });
 
 test('site icon links to the organization homepage', async () => {
-  const logo = (pages) =>
-    parse(byUrl(pages, '/')[0].content)
+  const logo = (pages: RenderedPage[]): string | undefined =>
+    parse(pageAt(pages, '/').content)
       .querySelector('.site-nav > a')
-      .getAttribute('href');
+      ?.getAttribute('href');
 
   assert.equal(logo(await build()), 'https://www.lullabot.com/');
   const plugin = { dirs: { decisions: 'adrs' }, site: { homepage: '' } };

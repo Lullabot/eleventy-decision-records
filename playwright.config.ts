@@ -42,6 +42,9 @@ const projects = [
 
 export default defineConfig({
   testDir: './tests',
+  // Only top-level specs: the fixture site's node:test file is not one, and
+  // a project-level testIgnore would replace this rather than extend it.
+  testMatch: /\/tests\/[^/]+\.spec\.ts$/,
   // Visual baselines are rendered in the Docker container (npm test);
   // skip screenshot assertions for direct host runs (npm run test:local).
   ignoreSnapshots: !process.env.E2E_IN_DOCKER,
@@ -70,7 +73,7 @@ export default defineConfig({
     // dependency. cwd matters: the plugin resolves Nunjucks through the
     // project's own Eleventy, so it has to run from the site directory.
     command:
-      'bash ../../bin/prepare-fixture-site.sh && npx eleventy --serve --port=8181',
+      'bash ../../bin/prepare-fixture-site.sh && npx eleventy --config=eleventy.config.ts --serve --port=8181',
     cwd: 'tests/fixture-site',
     url: 'http://localhost:8181',
     reuseExistingServer: !process.env.CI,

@@ -9,15 +9,24 @@ import filters from './lib/filters/index.js';
 import plugins from './lib/plugins/index.js';
 import shortcodes from './lib/shortcodes/index.js';
 import themeConfig from './config.js';
+import type { DecisionRecordsOptions, PluginConfig } from './types.js';
 
 const themeRoot = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 
 /**
+ * The slice of a Nunjucks environment the theme touches. Eleventy passes
+ * the whole environment to the `eleventy.engine.njk` event untyped.
+ */
+interface NunjucksEnvironment {
+  loaders?: Array<{ searchPaths?: unknown }>;
+}
+
+/**
  * Resolves the on-disk root of an installed package, regardless of
  * whether its export map exposes package.json.
  */
-function packageRoot(name, probe = name) {
+function packageRoot(name: string, probe = name): string {
   const entry = require.resolve(probe);
   const marker = join('node_modules', ...name.split('/'));
   return entry.slice(0, entry.indexOf(marker) + marker.length);
@@ -35,14 +44,20 @@ function packageRoot(name, probe = name) {
  * its working directory) stay ahead of the theme's, so a project file
  * of the same name still takes precedence.
  */
-function addThemeSearchPaths(eleventyConfig, searchPaths) {
-  eleventyConfig.on('eleventy.engine.njk', ({ environment }) => {
-    for (const loader of environment.loaders ?? []) {
-      if (Array.isArray(loader.searchPaths)) {
-        loader.searchPaths.push(...searchPaths);
+function addThemeSearchPaths(
+  eleventyConfig: PluginConfig,
+  searchPaths: string[],
+): void {
+  eleventyConfig.on(
+    'eleventy.engine.njk',
+    ({ environment }: { environment: NunjucksEnvironment }) => {
+      for (const loader of environment.loaders ?? []) {
+        if (Array.isArray(loader.searchPaths)) {
+          loader.searchPaths.push(...searchPaths);
+        }
       }
-    }
-  });
+    },
+  );
 }
 
 /**
@@ -56,35 +71,35 @@ const PAGES = [
   'practice-areas.njk',
   'contributors.njk',
   'contributor.njk',
-];
+] as const;
 
 /**
  * Layouts the theme provides, registered as virtual templates in the
  * includes directory unless the project overrides them on disk.
  */
-const LAYOUTS = ['page.njk', 'adr.njk'];
+const LAYOUTS = ['page.njk', 'adr.njk'] as const;
 
-const ASSETS = ['favicon.njk', 'search_index.njk'];
+const ASSETS = ['favicon.njk', 'search_index.njk'] as const;
 
 /**
  * Default content the theme ships so a fresh project has a homepage and
  * an about page. These live at the theme root rather than under
  * templates/ because they are prose a project is expected to replace.
  */
-const CONTENT = ['index.md', 'about.md'];
+const CONTENT = ['index.md', 'about.md'] as const;
 
 /**
  * Extensions Eleventy will render a page from, used to decide whether a
  * project already provides its own version of a theme page.
  */
-const TEMPLATE_EXTENSIONS = ['md', 'njk', 'html', 'liquid', '11ty.js'];
+const TEMPLATE_EXTENSIONS = ['md', 'njk', 'html', 'liquid', '11ty.js'] as const;
 
 /**
  * True when the project has its own template that would take the theme
  * page's place. The extension is ignored so a project's about.njk
  * replaces the theme's about.md rather than fighting it for /about/.
  */
-function hasOverride(dir, name) {
+function hasOverride(dir: string, name: string): boolean {
   const base = name.slice(0, name.indexOf('.'));
   return TEMPLATE_EXTENSIONS.some((ext) =>
     existsSync(join(dir, `${base}.${ext}`)),
@@ -102,7 +117,7 @@ function hasOverride(dir, name) {
  * the nearest shared parent directory, so the reset target is registered
  * a second time in that form, without its leading `../` segments.
  */
-function watchTheme(eleventyConfig) {
+function watchTheme(eleventyConfig: PluginConfig): void {
   if (!process.env.DECISION_RECORDS_DEV) {
     return;
   }
@@ -115,7 +130,7 @@ function watchTheme(eleventyConfig) {
   }
 }
 
-function isEleventy4(eleventyConfig) {
+function isEleventy4(eleventyConfig: PluginConfig): boolean {
   try {
     eleventyConfig.versionCheck('>=4.0.0-0');
     return true;
@@ -124,7 +139,10 @@ function isEleventy4(eleventyConfig) {
   }
 }
 
-export default function (eleventyConfig, options = {}) {
+export default function (
+  eleventyConfig: PluginConfig,
+  options: DecisionRecordsOptions = {},
+): void {
   const opts = themeConfig(options);
 
   const inputDir = eleventyConfig.directories?.input ?? './src/';
@@ -230,3 +248,5 @@ export default function (eleventyConfig, options = {}) {
     }
   }
 }
+
+export type { DecisionRecordsOptions, PluginConfig } from './types.js';

@@ -1,4 +1,19 @@
+import type UserConfig from '@11ty/eleventy/UserConfig';
+
 type Defaults = typeof import('./defaultConfig.json');
+
+/**
+ * Eleventy types `directories` as a bare `object`; this names the members
+ * the plugin reads from it. Every project passes a plain `UserConfig`, which
+ * is assignable to this type.
+ */
+export interface EleventyDirectories {
+  input?: string;
+  includes?: string;
+  layouts?: string;
+}
+
+export type PluginConfig = UserConfig & { directories?: EleventyDirectories };
 
 export type SiteConfig = Defaults['site'];
 

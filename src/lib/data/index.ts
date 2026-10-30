@@ -1,21 +1,14 @@
 import type UserConfig from '@11ty/eleventy/UserConfig';
 
+/**
+ * The slice of a template's data the layout computation reads. Eleventy
+ * also calls computed functions once with a discovery proxy, so nothing
+ * here may be assumed present: the proxy answers property reads but not
+ * `in` checks.
+ */
 interface PageData {
-  page: { inputPath: string };
+  page?: { inputPath?: unknown };
   layout?: unknown;
-}
-
-function isPageData(data: unknown): data is PageData {
-  if (typeof data !== 'object' || data === null || !('page' in data)) {
-    return false;
-  }
-  const { page } = data;
-  return (
-    typeof page === 'object' &&
-    page !== null &&
-    'inputPath' in page &&
-    typeof page.inputPath === 'string'
-  );
 }
 
 /**
@@ -29,13 +22,12 @@ export default function (
 ): void {
   eleventyConfig.addGlobalData('layout', 'page.njk');
   eleventyConfig.addGlobalData('eleventyComputed', {
-    layout: (data: unknown): unknown => {
-      if (!isPageData(data)) {
-        throw new Error('eleventyComputed.layout: page.inputPath is missing');
-      }
+    layout: (data: PageData): unknown => {
+      const inputPath = data.page?.inputPath;
       if (
-        data.page.inputPath.includes(`/${decisionsDir}/`) &&
-        data.page.inputPath.endsWith('.md')
+        typeof inputPath === 'string' &&
+        inputPath.includes(`/${decisionsDir}/`) &&
+        inputPath.endsWith('.md')
       ) {
         return 'adr.njk';
       }

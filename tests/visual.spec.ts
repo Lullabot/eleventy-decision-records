@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 // The fixture site's decision records carry fixed dates, so these URLs
 // are deterministic. Relative ages ("2 days ago") still drift with the
@@ -6,8 +6,14 @@ import { test, expect } from '@playwright/test';
 // every screenshot, so no masking is needed here.
 // Playwright's mouse starts at (0,0), which hovers the top nav item and
 // shows its tooltip; park it over empty page padding before screenshots.
-async function parkMouse(page) {
+async function parkMouse(page: Page) {
   await page.mouse.move(720, 4);
+}
+
+function viewport(page: Page) {
+  const size = page.viewportSize();
+  if (!size) throw new Error('Viewport size is not set');
+  return size;
 }
 
 const pages = [
@@ -20,7 +26,7 @@ const pages = [
   ['contributors', '/contributors/'],
   ['contributor', '/contributors/lorem-ipsum/'],
   ['about', '/about/'],
-];
+] as const;
 
 for (const [name, path] of pages) {
   test(`${name} page`, async ({ page }) => {
@@ -33,11 +39,11 @@ for (const [name, path] of pages) {
 // The layout pins the body to the viewport and scrolls .site-main, so a
 // fullPage screenshot stops at the fold. Growing the viewport by the
 // hidden overflow shows the whole article instead.
-async function fitMainToViewport(page) {
+async function fitMainToViewport(page: Page) {
   const overflow = await page
     .locator('.site-main')
     .evaluate((main) => main.scrollHeight - main.clientHeight);
-  const { width, height } = page.viewportSize();
+  const { width, height } = viewport(page);
   await page.setViewportSize({ width, height: height + overflow });
 }
 
@@ -47,7 +53,7 @@ const specimens = [
   ['typography', '/adrs/20230801-typography-specimen/'],
   ['tables', '/adrs/20230802-html-tables/'],
   ['syntax-highlighting', '/adrs/20230803-syntax-highlighting/'],
-];
+] as const;
 
 for (const [name, path] of specimens) {
   test(`${name} specimen`, async ({ page }) => {
@@ -69,7 +75,7 @@ test('expanded menu', async ({ page }) => {
 test('search dialog with results', async ({ page }) => {
   await page.goto('/');
   // On mobile the search button lives inside the collapsed menu.
-  if (page.viewportSize().width < 768) {
+  if (viewport(page).width < 768) {
     await page.getByRole('button', { name: 'Menu' }).click();
   }
   await page.getByRole('button', { name: 'Search' }).click();

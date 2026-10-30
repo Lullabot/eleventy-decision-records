@@ -1,6 +1,14 @@
-import { test, expect } from '@playwright/test';
+import {
+  test,
+  expect,
+  type CDPSession,
+  type Locator,
+  type Page,
+  type TestInfo,
+} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { checkAccessibility } from '@lullabot/playwright-drupal';
+import type { Result } from 'axe-core';
 import { baseline } from './a11y-baseline.js';
 
 // Same deterministic URLs the visual suite screenshots, so every page
@@ -18,9 +26,15 @@ const pages = [
   ['typography', '/adrs/20230801-typography-specimen/'],
   ['tables', '/adrs/20230802-html-tables/'],
   ['syntax-highlighting', '/adrs/20230803-syntax-highlighting/'],
-];
+] as const;
 
-function describeViolations(violations) {
+function viewport(page: Page) {
+  const size = page.viewportSize();
+  if (!size) throw new Error('Viewport size is not set');
+  return size;
+}
+
+function describeViolations(violations: Result[]) {
   return violations
     .map((v) => {
       const targets = v.nodes
@@ -40,7 +54,7 @@ function describeViolations(violations) {
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
-async function expectNoViolations(page, testInfo) {
+async function expectNoViolations(page: Page, testInfo: TestInfo) {
   await checkAccessibility(page, testInfo, {
     wcagTags: WCAG_TAGS,
     baseline,
@@ -53,7 +67,10 @@ const INTERACTIVE = 'a[href], button, input, select, textarea, summary';
 // Puts every interactive element into a pseudo-class state at once through
 // the DevTools protocol, so hover and focus styles can be scanned without
 // moving the mouse over each element in turn. Chromium only.
-async function forcePseudoState(page, pseudoClasses) {
+async function forcePseudoState(
+  page: Page,
+  pseudoClasses: string[],
+): Promise<CDPSession> {
   const cdp = await page.context().newCDPSession(page);
   await cdp.send('DOM.enable');
   await cdp.send('CSS.enable');
@@ -72,14 +89,14 @@ async function forcePseudoState(page, pseudoClasses) {
 }
 
 // State changes are visual, so only the colour rules are rechecked.
-const STATES = [
+const STATES: [string, string[]][] = [
   ['hovered', ['hover']],
   ['focused', ['focus', 'focus-visible']],
 ];
 
 const COLOUR_RULES = ['color-contrast', 'link-in-text-block'];
 
-function targetKeys(violations) {
+function targetKeys(violations: Result[]) {
   return new Set(
     violations.flatMap((v) =>
       v.nodes.map((n) => `${v.id} ${n.target.join(' ')}`),
@@ -89,7 +106,7 @@ function targetKeys(violations) {
 
 // Reports only what the state introduces; anything already failing at
 // rest belongs to the page's own test.
-async function expectNoStateViolations(page, pseudoClasses) {
+async function expectNoStateViolations(page: Page, pseudoClasses: string[]) {
   const scan = () => new AxeBuilder({ page }).withRules(COLOUR_RULES).analyze();
   const atRest = targetKeys((await scan()).violations);
   const cdp = await forcePseudoState(page, pseudoClasses);
@@ -133,7 +150,7 @@ test('expanded menu', async ({ page }, testInfo) => {
 
 test('search dialog with results', async ({ page }, testInfo) => {
   await page.goto('/');
-  if (page.viewportSize().width < 768) {
+  if (viewport(page).width < 768) {
     await page.getByRole('button', { name: 'Menu' }).click();
   }
   await page.getByRole('button', { name: 'Search' }).click();
@@ -146,10 +163,10 @@ test('search dialog with results', async ({ page }, testInfo) => {
 });
 
 test.describe('scroll boxes', () => {
-  const boxes = (page) =>
+  const boxes = (page: Page) =>
     page.locator('.adr-content pre, .adr-content .table-scroll').all();
 
-  const overflows = (box) =>
+  const overflows = (box: Locator) =>
     box.evaluate((el) => el.scrollWidth > el.clientWidth);
 
   for (const path of [

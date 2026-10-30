@@ -12,17 +12,17 @@ const mobile = {
 const projects = [
   {
     name: 'chromium-desktop',
-    testIgnore: /accessibility\.spec\.js/,
+    testIgnore: /accessibility\.spec\.ts/,
     use: desktop,
   },
   {
     name: 'chromium-mobile',
-    testMatch: /visual\.spec\.js/,
+    testMatch: /visual\.spec\.ts/,
     use: mobile,
   },
   {
     name: 'firefox',
-    testMatch: /(search|sidebar)\.spec\.js/,
+    testMatch: /(search|sidebar)\.spec\.ts/,
     use: {
       ...devices['Desktop Firefox'],
       viewport: { width: 1440, height: 900 },
@@ -30,12 +30,12 @@ const projects = [
   },
   {
     name: 'a11y-desktop',
-    testMatch: /accessibility\.spec\.js/,
+    testMatch: /accessibility\.spec\.ts/,
     use: desktop,
   },
   {
     name: 'a11y-mobile',
-    testMatch: /accessibility\.spec\.js/,
+    testMatch: /accessibility\.spec\.ts/,
     use: mobile,
   },
 ];

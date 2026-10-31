@@ -16,7 +16,7 @@ services:
         # Link the document root to the expected path. The preview serves
         # the fixture site, which consumes the theme the way a real
         # project does, so the docroot is that site's Eleventy output.
-        - curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
+        - curl -fsSL https://deb.nodesource.com/setup_26.x | bash -
         - ln -snf "${TUGBOAT_ROOT}/tests/fixture-site/_site" "${DOCROOT}"
         - apt-get install -y nodejs
       build:

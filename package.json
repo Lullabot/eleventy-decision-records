@@ -3,29 +3,26 @@
   "version": "1.2.0",
   "description": "An Eleventy theme plugin for documenting decision records",
   "scripts": {
-    "start": "bash bin/link-fixture-site.sh && DECISION_RECORDS_DEV=1 npm --prefix tests/fixture-site run serve",
-    "lint": "eslint && prettier -c .",
+    "start": "bash bin/start.sh",
+    "lint": "eslint && prettier -c . && tsc -p tsconfig.check.json --noEmit",
     "lint:fix": "eslint --fix && prettier -w .",
     "lint-staged": "lint-staged",
     "prepare": "husky",
     "test": "bash bin/run-e2e.sh",
     "test:config": "bash bin/prepare-fixture-site.sh && npm --prefix tests/fixture-site test",
     "test:update": "bash bin/run-e2e.sh --update",
-    "test:local": "playwright test"
+    "test:local": "playwright test",
+    "build": "node bin/build.ts",
+    "prepack": "npm run build"
   },
   "exports": {
-    ".": "./src/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "files": [
-    "src/index.js",
-    "src/config.js",
-    "src/defaultConfig.json",
-    "src/index.md",
-    "src/about.md",
-    "src/YYYYMMDD-decision-template.md",
-    "src/lib",
-    "src/templates",
-    "src/assets"
+    "dist"
   ],
   "peerDependencies": {
     "@11ty/eleventy": "^3.0.0 || ^4.0.0-0"
@@ -58,17 +55,23 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "@11ty/eleventy": "^3.1.7",
     "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^10.0.0",
     "@lullabot/playwright-drupal": "^2.0.0",
     "@playwright/test": "^1.62.1",
+    "@types/he": "^1.2.3",
+    "@types/node": "^24.19.2",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.0.3",
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^17.0.0",
     "husky": "^9.1.7",
+    "jiti": "^2.7.0",
     "lint-staged": "^17.0.0",
-    "prettier": "^3.4.2"
+    "prettier": "^3.4.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.1"
   },
   "dependencies": {
     "@11ty/eleventy-plugin-bundle": "^3.0.7",
@@ -88,7 +91,7 @@
     "striptags": "^3.2.0"
   },
   "lint-staged": {
-    "*.js": "eslint",
-    "*.{js,njk,json,md,css,yml,yaml}": "prettier --check"
+    "*.ts": "eslint",
+    "*.{ts,njk,json,md,css,yml,yaml}": "prettier --check"
   }
 }

@@ -9,6 +9,8 @@ set -Eeuo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SITE="$REPO_ROOT/tests/fixture-site"
 
+(cd "$REPO_ROOT" && npm run build)
+
 cd "$SITE"
 npm install --no-audit --no-fund --silent
 npm install --no-audit --no-fund --silent --no-save "file:$REPO_ROOT"

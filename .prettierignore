@@ -6,3 +6,6 @@
 
 # Skip compiled test output
 /tests/fixture-site/_site/
+
+# Prettier has no shell parser.
+*.sh

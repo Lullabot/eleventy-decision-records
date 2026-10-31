@@ -76,7 +76,7 @@ playwright_cmd="npx playwright test"
 # The ${a[@]+"${a[@]}"} form keeps `set -u` from treating an empty array as
 # unset, which it does on bash 3.2 — the version macOS still ships.
 for pattern in ${test_patterns[@]+"${test_patterns[@]}"}; do
-  playwright_cmd="$playwright_cmd tests/*${pattern}*.spec.js"
+  playwright_cmd="$playwright_cmd tests/*${pattern}*.spec.ts"
 done
 
 if [[ $update_mode -eq 1 ]]; then
@@ -93,8 +93,9 @@ CONTAINER_NAME="edr-e2e-$$"
 # the fixture site's node_modules volume, and recursing through it would
 # cost thousands of needless chowns on every run.
 CHOWN_PATHS="/work/test-results \
+  /work/dist \
   /work/playwright-report \
-  /work/tests/visual.spec.js-snapshots \
+  /work/tests/visual.spec.ts-snapshots \
   /work/tests/fixture-site/_site \
   /work/dist-package"
 

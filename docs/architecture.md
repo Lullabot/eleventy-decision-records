@@ -2,8 +2,10 @@
 
 ```
 src/
-  index.js             # Plugin entrypoint — everything is registered from here
-  config.js            # Merges project options over the defaults
+  index.ts             # Plugin entrypoint — everything is registered from here
+  config.ts            # Merges project options over the defaults
+  types.ts             # Option and config types; DecisionRecordsOptions is the public one
+  types/               # Ambient declarations for dependencies that ship no types
   defaultConfig.json   # Default site, navigation, practiceAreas, dirs
   index.md             # Default homepage (content, not a template)
   about.md             # Default about page
@@ -14,20 +16,24 @@ src/
     pages/             # decisions, topics, topic, practice-areas, contributors, contributor
     partials/          # site-nav, footer, recent-decisions, *-intro
     assets/            # favicon.njk, search_index.njk
-  assets/              # fonts, icons, images, js, styles
+  assets/              # fonts, icons, images, styles
+    js/*.ts            # Browser scripts, compiled into dist/assets/js/
+dist/                  # Build output, gitignored; what the package publishes
 tests/
   fixture-site/        # A consumer project; the only site this repo builds
-  *.spec.js            # Playwright specs
-bin/                   # Fixture-site install and Dockerised test runner
+  *.spec.ts            # Playwright specs
+bin/                   # Build script, fixture-site install, Dockerised test runner
 ```
 
-This repository is the package, not a site: there is no Eleventy config, input directory, or build script at the root.
+This repository is the package, not a site: there is no Eleventy config or input directory at the root. `npm run build` (`bin/build.ts`) compiles `src/` with `tsc` into `dist/`, then copies everything `tsc` does not emit (templates, assets, the markdown content, `defaultConfig.json`, the ambient declarations) into `dist/` at the same relative paths. The layout has to match because the compiled `dist/index.js` derives `themeRoot` from its own location and reads templates and assets relative to it. `package.json` points `files` and `exports` at `dist/`, and `prepack` runs the build, so `npm pack` always ships a fresh one.
 
 ## The plugin entrypoint
 
-`src/index.js` receives Eleventy's config object and the project's options, and does everything from there. It reads the project's own directories (`eleventyConfig.directories.input` / `.includes`) rather than assuming any layout, so the theme adapts to wherever the consumer keeps its content.
+`src/index.ts` receives Eleventy's config object and the project's options, and does everything from there. It reads the project's own directories (`eleventyConfig.directories.input` / `.includes`) rather than assuming any layout, so the theme adapts to wherever the consumer keeps its content.
 
-- **Configuration** — `config.js` merges the project's options over `defaultConfig.json` using `@11ty/eleventy-utils`: objects deep-merge, arrays concatenate, and an `override:` key prefix replaces rather than merges. It also rewrites the `{decisions}` token in navigation URLs to the configured decisions directory. The resolved config is exposed as the `site`, `navigation`, `practiceAreas`, and `dirs` global data.
+The config object is typed with Eleventy's own `UserConfig`, read straight from its JSDoc source (`allowJs` with `maxNodeModuleJsDepth: 1` in `tsconfig.json`). Eleventy plugins without types are declared in `src/types/eleventy-plugins.d.ts`. `DecisionRecordsOptions` in `types.ts` is the shape a project passes to `addPlugin`, and is exported from the package root.
+
+- **Configuration** — `config.ts` merges the project's options over `defaultConfig.json` using `@11ty/eleventy-utils`: objects deep-merge, arrays concatenate, and an `override:` key prefix replaces rather than merges. It also rewrites the `{decisions}` token in navigation URLs to the configured decisions directory. The resolved config is exposed as the `site`, `navigation`, `practiceAreas`, and `dirs` global data.
 - **Nunjucks environment** — the theme appends `templates/partials/` and `assets/` to the search paths of the environment Eleventy already built, via the `eleventy.engine.njk` event. Eleventy's own paths (the project's includes directory, then its working directory) stay ahead of the theme's, which is what makes partials and stylesheets overridable.
 - **Passthrough copying** — theme assets are copied file by file, skipping any path the project already has under its own `assets/`, so a project file replaces the theme's rather than colliding with it. The project's `assets/` is then copied wholesale, plus the Orama browser bundle to `/js/orama`.
 
@@ -35,9 +41,9 @@ This repository is the package, not a site: there is no Eleventy config, input d
 
 - `collections/` — `adrs` (newest first), `topics` (deduplicated, lowercased), `contributors` (deduplicated, sorted), `practiceAreas` (configured areas that have at least one ADR, in config order; drives the homepage, nav, and practice area pages). All four are built from a single glob derived from `dirs.decisions`, so moving the records moves every collection with them
 - `data/` — default layout `page.njk`, plus an `eleventyComputed` rule that switches markdown files inside the decisions directory to `adr.njk`
-- `filters/` — date formatting via the Temporal polyfill (`dates.js`; relative and absolute formats all render in UTC), collection helpers (`collections.js`), `spaceless` (`strings.js`)
+- `filters/` — date formatting via the Temporal polyfill (`dates.ts`; relative and absolute formats all render in UTC), collection helpers (`collections.ts`), `spaceless` (`strings.ts`)
 - `plugins/` — markdown-it with anchor links, bundle plugin with lightningcss minification, TOC (bare-list output, wrapped by `adr.njk`), Atom feed at `/feed.xml` (absolute URLs from `site.url`), syntax highlighting
-- `shortcodes/` — `icon`/`favicon` (`icons.js`), resolved against the project's icon directory, then the theme's, then `@material-symbols/svg-400`; `oramaIndex` (`search.js`), which serializes the ADR collection into an Orama database
+- `shortcodes/` — `icon`/`favicon` (`icons.ts`), resolved against the project's icon directory, then the theme's, then `@material-symbols/svg-400`; `oramaIndex` (`search.ts`), which serializes the ADR collection into an Orama database
 
 ## What the theme provides, and how projects override it
 
@@ -56,7 +62,7 @@ Content (`index.md`, `about.md`) lives at the package root rather than under `te
 
 ## Search
 
-The index is built at build time by the `oramaIndex` shortcode and emitted as `/searchindex.json` by `templates/assets/search_index.njk`. The client-side UI in `assets/js/search.js` loads the Orama browser bundle from `/js/orama` and computes relative ages at render time (`time-since.js`). Anything interpolated into result markup must be escaped or set via `textContent` — topics and titles come from ADR frontmatter.
+The index is built at build time by the `oramaIndex` shortcode and emitted as `/searchindex.json` by `templates/assets/search_index.njk`. The client-side UI in `assets/js/search.ts` loads the Orama browser bundle from `/js/orama` and computes relative ages at render time (`time-since.ts`). The browser scripts are compiled into `dist/assets/js/` and passthrough-copied from there, so their import specifiers are the URLs the browser will load (`/js/orama/index.js`, `./time-since.js`); a `paths` entry in `tsconfig.json` maps the Orama URL to its declaration file for type-checking only. Anything interpolated into result markup must be escaped or set via `textContent` — topics and titles come from ADR frontmatter.
 
 ## Styles
 

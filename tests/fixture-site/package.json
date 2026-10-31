@@ -8,9 +8,9 @@
     "@11ty/eleventy": "^3.1.6"
   },
   "scripts": {
-    "build": "eleventy",
-    "serve": "eleventy --serve --port=8181",
-    "test": "node --test config.test.js"
+    "build": "eleventy --config=eleventy.config.ts",
+    "serve": "eleventy --config=eleventy.config.ts --serve --port=8181",
+    "test": "node --test config.test.ts"
   },
   "devDependencies": {
     "node-html-parser": "^9.0.4"

@@ -6,7 +6,7 @@ This file provides guidance to AI agents when working with code in this reposito
 
 An Eleventy (v3) theme plugin, published to npm as `@lullabot/eleventy-decision-records`, that gives a consuming site everything it needs to document architectural decision records (ADRs). Consumers install it and register it in their Eleventy config; they do not clone this repository. Uses ESM (`"type": "module"`), and Eleventy itself is a peer dependency rather than a dependency.
 
-The distinction that matters most when changing code here: this repository is the _package_, not a site. There is no Eleventy config, no input directory, and no build script at the root. The only site that gets built is `tests/fixture-site/`, which installs the packaged theme the way a real consumer would.
+The distinction that matters most when changing code here: this repository is the _package_, not a site. There is no Eleventy config or input directory at the root; `npm run build` compiles `src/` (TypeScript) into `dist/`, which is what the package publishes. The only site that gets built is `tests/fixture-site/`, which installs the packaged theme the way a real consumer would.
 
 ## Documentation
 

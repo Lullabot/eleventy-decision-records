@@ -10,7 +10,7 @@
     "social": [
       {
         "label": "RSS",
-        "url": "/feed.xml",
+        "url": "{feed}",
         "icon": "rss_feed"
       },
       {
@@ -96,5 +96,11 @@
   ],
   "dirs": {
     "decisions": "decisions"
-  }
+  },
+  "feeds": [
+    {
+      "type": "atom",
+      "path": "/feed.xml"
+    }
+  ]
 }

@@ -1,24 +1,9 @@
-import { feedPlugin } from '@11ty/eleventy-plugin-rss';
+import { rssPlugin } from '@11ty/eleventy-plugin-rss';
 
 /**
- * Register the Atom feed plugin, served at /feed.xml.
+ * Register the RSS plugin's date and URL filters, used by the theme's feed
+ * templates (templates/assets/feed-*.njk).
  */
-export function rss(eleventyConfig, site) {
-  eleventyConfig.addPlugin(feedPlugin, {
-    type: 'atom',
-    outputPath: '/feed.xml',
-    collection: {
-      name: 'adrs',
-      limit: 0,
-    },
-    metadata: {
-      language: 'en',
-      title: `${site.title} — ${site.organization}`,
-      subtitle: site.description,
-      base: site.url,
-      author: {
-        name: site.organization,
-      },
-    },
-  });
+export function rss(eleventyConfig) {
+  eleventyConfig.addPlugin(rssPlugin);
 }

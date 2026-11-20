@@ -3,19 +3,53 @@ import defaultConfig from './defaultConfig.json' with { type: 'json' };
 
 const RESOLVED = Symbol.for('eleventy-decision-records.config.resolved');
 
+const FEED_TYPES = ['atom', 'rss'];
+
 /**
- * Rewrites `{decisions}` in navigation URLs to the configured decisions
- * directory, so moving the records with `dirs.decisions` also moves the
- * links pointing at them. Projects writing their own navigation can use
- * the same token or hardcode a path.
+ * Rewrites `{decisions}` and `{feed}` in navigation and social link URLs to
+ * the configured decisions directory and the first feed's path, so changing
+ * `dirs.decisions` or `feeds` also moves the links pointing at them. Links
+ * to `{feed}` are dropped when there are no feeds. Projects writing their
+ * own links can use the same tokens or hardcode a path.
  */
 function resolveNavigationTokens(config) {
-  for (const group of Object.values(config.navigation ?? {})) {
+  const feedPath = config.feeds[0]?.path;
+  if (!feedPath && config.site?.social) {
+    config.site.social = config.site.social.filter(
+      (item) => !item.url?.includes('{feed}'),
+    );
+  }
+  const groups = [
+    ...Object.values(config.navigation ?? {}),
+    config.site?.social ?? [],
+  ];
+  for (const group of groups) {
     for (const item of group) {
       if (typeof item.url === 'string') {
-        item.url = item.url.replace('{decisions}', config.dirs.decisions);
+        item.url = item.url
+          .replace('{decisions}', config.dirs.decisions)
+          .replace('{feed}', feedPath);
       }
     }
+  }
+}
+
+/**
+ * Each feed type can be listed once: its template is registered as
+ * `feed-<type>.njk`, which is also the name a project overrides it with.
+ */
+function validateFeeds(feeds) {
+  const seen = new Set();
+  for (const { type } of feeds) {
+    if (!FEED_TYPES.includes(type)) {
+      throw new Error(
+        `feeds[].type must be one of ${FEED_TYPES.join(', ')}, got "${type}"`,
+      );
+    }
+    if (seen.has(type)) {
+      throw new Error(`feeds lists the "${type}" type more than once`);
+    }
+    seen.add(type);
   }
 }
 
@@ -32,6 +66,7 @@ export default function themeConfig(config = {}) {
     return config;
   }
   const resolved = Merge(structuredClone(defaultConfig), config);
+  validateFeeds(resolved.feeds);
   resolveNavigationTokens(resolved);
   Object.defineProperty(resolved, RESOLVED, { value: true });
   return resolved;

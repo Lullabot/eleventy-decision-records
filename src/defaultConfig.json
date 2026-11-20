@@ -97,8 +97,10 @@
   "dirs": {
     "decisions": "decisions"
   },
-  "feed": {
-    "type": "atom",
-    "path": "/feed.xml"
-  }
+  "feeds": [
+    {
+      "type": "atom",
+      "path": "/feed.xml"
+    }
+  ]
 }

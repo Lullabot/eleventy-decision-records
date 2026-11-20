@@ -50,7 +50,7 @@ Everything the theme ships is registered as an Eleventy _virtual_ template, and 
 | Content | `index.md`, `about.md` | A file of the same base name, any template extension  |
 | Assets  | `templates/assets/`    | A file of the same base name, any template extension  |
 
-The feed is an asset too: `templates/assets/feed-atom.njk` or `feed-rss.njk`, picked by `feed.type`, is registered as `feed.njk` at `feed.path`, with absolute URLs from `site.url`. A project's own `feed.*` replaces it. Both feed templates are skipped by Prettier, which formats them as HTML and breaks the XML.
+Feeds are assets too: for each entry in `feeds`, `templates/assets/feed-<type>.njk` is registered with the entry's `path` as its permalink, and absolute URLs from `site.url`. A project's own `feed-<type>.*` replaces it. Both feed templates are skipped by Prettier, which formats them as HTML and breaks the XML.
 
 The extension is ignored for all but layouts, so a project's `about.njk` replaces the theme's `about.md` instead of fighting it for the same output path. Partials and stylesheets are not virtual templates — they are overridden through the Nunjucks search path order described above.
 

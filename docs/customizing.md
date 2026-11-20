@@ -42,22 +42,21 @@ eleventyConfig.addPlugin(decisionRecords, {
 });
 ```
 
-`icon` is a [Material Symbols](https://fonts.google.com/icons) identifier used in the site header, where it links to `homepage`, your organization's main site. Set `homepage` to an empty string to link the icon to the decision records homepage instead. `url` is the production base URL, used to build absolute links in the feed. `social` links appear in the footer, and each `icon` resolves the same way as the `{% icon %}` shortcode. The `{feed}` token in a URL is replaced with the feed's path (see [Feed](#feed)).
+`icon` is a [Material Symbols](https://fonts.google.com/icons) identifier used in the site header, where it links to `homepage`, your organization's main site. Set `homepage` to an empty string to link the icon to the decision records homepage instead. `url` is the production base URL, used to build absolute links in the feed. `social` links appear in the footer, and each `icon` resolves the same way as the `{% icon %}` shortcode. The `{feed}` token in a URL is replaced with the first feed's path, and a link using it is dropped when there are no feeds (see [Feeds](#feeds)).
 
-## Feed
+## Feeds
 
-The theme publishes an Atom feed at `/feed.xml`. To publish RSS 2.0 instead, or at another path:
+The theme publishes an Atom feed at `/feed.xml`. To add an RSS 2.0 feed next to it:
 
 ```js
 eleventyConfig.addPlugin(decisionRecords, {
-  feed: {
-    type: 'rss', // or 'atom'
-    path: '/rss.xml',
-  },
+  feeds: [{ type: 'rss', path: '/rss.xml' }],
 });
 ```
 
-Each entry lists the record's `context` as its summary, one category per topic, and its practice area and status as categories, labeled `topic`, `practiceArea` and `status` (the `scheme` attribute in Atom, `domain` in RSS). The Atom feed also includes each record's full content. To change the feed's markup, add your own `feed.njk` to the input directory.
+Since arrays concatenate, this publishes both feeds. To replace the Atom feed instead, use `'override:feeds'`; an empty list turns feeds off. Each type (`atom` or `rss`) can be listed once. Every page's `<head>` gets a `<link rel="alternate">` for each feed, so browsers and feed readers can find them.
+
+Each entry lists the record's `context` as its summary, one category per topic, and its practice area and status as categories, labeled `topic`, `practiceArea` and `status` (the `scheme` attribute in Atom, `domain` in RSS). The Atom feed also includes each record's full content. To change a feed's markup, add your own `feed-atom.njk` or `feed-rss.njk` to the input directory, with a `permalink`.
 
 ## Navigation
 

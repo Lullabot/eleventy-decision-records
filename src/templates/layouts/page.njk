@@ -6,6 +6,14 @@
     <title>{{ title or site.title }} — {{ site.organization }}</title>
     <meta name="description" content="{{ description or site.description }}" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {%- for feed in feeds %}
+      <link
+        rel="alternate"
+        type="application/{{ feed.type }}+xml"
+        href="{{ feed.path }}"
+        title="{{ site.title }}"
+      />
+    {%- endfor %}
     <style>
       @view-transition {
         navigation: auto;

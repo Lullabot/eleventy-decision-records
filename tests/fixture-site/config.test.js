@@ -190,29 +190,59 @@ test('feed lists each record with its summary and categories', async () => {
 
   const plugin = {
     dirs: { decisions: 'adrs' },
-    feed: { type: 'rss', path: '/rss.xml' },
+    feeds: [{ type: 'rss', path: '/rss.xml' }],
   };
   const pages = await build({ plugin });
-  assert.equal(byUrl(pages, '/feed.xml').length, 0);
+  assert.equal(byUrl(pages, '/feed.xml').length, 1);
   const rss = byUrl(pages, '/rss.xml')[0].content;
   assert.match(rss, /^<\?xml [^>]+>\n<rss version="2.0"/);
   assert.match(rss, /<atom:link href="https:\/\/[^"]+\/rss\.xml"/);
   assert.match(rss, /<description>Exercises the prose styles/);
   assert.match(rss, /<category domain="topic">lorem<\/category>/);
   assert.match(rss, /<category domain="status">accepted<\/category>/);
-  assert.match(byUrl(pages, '/')[0].content, /href="\/rss\.xml"/);
+  const home = parse(byUrl(pages, '/')[0].content);
+  assert.ok(home.querySelector('footer a[href="/feed.xml"]'));
+  assert.deepEqual(
+    home
+      .querySelectorAll('head link[rel="alternate"]')
+      .map((link) => [link.getAttribute('type'), link.getAttribute('href')]),
+    [
+      ['application/atom+xml', '/feed.xml'],
+      ['application/rss+xml', '/rss.xml'],
+    ],
+  );
 });
 
-test('project template replaces the feed', async () => {
+test('feeds can be replaced or turned off', async () => {
+  const rssOnly = await build({
+    plugin: {
+      dirs: { decisions: 'adrs' },
+      'override:feeds': [{ type: 'rss', path: '/rss.xml' }],
+    },
+  });
+  assert.equal(byUrl(rssOnly, '/feed.xml').length, 0);
+  assert.equal(byUrl(rssOnly, '/rss.xml').length, 1);
+  assert.match(byUrl(rssOnly, '/')[0].content, /href="\/rss\.xml"/);
+
+  const none = await build({
+    plugin: { dirs: { decisions: 'adrs' }, 'override:feeds': [] },
+  });
+  assert.equal(none.filter((p) => p.url.endsWith('.xml')).length, 0);
+  assert.doesNotMatch(byUrl(none, '/')[0].content, /href="(\{feed\}|\/feed)/);
+});
+
+test('project template replaces a feed', async () => {
   const input = inputWith({
-    'feed.njk': '---\npermalink: /feed.xml\n---\n<feed id="own-feed"/>',
+    'feed-atom.njk': '---\npermalink: /feed.xml\n---\n<feed id="own-feed"/>',
   });
   const feed = byUrl(await build({ input }), '/feed.xml');
   assert.equal(feed.length, 1);
   assert.match(feed[0].content, /id="own-feed"/);
 });
 
-test('unknown feed type fails the build', async () => {
-  const plugin = { dirs: { decisions: 'adrs' }, feed: { type: 'json' } };
-  await assert.rejects(build({ plugin }), /feed\.type must be one of/);
+test('invalid feeds fail the build', async () => {
+  const withFeeds = (feeds) =>
+    build({ plugin: { dirs: { decisions: 'adrs' }, feeds } });
+  await assert.rejects(withFeeds([{ type: 'json' }]), /must be one of/);
+  await assert.rejects(withFeeds([{ type: 'atom' }]), /more than once/);
 });

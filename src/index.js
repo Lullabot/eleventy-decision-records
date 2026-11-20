@@ -149,7 +149,7 @@ export default function (eleventyConfig, options = {}) {
   eleventyConfig.addGlobalData('navigation', opts.navigation);
   eleventyConfig.addGlobalData('practiceAreas', opts.practiceAreas);
   eleventyConfig.addGlobalData('dirs', opts.dirs);
-  eleventyConfig.addGlobalData('feed', opts.feed);
+  eleventyConfig.addGlobalData('feeds', opts.feeds);
 
   // Nunjucks resolves includes from the project first, then the theme,
   // so any theme partial or stylesheet can be overridden by creating a
@@ -231,13 +231,14 @@ export default function (eleventyConfig, options = {}) {
     }
   }
 
-  if (!hasOverride(inputDir, 'feed.njk')) {
-    eleventyConfig.addTemplate(
-      'feed.njk',
-      readFileSync(
-        join(themeRoot, 'templates/assets', `feed-${opts.feed.type}.njk`),
-        'utf8',
-      ),
-    );
+  for (const { type, path } of opts.feeds) {
+    const name = `feed-${type}.njk`;
+    if (!hasOverride(inputDir, name)) {
+      eleventyConfig.addTemplate(
+        name,
+        readFileSync(join(themeRoot, 'templates/assets', name), 'utf8'),
+        { permalink: path },
+      );
+    }
   }
 }

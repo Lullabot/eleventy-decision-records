@@ -36,7 +36,7 @@ This repository is the package, not a site: there is no Eleventy config, input d
 - `collections/` — `adrs` (newest first), `topics` (deduplicated, lowercased), `contributors` (deduplicated, sorted), `practiceAreas` (configured areas that have at least one ADR, in config order; drives the homepage, nav, and practice area pages). All four are built from a single glob derived from `dirs.decisions`, so moving the records moves every collection with them
 - `data/` — default layout `page.njk`, plus an `eleventyComputed` rule that switches markdown files inside the decisions directory to `adr.njk`
 - `filters/` — date formatting via the Temporal polyfill (`dates.js`; relative and absolute formats all render in UTC), collection helpers (`collections.js`), `spaceless` (`strings.js`)
-- `plugins/` — markdown-it with anchor links, bundle plugin with lightningcss minification, TOC (bare-list output, wrapped by `adr.njk`), Atom feed at `/feed.xml` (absolute URLs from `site.url`), syntax highlighting
+- `plugins/` — markdown-it with anchor links, bundle plugin with lightningcss minification, TOC (bare-list output, wrapped by `adr.njk`), the RSS plugin's date and URL filters for the feed templates, syntax highlighting
 - `shortcodes/` — `icon`/`favicon` (`icons.js`), resolved against the project's icon directory, then the theme's, then `@material-symbols/svg-400`; `oramaIndex` (`search.js`), which serializes the ADR collection into an Orama database
 
 ## What the theme provides, and how projects override it
@@ -49,6 +49,8 @@ Everything the theme ships is registered as an Eleventy _virtual_ template, and 
 | Pages   | `templates/pages/`     | A file of the same base name, any template extension  |
 | Content | `index.md`, `about.md` | A file of the same base name, any template extension  |
 | Assets  | `templates/assets/`    | A file of the same base name, any template extension  |
+
+The feed is an asset too: `templates/assets/feed-atom.njk` or `feed-rss.njk`, picked by `feed.type`, is registered as `feed.njk` at `feed.path`, with absolute URLs from `site.url`. A project's own `feed.*` replaces it. Both feed templates are skipped by Prettier, which formats them as HTML and breaks the XML.
 
 The extension is ignored for all but layouts, so a project's `about.njk` replaces the theme's `about.md` instead of fighting it for the same output path. Partials and stylesheets are not virtual templates — they are overridden through the Nunjucks search path order described above.
 

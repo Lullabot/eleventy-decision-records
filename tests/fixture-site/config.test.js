@@ -178,3 +178,41 @@ test('site icon links to the organization homepage', async () => {
   const plugin = { dirs: { decisions: 'adrs' }, site: { homepage: '' } };
   assert.equal(logo(await build({ plugin })), '/');
 });
+
+test('feed lists each record with its summary and categories', async () => {
+  const atom = byUrl(await build(), '/feed.xml')[0].content;
+  assert.match(atom, /^<\?xml /);
+  assert.match(atom, /<link href="https:\/\/[^"]+\/feed\.xml" rel="self" \/>/);
+  assert.match(atom, /<summary>Exercises the prose styles/);
+  assert.match(atom, /<category term="lorem" scheme="topic" \/>/);
+  assert.match(atom, /<category term="Design" scheme="practiceArea" \/>/);
+  assert.match(atom, /<category term="accepted" scheme="status" \/>/);
+
+  const plugin = {
+    dirs: { decisions: 'adrs' },
+    feed: { type: 'rss', path: '/rss.xml' },
+  };
+  const pages = await build({ plugin });
+  assert.equal(byUrl(pages, '/feed.xml').length, 0);
+  const rss = byUrl(pages, '/rss.xml')[0].content;
+  assert.match(rss, /^<\?xml [^>]+>\n<rss version="2.0"/);
+  assert.match(rss, /<atom:link href="https:\/\/[^"]+\/rss\.xml"/);
+  assert.match(rss, /<description>Exercises the prose styles/);
+  assert.match(rss, /<category domain="topic">lorem<\/category>/);
+  assert.match(rss, /<category domain="status">accepted<\/category>/);
+  assert.match(byUrl(pages, '/')[0].content, /href="\/rss\.xml"/);
+});
+
+test('project template replaces the feed', async () => {
+  const input = inputWith({
+    'feed.njk': '---\npermalink: /feed.xml\n---\n<feed id="own-feed"/>',
+  });
+  const feed = byUrl(await build({ input }), '/feed.xml');
+  assert.equal(feed.length, 1);
+  assert.match(feed[0].content, /id="own-feed"/);
+});
+
+test('unknown feed type fails the build', async () => {
+  const plugin = { dirs: { decisions: 'adrs' }, feed: { type: 'json' } };
+  await assert.rejects(build({ plugin }), /feed\.type must be one of/);
+});

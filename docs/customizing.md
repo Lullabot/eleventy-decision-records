@@ -35,14 +35,29 @@ eleventyConfig.addPlugin(decisionRecords, {
     description: 'Documented architectural decisions for your team',
     icon: 'brand_family-fill',
     social: [
-      { label: 'RSS', url: '/feed.xml', icon: 'rss_feed' },
+      { label: 'RSS', url: '{feed}', icon: 'rss_feed' },
       { label: 'GitHub', url: 'https://github.com/your-org', icon: 'github' },
     ],
   },
 });
 ```
 
-`icon` is a [Material Symbols](https://fonts.google.com/icons) identifier used in the site header, where it links to `homepage`, your organization's main site. Set `homepage` to an empty string to link the icon to the decision records homepage instead. `url` is the production base URL, used to build absolute links in the Atom feed at `/feed.xml`. `social` links appear in the footer, and each `icon` resolves the same way as the `{% icon %}` shortcode.
+`icon` is a [Material Symbols](https://fonts.google.com/icons) identifier used in the site header, where it links to `homepage`, your organization's main site. Set `homepage` to an empty string to link the icon to the decision records homepage instead. `url` is the production base URL, used to build absolute links in the feed. `social` links appear in the footer, and each `icon` resolves the same way as the `{% icon %}` shortcode. The `{feed}` token in a URL is replaced with the feed's path (see [Feed](#feed)).
+
+## Feed
+
+The theme publishes an Atom feed at `/feed.xml`. To publish RSS 2.0 instead, or at another path:
+
+```js
+eleventyConfig.addPlugin(decisionRecords, {
+  feed: {
+    type: 'rss', // or 'atom'
+    path: '/rss.xml',
+  },
+});
+```
+
+Each entry lists the record's `context` as its summary, one category per topic, and its practice area and status as categories, labeled `topic`, `practiceArea` and `status` (the `scheme` attribute in Atom, `domain` in RSS). The Atom feed also includes each record's full content. To change the feed's markup, add your own `feed.njk` to the input directory.
 
 ## Navigation
 

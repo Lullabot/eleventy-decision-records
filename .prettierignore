@@ -6,3 +6,7 @@
 
 # Skip compiled test output
 /tests/fixture-site/_site/
+
+# Formatting as HTML breaks XML: it puts a blank line before <?xml ?>, and
+# treats RSS's <link>…</link> as a void element.
+/src/templates/assets/feed-*.njk

@@ -5,7 +5,7 @@ eleventyImport:
   collections: ['adrs']
 ---
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-us">
   <title>{{ site.title }} — {{ site.organization }}</title>
   <subtitle>{{ site.description }}</subtitle>
   <link href="{{ page.url | htmlBaseUrl(site.url) }}" rel="self" />
@@ -15,6 +15,7 @@ eleventyImport:
   <author>
     <name>{{ site.organization }}</name>
   </author>
+  <rights>{{ null | year }} {{ site.legalName }} CC-BY 4.0.</rights>
   {%- for adr in collections.adrs | eleventyFeedHasUrl | reverse %}
   {%- set absolutePostUrl = adr.url | htmlBaseUrl(site.url) %}
   <entry>
@@ -26,13 +27,13 @@ eleventyImport:
     <summary>{{ adr.data.context }}</summary>
     {%- endif %}
     {%- for topic in adr.data.topics %}
-    <category term="{{ topic }}" scheme="topic" />
+    <category term="{{ topic }}" scheme="{{ '/topics/' | htmlBaseUrl(site.url) }}" />
     {%- endfor %}
     {%- if adr.data.practiceArea %}
-    <category term="{{ adr.data.practiceArea }}" scheme="practiceArea" />
+    <category term="{{ adr.data.practiceArea }}" scheme="{{ '/practice-areas/' | htmlBaseUrl(site.url) }}" />
     {%- endif %}
     {%- if adr.data.status %}
-    <category term="{{ adr.data.status }}" scheme="status" />
+    <category term="{{ adr.data.status }}" />
     {%- endif %}
     <content type="html">{{ adr.content | renderTransforms(adr.data.page, site.url) }}</content>
   </entry>

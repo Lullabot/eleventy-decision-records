@@ -184,12 +184,20 @@ test('feed lists each record with its summary and categories', async () => {
   assert.match(atom, /^<\?xml /);
   assert.match(atom, /<link href="https:\/\/[^"]+\/feed\.xml" rel="self" \/>/);
   assert.match(atom, /<summary>Exercises the prose styles/);
-  assert.match(atom, /<category term="lorem" scheme="topic" \/>/);
-  assert.match(atom, /<category term="Design" scheme="practiceArea" \/>/);
-  assert.match(atom, /<category term="accepted" scheme="status" \/>/);
+  assert.match(atom, /<rights>\d{4} Lullabot, Inc\. CC-BY 4\.0\.<\/rights>/);
+  assert.match(
+    atom,
+    /<category term="lorem" scheme="https:\/\/[^"]+\/topics\/" \/>/,
+  );
+  assert.match(
+    atom,
+    /<category term="Design" scheme="https:\/\/[^"]+\/practice-areas\/" \/>/,
+  );
+  assert.match(atom, /<category term="accepted" \/>/);
 
   const plugin = {
     dirs: { decisions: 'adrs' },
+    site: { legalName: 'Example, Inc.' },
     feeds: [{ type: 'rss', path: '/rss.xml' }],
   };
   const pages = await build({ plugin });
@@ -197,6 +205,10 @@ test('feed lists each record with its summary and categories', async () => {
   const rss = byUrl(pages, '/rss.xml')[0].content;
   assert.match(rss, /^<\?xml [^>]+>\n<rss version="2.0"/);
   assert.match(rss, /<atom:link href="https:\/\/[^"]+\/rss\.xml"/);
+  assert.match(
+    rss,
+    /<copyright>\d{4} Example, Inc\. CC-BY 4\.0\.<\/copyright>/,
+  );
   assert.match(rss, /<description>Exercises the prose styles/);
   assert.match(rss, /<category domain="topic">lorem<\/category>/);
   assert.match(rss, /<category domain="status">accepted<\/category>/);

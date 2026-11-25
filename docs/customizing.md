@@ -56,7 +56,7 @@ eleventyConfig.addPlugin(decisionRecords, {
 
 Since arrays concatenate, this publishes both feeds. To replace the Atom feed instead, use `'override:feeds'`; an empty list turns feeds off. Each type (`atom` or `rss`) can be listed once. Every page's `<head>` gets a `<link rel="alternate">` for each feed, so browsers and feed readers can find them.
 
-Each entry lists the record's `context` as its summary, one category per topic, and its practice area and status as categories, labeled `topic`, `practiceArea` and `status` (the `scheme` attribute in Atom, `domain` in RSS). The Atom feed also includes each record's full content. To change a feed's markup, add your own `feed-atom.njk` or `feed-rss.njk` to the input directory, with a `permalink`.
+Each entry lists the record's `context` as its summary, one category per topic, and its practice area and status as categories. RSS labels them `topic`, `practiceArea` and `status` with the `domain` attribute. Atom's `scheme` must be a URL, so topics use the site's `/topics/` URL, practice areas use `/practice-areas/`, and status has no scheme. The Atom feed also includes each record's full content. Both feeds carry the same copyright notice as the footer, built from `site.legalName`. To change a feed's markup, add your own `feed-atom.njk` or `feed-rss.njk` to the input directory, with a `permalink`.
 
 ## Navigation
 

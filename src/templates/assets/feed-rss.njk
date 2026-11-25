@@ -12,7 +12,7 @@ eleventyImport:
     <atom:link href="{{ page.url | htmlBaseUrl(site.url) }}" rel="self" type="application/rss+xml" />
     <description>{{ site.description }}</description>
     <language>en-us</language>
-    <copyright>{{ null | year }} {{ site.legalName }} CC-BY 4.0.</copyright>
+    <copyright>{{ null | year }} {{ site.legalName }}{% if site.license %} {{ site.license }}.{% endif %}</copyright>
     <generator>{{ eleventy.generator }}</generator>
     <lastBuildDate>{{ collections.adrs | eleventyFeedHasUrl | getNewestCollectionItemDate | dateToRfc822 }}</lastBuildDate>
     {%- for adr in collections.adrs | eleventyFeedHasUrl %}

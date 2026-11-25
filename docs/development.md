@@ -64,6 +64,15 @@ ELEVENTY_VERSION=canary npm test
 
 `tests/fixture-site/config.test.js` builds the fixture through the Eleventy CLI with generated config files: custom `includes` and `layouts` directories, the default (liquid) markdown engine, and project files overriding a theme page or layout. It catches the class of bug where the theme only works with the fixture's own settings. Each case is a separate process because Eleventy caches layouts per process, which would let one case's result leak into the next.
 
+The feeds are also checked with [w3c/feedvalidator](https://github.com/w3c/feedvalidator), the checker behind the [W3C Feed Validation Service](https://validator.w3.org/feed/), through `bin/validate-feed.py`. That test is skipped unless `FEEDVALIDATOR` points at the `src/` directory of a feedvalidator checkout; CI checks it out at a pinned commit. To run it locally, install its requirements into a virtual environment and run the tests with that environment active:
+
+```bash
+git clone https://github.com/w3c/feedvalidator.git ../feedvalidator
+python3 -m venv ../feedvalidator/venv
+../feedvalidator/venv/bin/pip install -r ../feedvalidator/requirements.txt
+PATH="$PWD/../feedvalidator/venv/bin:$PATH" FEEDVALIDATOR="$PWD/../feedvalidator/src" npm run test:config
+```
+
 Visual baselines live in `tests/visual.spec.js-snapshots/` and must only be generated via Docker (`npm run test:update`) — host-rendered screenshots differ by platform and would churn the baselines. The runner (`bin/run-e2e.sh`) uses the `mcr.microsoft.com/playwright` image matching the installed `@playwright/test` version, and gives both `node_modules` trees their own named volumes so container installs never land in the host working tree.
 
 The fixture records carry fixed dates, so URLs are deterministic. Relative ages ("2 days ago") still move with the real clock, so `tests/screenshot.css` — injected only during screenshots via `expect.toHaveScreenshot.stylePath` — hides them and pins their width. Hiding the text alone is not enough: the element resizes as the string changes, which shifts surrounding pixels and fails the comparison.

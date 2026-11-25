@@ -55,9 +55,23 @@ jobs:
         with:
           name: theme-package
           path: dist-package
+      # The W3C Feed Validation Service's checker, which has no releases, so
+      # it is pinned to a commit. test:config validates the feeds with it.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: w3c/feedvalidator
+          ref: c81401ac0dbbf03fb322ce46a5526b28ea8f58bf
+          path: feedvalidator
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.13'
+      - run: pip install -r feedvalidator/requirements.txt
       # Builds the fixture under several consumer configurations. Fast and
       # browserless, so it runs before the Docker suite.
       - run: npm run test:config
+        env:
+          FEEDVALIDATOR: ${{ github.workspace }}/feedvalidator/src
       # Runs the suite in the same Docker image used for local snapshot
       # generation, so visual baselines match exactly.
       - run: npm test

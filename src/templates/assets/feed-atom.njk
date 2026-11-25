@@ -15,7 +15,7 @@ eleventyImport:
   <author>
     <name>{{ site.organization }}</name>
   </author>
-  <rights>{{ null | year }} {{ site.legalName }} CC-BY 4.0.</rights>
+  <rights>{{ null | year }} {{ site.legalName }}{% if site.license %} {{ site.license }}.{% endif %}</rights>
   {%- for adr in collections.adrs | eleventyFeedHasUrl | reverse %}
   {%- set absolutePostUrl = adr.url | htmlBaseUrl(site.url) %}
   <entry>

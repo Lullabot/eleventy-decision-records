@@ -197,7 +197,7 @@ test('feed lists each record with its summary and categories', async () => {
 
   const plugin = {
     dirs: { decisions: 'adrs' },
-    site: { legalName: 'Example, Inc.' },
+    site: { legalName: 'Example, Inc.', license: 'MIT' },
     feeds: [{ type: 'rss', path: '/rss.xml' }],
   };
   const pages = await build({ plugin });
@@ -205,10 +205,7 @@ test('feed lists each record with its summary and categories', async () => {
   const rss = byUrl(pages, '/rss.xml')[0].content;
   assert.match(rss, /^<\?xml [^>]+>\n<rss version="2.0"/);
   assert.match(rss, /<atom:link href="https:\/\/[^"]+\/rss\.xml"/);
-  assert.match(
-    rss,
-    /<copyright>\d{4} Example, Inc\. CC-BY 4\.0\.<\/copyright>/,
-  );
+  assert.match(rss, /<copyright>\d{4} Example, Inc\. MIT\.<\/copyright>/);
   assert.match(rss, /<description>Exercises the prose styles/);
   assert.match(rss, /<category domain="topic">lorem<\/category>/);
   assert.match(rss, /<category domain="status">accepted<\/category>/);
@@ -224,6 +221,36 @@ test('feed lists each record with its summary and categories', async () => {
     ],
   );
 });
+
+// FEEDVALIDATOR is the src/ directory of a w3c/feedvalidator checkout, whose
+// requirements python3 can import. CI sets it; see docs/development.md.
+test(
+  'feeds pass the W3C feed validator',
+  { skip: !process.env.FEEDVALIDATOR && 'FEEDVALIDATOR is not set' },
+  async () => {
+    const plugin = {
+      dirs: { decisions: 'adrs' },
+      feeds: [{ type: 'rss', path: '/rss.xml' }],
+    };
+    const pages = await build({ plugin });
+    const dir = scratchDir();
+    for (const url of ['/feed.xml', '/rss.xml']) {
+      const file = join(dir, url.slice(1));
+      writeFileSync(file, byUrl(pages, url)[0].content);
+      await promisify(execFile)(
+        'python3',
+        [
+          '../../bin/validate-feed.py',
+          file,
+          new URL(url, 'https://architecture.lullabot.com/').href,
+        ],
+        { env: { ...process.env, PYTHONPATH: process.env.FEEDVALIDATOR } },
+      ).catch((error) =>
+        assert.fail(`${url}:\n${error.stdout}${error.stderr}`),
+      );
+    }
+  },
+);
 
 test('feeds can be replaced or turned off', async () => {
   const rssOnly = await build({

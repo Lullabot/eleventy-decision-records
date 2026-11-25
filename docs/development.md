@@ -37,7 +37,7 @@ Two details worth knowing before changing any of this:
 ## Code Style
 
 - ESLint flat config (`eslint.config.js`) with Prettier integration
-- Prettier: single quotes, trailing commas, 80 char width; `.njk` files formatted via `prettier-plugin-jinja-template`
+- Prettier: single quotes, trailing commas, 80 char width; `.njk` files formatted via `prettier-plugin-jinja-template`. When it wraps a line, it can drop the space between a `}}` and a `{% if %}` that follows it, so put text that needs a space before it on its own line
 - Husky pre-commit hook runs `lint-staged` (ESLint on `.js`, Prettier check on staged `.js/.njk/.json/.md/.css/.yml`)
 - Keep inline comments to a minimum — only for genuinely non-obvious code; rationale belongs in commit messages
 

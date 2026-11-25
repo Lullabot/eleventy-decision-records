@@ -42,6 +42,9 @@ const projects = [
 
 export default defineConfig({
   testDir: './tests',
+  // Playwright's default also matches *.test.js, which would load the
+  // fixture site's node:test suite and run it inside Playwright.
+  testMatch: /\.spec\.js$/,
   // Visual baselines are rendered in the Docker container (npm test);
   // skip screenshot assertions for direct host runs (npm run test:local).
   ignoreSnapshots: !process.env.E2E_IN_DOCKER,

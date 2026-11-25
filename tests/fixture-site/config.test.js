@@ -194,6 +194,10 @@ test('feed lists each record with its summary and categories', async () => {
     /<category term="Design" scheme="https:\/\/[^"]+\/practice-areas\/" \/>/,
   );
   assert.match(atom, /<category term="accepted" \/>/);
+  const updated = [...atom.matchAll(/<entry>[\s\S]*?<updated>([^<]+)/g)].map(
+    (match) => match[1],
+  );
+  assert.deepEqual(updated, updated.toSorted().reverse(), 'newest first');
 
   const plugin = {
     dirs: { decisions: 'adrs' },
@@ -214,10 +218,14 @@ test('feed lists each record with its summary and categories', async () => {
   assert.deepEqual(
     home
       .querySelectorAll('head link[rel="alternate"]')
-      .map((link) => [link.getAttribute('type'), link.getAttribute('href')]),
+      .map((link) => [
+        link.getAttribute('type'),
+        link.getAttribute('href'),
+        link.getAttribute('title'),
+      ]),
     [
-      ['application/atom+xml', '/feed.xml'],
-      ['application/rss+xml', '/rss.xml'],
+      ['application/atom+xml', '/feed.xml', 'Decision Records (Atom)'],
+      ['application/rss+xml', '/rss.xml', 'Decision Records (RSS)'],
     ],
   );
 });
@@ -264,10 +272,17 @@ test('feeds can be replaced or turned off', async () => {
   assert.match(byUrl(rssOnly, '/')[0].content, /href="\/rss\.xml"/);
 
   const none = await build({
-    plugin: { dirs: { decisions: 'adrs' }, 'override:feeds': [] },
+    plugin: {
+      dirs: { decisions: 'adrs' },
+      'override:feeds': [],
+      navigation: { primary: [{ label: 'Feed', url: '{feed}' }] },
+    },
   });
   assert.equal(none.filter((p) => p.url.endsWith('.xml')).length, 0);
-  assert.doesNotMatch(byUrl(none, '/')[0].content, /href="(\{feed\}|\/feed)/);
+  assert.doesNotMatch(
+    byUrl(none, '/')[0].content,
+    /href="(\{feed\}|\/feed|undefined)/,
+  );
 });
 
 test('project template replaces a feed', async () => {
@@ -282,6 +297,13 @@ test('project template replaces a feed', async () => {
 test('invalid feeds fail the build', async () => {
   const withFeeds = (feeds) =>
     build({ plugin: { dirs: { decisions: 'adrs' }, feeds } });
-  await assert.rejects(withFeeds([{ type: 'json' }]), /must be one of/);
-  await assert.rejects(withFeeds([{ type: 'atom' }]), /more than once/);
+  await assert.rejects(withFeeds([{ type: 'rss' }]), /must be a path/);
+  await assert.rejects(
+    withFeeds([{ type: 'json', path: '/feed.json' }]),
+    /must be one of/,
+  );
+  await assert.rejects(
+    withFeeds([{ type: 'atom', path: '/atom.xml' }]),
+    /more than once/,
+  );
 });

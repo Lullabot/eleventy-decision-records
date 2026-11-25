@@ -11,7 +11,7 @@
         rel="alternate"
         type="application/{{ feed.type }}+xml"
         href="{{ feed.path }}"
-        title="{{ site.title }}"
+        title="{{ site.title }} ({{ 'Atom' if feed.type == 'atom' else 'RSS' }})"
       />
     {%- endfor %}
     <style>

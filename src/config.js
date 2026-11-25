@@ -14,33 +14,40 @@ const FEED_TYPES = ['atom', 'rss'];
  */
 function resolveNavigationTokens(config) {
   const feedPath = config.feeds[0]?.path;
-  if (!feedPath && config.site?.social) {
-    config.site.social = config.site.social.filter(
-      (item) => !item.url?.includes('{feed}'),
-    );
+  const resolve = (items) =>
+    items
+      .filter((item) => feedPath || !String(item.url).includes('{feed}'))
+      .map((item) =>
+        typeof item.url === 'string'
+          ? {
+              ...item,
+              url: item.url
+                .replace('{decisions}', config.dirs.decisions)
+                .replace('{feed}', feedPath),
+            }
+          : item,
+      );
+  for (const [name, items] of Object.entries(config.navigation ?? {})) {
+    config.navigation[name] = resolve(items);
   }
-  const groups = [
-    ...Object.values(config.navigation ?? {}),
-    config.site?.social ?? [],
-  ];
-  for (const group of groups) {
-    for (const item of group) {
-      if (typeof item.url === 'string') {
-        item.url = item.url
-          .replace('{decisions}', config.dirs.decisions)
-          .replace('{feed}', feedPath);
-      }
-    }
+  if (config.site?.social) {
+    config.site.social = resolve(config.site.social);
   }
 }
 
 /**
- * Each feed type can be listed once: its template is registered as
- * `feed-<type>.njk`, which is also the name a project overrides it with.
+ * Each feed needs a path, and each type can be listed once: its template is
+ * registered as `feed-<type>.njk`, which is also the name a project
+ * overrides it with.
  */
 function validateFeeds(feeds) {
   const seen = new Set();
-  for (const { type } of feeds) {
+  for (const { type, path } of feeds) {
+    if (typeof path !== 'string' || !path.startsWith('/')) {
+      throw new Error(
+        `feeds[].path must be a path starting with "/", got ${JSON.stringify(path)}`,
+      );
+    }
     if (!FEED_TYPES.includes(type)) {
       throw new Error(
         `feeds[].type must be one of ${FEED_TYPES.join(', ')}, got "${type}"`,

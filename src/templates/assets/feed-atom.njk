@@ -16,7 +16,7 @@ eleventyImport:
     <name>{{ site.organization }}</name>
   </author>
   <rights>{{ null | year }} {{ site.legalName }}{% if site.license %} {{ site.license }}.{% endif %}</rights>
-  {%- for adr in collections.adrs | eleventyFeedHasUrl | reverse %}
+  {%- for adr in collections.adrs | eleventyFeedHasUrl %}
   {%- set absolutePostUrl = adr.url | htmlBaseUrl(site.url) %}
   <entry>
     <title>{{ adr.data.title }}</title>

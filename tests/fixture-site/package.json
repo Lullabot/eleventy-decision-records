@@ -13,6 +13,7 @@
     "test": "node --test"
   },
   "devDependencies": {
+    "fast-xml-parser": "^5.12.1",
     "node-html-parser": "^9.0.4"
   }
 }

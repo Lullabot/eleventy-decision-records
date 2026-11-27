@@ -1,11 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ site.language }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ title or site.title }} — {{ site.organization }}</title>
     <meta name="description" content="{{ description or site.description }}" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {%- for feed in feeds %}
+      <link
+        rel="alternate"
+        type="application/{{ feed.type }}+xml"
+        href="{{ feed.path }}"
+        title="{{ site.title }} ({{ 'Atom' if feed.type == 'atom' else 'RSS' }})"
+      />
+    {%- endfor %}
     <style>
       @view-transition {
         navigation: auto;

@@ -31,18 +31,34 @@ eleventyConfig.addPlugin(decisionRecords, {
     homepage: 'https://www.example.com/',
     url: 'https://decisions.example.com/',
     legalName: 'Your Organization, Inc.',
+    license: 'CC-BY 4.0',
+    language: 'en-US',
     title: 'Decision Records',
     description: 'Documented architectural decisions for your team',
     icon: 'brand_family-fill',
     social: [
-      { label: 'RSS', url: '/feed.xml', icon: 'rss_feed' },
+      { label: 'RSS', url: '{feed}', icon: 'rss_feed' },
       { label: 'GitHub', url: 'https://github.com/your-org', icon: 'github' },
     ],
   },
 });
 ```
 
-`icon` is a [Material Symbols](https://fonts.google.com/icons) identifier used in the site header, where it links to `homepage`, your organization's main site. Set `homepage` to an empty string to link the icon to the decision records homepage instead. `url` is the production base URL, used to build absolute links in the Atom feed at `/feed.xml`. `social` links appear in the footer, and each `icon` resolves the same way as the `{% icon %}` shortcode.
+`title` and `description` name the site: they are the homepage heading, title and meta description, the fallback for any page without its own, and the title and description of each feed. `icon` is a [Material Symbols](https://fonts.google.com/icons) identifier used in the site header, where it links to `homepage`, your organization's main site. Set `homepage` to an empty string to link the icon to the decision records homepage instead. `url` is the production base URL, used to build absolute links in the feed. `legalName` and `license` make up the copyright notice in the footer and the feeds; set `license` to an empty string to leave it out. `language` is a [BCP 47](https://www.rfc-editor.org/info/bcp47) tag set on `<html lang>` and on both feeds. `social` links appear in the footer, and each `icon` resolves the same way as the `{% icon %}` shortcode. The `{feed}` token in a URL is replaced with the first feed's path, and a link using it is dropped when there are no feeds (see [Feeds](#feeds)).
+
+## Feeds
+
+The theme publishes an Atom feed at `/feed.xml`. To add an RSS 2.0 feed next to it:
+
+```js
+eleventyConfig.addPlugin(decisionRecords, {
+  feeds: [{ type: 'rss', path: '/rss.xml' }],
+});
+```
+
+Since arrays concatenate, this publishes both feeds. To replace the Atom feed instead, use `'override:feeds'`; an empty list turns feeds off. Each type (`atom` or `rss`) can be listed once, and each feed needs a `path` starting with `/`. Both feeds list the newest records first. Every page's `<head>` gets a `<link rel="alternate">` for each feed, so browsers and feed readers can find them.
+
+Each entry lists the record's `context` as its summary, one category per topic, and its practice area as a category. A record whose status isn't `accepted` has it prefixed to the title, as in `[deprecated] Title`. RSS labels the categories `topic` and `practiceArea` with the `domain` attribute. Atom's `scheme` must be a URL, so topics use the site's `/topics/` URL and practice areas use `/practice-areas/`. The Atom feed also includes each record's full content. Both feeds carry the same copyright notice as the footer, built from `site.legalName` and `site.license`. To change a feed's markup, add your own `feed-atom.njk` or `feed-rss.njk` to the input directory, with a `permalink`.
 
 ## Navigation
 

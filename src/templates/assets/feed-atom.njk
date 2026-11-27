@@ -1,0 +1,41 @@
+---
+layout: false
+eleventyExcludeFromCollections: true
+eleventyImport:
+  collections: ['adrs']
+---
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ site.language }}">
+  <title>{{ site.title }} — {{ site.organization }}</title>
+  <subtitle>{{ site.description }}</subtitle>
+  <link href="{{ page.url | htmlBaseUrl(site.url) }}" rel="self" />
+  <link href="{{ site.url | addPathPrefixToFullUrl }}" />
+  <updated>{{ collections.adrs | eleventyFeedHasUrl | getNewestCollectionItemDate | dateToRfc3339 }}</updated>
+  <id>{{ site.url | addPathPrefixToFullUrl }}</id>
+  <author>
+    <name>{{ site.organization }}</name>
+  </author>
+  <rights>{{ null | year }} {{ site.legalName }}{% if site.license %} {{ site.license }}.{% endif %}</rights>
+  {%- for adr in collections.adrs | eleventyFeedHasUrl %}
+  {%- set absolutePostUrl = adr.url | htmlBaseUrl(site.url) %}
+  {%- set status = adr.data.status -%}
+  {%- set title = adr.data.title -%}
+  {%- set itemTitle = title if status == 'accepted' else '[' ~ status ~ '] ' ~ title -%}
+  <entry>
+    <title>{{ itemTitle }}</title>
+    <link href="{{ absolutePostUrl }}" />
+    <updated>{{ adr.date | dateToRfc3339 }}</updated>
+    <id>{{ absolutePostUrl }}</id>
+    {%- if adr.data.context %}
+    <summary>{{ adr.data.context }}</summary>
+    {%- endif %}
+    {%- for topic in adr.data.topics %}
+    <category term="{{ topic }}" scheme="{{ '/topics/' | htmlBaseUrl(site.url) }}" />
+    {%- endfor %}
+    {%- if adr.data.practiceArea %}
+    <category term="{{ adr.data.practiceArea }}" scheme="{{ '/practice-areas/' | htmlBaseUrl(site.url) }}" />
+    {%- endif %}
+    <content type="html">{{ adr.content | renderTransforms(adr.data.page, site.url) }}</content>
+  </entry>
+  {%- endfor %}
+</feed>

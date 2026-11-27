@@ -1,10 +1,8 @@
 ---
-title: Decision Records
-description: Documented architectural decisions and best practices
 eleventyExcludeFromCollections: true
 ---
 
-# {{ title }}
+# {{ site.title }}
 
 An Architectural Decision Record (ADR) captures a single software design choice that addresses an architecturally significant requirement. Our collection of ADRs forms a decision log that helps the team understand the history and reasoning behind key choices.
 

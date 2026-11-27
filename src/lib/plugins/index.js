@@ -7,10 +7,10 @@ import { syntaxHighlight } from './syntax-highlight.js';
 /**
  * Register all plugins with Eleventy.
  */
-export default function (eleventyConfig, opts) {
+export default function (eleventyConfig) {
   bundle(eleventyConfig);
   markdown(eleventyConfig);
   toc(eleventyConfig);
-  rss(eleventyConfig, opts.site);
+  rss(eleventyConfig);
   syntaxHighlight(eleventyConfig);
 }

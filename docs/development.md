@@ -37,7 +37,7 @@ Two details worth knowing before changing any of this:
 ## Code Style
 
 - ESLint flat config (`eslint.config.js`) with Prettier integration
-- Prettier: single quotes, trailing commas, 80 char width; `.njk` files formatted via `prettier-plugin-jinja-template`
+- Prettier: single quotes, trailing commas, 80 char width; `.njk` files formatted via `prettier-plugin-jinja-template`. When it wraps a line, it can drop the space between a `}}` and a `{% if %}` that follows it, so put text that needs a space before it on its own line
 - Husky pre-commit hook runs `lint-staged` (ESLint on `.js`, Prettier check on staged `.js/.njk/.json/.md/.css/.yml`)
 - Keep inline comments to a minimum — only for genuinely non-obvious code; rationale belongs in commit messages
 
@@ -62,7 +62,16 @@ ELEVENTY_VERSION=canary npm test
 
 `tests/accessibility.spec.js` runs [axe-core](https://github.com/dequelabs/axe-core) against every page type at desktop and mobile widths, plus the expanded menu and the search dialog, checking WCAG 2.2 AA and axe's best-practice rules. The scans go through `checkAccessibility()` from [playwright-drupal](https://lullabot.github.io/playwright-drupal/latest/working-with-tests/accessibility-tests/), which attaches the axe results and a screenshot outlining any violations to the report, and writes a summary to the CI job page. A violation that has to be accepted for now goes in `tests/a11y-baseline.js` with a reason and a link to the issue that will fix it; anything not listed fails the suite. Each page is also rescanned for colour contrast with every link and button forced into `:hover`, and again into `:focus-visible`, through the DevTools protocol (`CSS.forcePseudoState`), which is why the suite is Chromium only. Those state tests report only what the state introduces; anything already failing at rest belongs to the page's own test. It runs as part of `npm test`; `npm test -- --tests accessibility` runs it alone. On the host, `npm run test:local` works too; there are no snapshots involved.
 
-`tests/fixture-site/config.test.js` builds the fixture through the Eleventy CLI with generated config files: custom `includes` and `layouts` directories, the default (liquid) markdown engine, and project files overriding a theme page or layout. It catches the class of bug where the theme only works with the fixture's own settings. Each case is a separate process because Eleventy caches layouts per process, which would let one case's result leak into the next.
+The `*.test.js` files in `tests/fixture-site/` build the fixture through the Eleventy CLI with generated config files, using the shared `build()` helper in `helpers.js`. `config.test.js` covers consumer settings (custom `includes` and `layouts` directories, the default liquid markdown engine), catching the class of bug where the theme only works with the fixture's own settings. `overrides.test.js` covers project files replacing a theme page, layout, partial or feed, and the `override:feeds` option, `site.test.js` covers site and practice-area options, and `feeds.test.js` parses the generated feeds and checks individual entries. `node --test` runs each file in its own process, in parallel. Within a file, each build is a separate process because Eleventy caches layouts per process, which would let one case's result leak into the next.
+
+The feeds are also checked with [w3c/feedvalidator](https://github.com/w3c/feedvalidator), the checker behind the [W3C Feed Validation Service](https://validator.w3.org/feed/), through `bin/validate-feed.py`. That test is skipped unless `FEEDVALIDATOR` points at the `src/` directory of a feedvalidator checkout; CI checks it out at a pinned commit. To run it locally, install its requirements into a virtual environment and run the tests with that environment active:
+
+```bash
+git clone https://github.com/w3c/feedvalidator.git ../feedvalidator
+python3 -m venv ../feedvalidator/venv
+../feedvalidator/venv/bin/pip install -r ../feedvalidator/requirements.txt
+PATH="$PWD/../feedvalidator/venv/bin:$PATH" FEEDVALIDATOR="$PWD/../feedvalidator/src" npm run test:config
+```
 
 Visual baselines live in `tests/visual.spec.js-snapshots/` and must only be generated via Docker (`npm run test:update`) — host-rendered screenshots differ by platform and would churn the baselines. The runner (`bin/run-e2e.sh`) uses the `mcr.microsoft.com/playwright` image matching the installed `@playwright/test` version, and gives both `node_modules` trees their own named volumes so container installs never land in the host working tree.
 

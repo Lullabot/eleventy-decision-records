@@ -18,7 +18,10 @@ eleventyImport:
     {%- for adr in collections.adrs | eleventyFeedHasUrl %}
     {%- set absolutePostUrl = adr.url | htmlBaseUrl(site.url) %}
     <item>
-      <title>{{ adr.data.title }}</title>
+      {%- set status = adr.data.status -%}
+      {%- set title = adr.data.title -%}
+      {%- set itemTitle = title if status == 'accepted' else '[' ~ status ~ '] ' ~ title -%}
+      <title>{{ itemTitle }}</title>
       <link>{{ absolutePostUrl }}</link>
       <description>{{ adr.data.context }}</description>
       {%- for topic in adr.data.topics %}
@@ -26,9 +29,6 @@ eleventyImport:
       {%- endfor %}
       {%- if adr.data.practiceArea %}
       <category domain="practiceArea">{{ adr.data.practiceArea }}</category>
-      {%- endif %}
-      {%- if adr.data.status %}
-      <category domain="status">{{ adr.data.status }}</category>
       {%- endif %}
       <pubDate>{{ adr.date | dateToRfc822 }}</pubDate>
       <guid>{{ absolutePostUrl }}</guid>

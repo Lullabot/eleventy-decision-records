@@ -18,8 +18,11 @@ eleventyImport:
   <rights>{{ null | year }} {{ site.legalName }}{% if site.license %} {{ site.license }}.{% endif %}</rights>
   {%- for adr in collections.adrs | eleventyFeedHasUrl %}
   {%- set absolutePostUrl = adr.url | htmlBaseUrl(site.url) %}
+  {%- set status = adr.data.status -%}
+  {%- set title = adr.data.title -%}
+  {%- set itemTitle = title if status == 'accepted' else '[' ~ status ~ '] ' ~ title -%}
   <entry>
-    <title>{{ adr.data.title }}</title>
+    <title>{{ itemTitle }}</title>
     <link href="{{ absolutePostUrl }}" />
     <updated>{{ adr.date | dateToRfc3339 }}</updated>
     <id>{{ absolutePostUrl }}</id>
@@ -31,9 +34,6 @@ eleventyImport:
     {%- endfor %}
     {%- if adr.data.practiceArea %}
     <category term="{{ adr.data.practiceArea }}" scheme="{{ '/practice-areas/' | htmlBaseUrl(site.url) }}" />
-    {%- endif %}
-    {%- if adr.data.status %}
-    <category term="{{ adr.data.status }}" />
     {%- endif %}
     <content type="html">{{ adr.content | renderTransforms(adr.data.page, site.url) }}</content>
   </entry>

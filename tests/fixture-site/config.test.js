@@ -193,7 +193,8 @@ test('feed lists each record with its summary and categories', async () => {
     atom,
     /<category term="Design" scheme="https:\/\/[^"]+\/practice-areas\/" \/>/,
   );
-  assert.match(atom, /<category term="accepted" \/>/);
+  assert.doesNotMatch(atom, /<category term="accepted" \/>/);
+  assert.match(atom, /<title>\[deprecated\] Faucibus scelerisque/);
   const updated = [...atom.matchAll(/<entry>[\s\S]*?<updated>([^<]+)/g)].map(
     (match) => match[1],
   );
@@ -214,7 +215,8 @@ test('feed lists each record with its summary and categories', async () => {
   assert.match(rss, /<copyright>\d{4} Example, Inc\. MIT\.<\/copyright>/);
   assert.match(rss, /<description>Exercises the prose styles/);
   assert.match(rss, /<category domain="topic">lorem<\/category>/);
-  assert.match(rss, /<category domain="status">accepted<\/category>/);
+  assert.doesNotMatch(rss, /<category domain="status">/);
+  assert.match(rss, /<title>\[deprecated\] Faucibus scelerisque/);
   const home = parse(byUrl(pages, '/')[0].content);
   assert.equal(home.querySelector('html').getAttribute('lang'), 'fr-CA');
   assert.ok(home.querySelector('footer a[href="/feed.xml"]'));

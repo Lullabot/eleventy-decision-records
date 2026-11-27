@@ -5,6 +5,7 @@
     "url": "https://architecture.lullabot.com/",
     "legalName": "Lullabot, Inc.",
     "license": "CC-BY 4.0",
+    "language": "en-US",
     "title": "Decision Records",
     "description": "Documented architectural decisions and best practices for Lullabot's team",
     "icon": "brand_family-fill",

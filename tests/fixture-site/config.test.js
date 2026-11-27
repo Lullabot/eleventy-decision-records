@@ -198,10 +198,11 @@ test('feed lists each record with its summary and categories', async () => {
     (match) => match[1],
   );
   assert.deepEqual(updated, updated.toSorted().reverse(), 'newest first');
+  assert.match(atom, /<feed [^>]*xml:lang="en-US"/);
 
   const plugin = {
     dirs: { decisions: 'adrs' },
-    site: { legalName: 'Example, Inc.', license: 'MIT' },
+    site: { legalName: 'Example, Inc.', license: 'MIT', language: 'fr-CA' },
     feeds: [{ type: 'rss', path: '/rss.xml' }],
   };
   const pages = await build({ plugin });
@@ -209,11 +210,13 @@ test('feed lists each record with its summary and categories', async () => {
   const rss = byUrl(pages, '/rss.xml')[0].content;
   assert.match(rss, /^<\?xml [^>]+>\n<rss version="2.0"/);
   assert.match(rss, /<atom:link href="https:\/\/[^"]+\/rss\.xml"/);
+  assert.match(rss, /<language>fr-CA<\/language>/);
   assert.match(rss, /<copyright>\d{4} Example, Inc\. MIT\.<\/copyright>/);
   assert.match(rss, /<description>Exercises the prose styles/);
   assert.match(rss, /<category domain="topic">lorem<\/category>/);
   assert.match(rss, /<category domain="status">accepted<\/category>/);
   const home = parse(byUrl(pages, '/')[0].content);
+  assert.equal(home.querySelector('html').getAttribute('lang'), 'fr-CA');
   assert.ok(home.querySelector('footer a[href="/feed.xml"]'));
   assert.deepEqual(
     home

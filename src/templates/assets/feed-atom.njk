@@ -5,7 +5,7 @@ eleventyImport:
   collections: ['adrs']
 ---
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-us">
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ site.language }}">
   <title>{{ site.title }} — {{ site.organization }}</title>
   <subtitle>{{ site.description }}</subtitle>
   <link href="{{ page.url | htmlBaseUrl(site.url) }}" rel="self" />

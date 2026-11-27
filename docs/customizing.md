@@ -32,6 +32,7 @@ eleventyConfig.addPlugin(decisionRecords, {
     url: 'https://decisions.example.com/',
     legalName: 'Your Organization, Inc.',
     license: 'CC-BY 4.0',
+    language: 'en-US',
     title: 'Decision Records',
     description: 'Documented architectural decisions for your team',
     icon: 'brand_family-fill',
@@ -43,7 +44,7 @@ eleventyConfig.addPlugin(decisionRecords, {
 });
 ```
 
-`icon` is a [Material Symbols](https://fonts.google.com/icons) identifier used in the site header, where it links to `homepage`, your organization's main site. Set `homepage` to an empty string to link the icon to the decision records homepage instead. `url` is the production base URL, used to build absolute links in the feed. `legalName` and `license` make up the copyright notice in the footer and the feeds; set `license` to an empty string to leave it out. `social` links appear in the footer, and each `icon` resolves the same way as the `{% icon %}` shortcode. The `{feed}` token in a URL is replaced with the first feed's path, and a link using it is dropped when there are no feeds (see [Feeds](#feeds)).
+`icon` is a [Material Symbols](https://fonts.google.com/icons) identifier used in the site header, where it links to `homepage`, your organization's main site. Set `homepage` to an empty string to link the icon to the decision records homepage instead. `url` is the production base URL, used to build absolute links in the feed. `legalName` and `license` make up the copyright notice in the footer and the feeds; set `license` to an empty string to leave it out. `language` is a [BCP 47](https://www.rfc-editor.org/info/bcp47) tag set on `<html lang>` and on both feeds. `social` links appear in the footer, and each `icon` resolves the same way as the `{% icon %}` shortcode. The `{feed}` token in a URL is replaced with the first feed's path, and a link using it is dropped when there are no feeds (see [Feeds](#feeds)).
 
 ## Feeds
 

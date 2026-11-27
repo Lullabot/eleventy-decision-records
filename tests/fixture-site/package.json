@@ -10,7 +10,7 @@
   "scripts": {
     "build": "eleventy",
     "serve": "eleventy --serve --port=8181",
-    "test": "node --test config.test.js"
+    "test": "node --test"
   },
   "devDependencies": {
     "node-html-parser": "^9.0.4"

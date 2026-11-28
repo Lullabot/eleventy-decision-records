@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1](https://github.com/Lullabot/eleventy-decision-records/compare/eleventy-decision-records-1.2.0...eleventy-decision-records-1.2.1) (2026-11-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @material-symbols/svg-400 to ^0.49.0 ([#114](https://github.com/Lullabot/eleventy-decision-records/issues/114)) ([68155cc](https://github.com/Lullabot/eleventy-decision-records/commit/68155cc7c2d741249052d73c7c107b487975c2f3))
+* import AGENTS.md with its actual case ([#124](https://github.com/Lullabot/eleventy-decision-records/issues/124)) ([5b7cb6f](https://github.com/Lullabot/eleventy-decision-records/commit/5b7cb6f1662ca9d68e71138b5a17476fd000edd3))
+
 ## [1.2.0](https://github.com/Lullabot/eleventy-decision-records/compare/eleventy-decision-records-1.1.0...eleventy-decision-records-1.2.0) (2026-10-28)
 
 
